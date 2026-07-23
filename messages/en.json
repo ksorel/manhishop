@@ -1,0 +1,75 @@
+{
+  "metadata": {
+    "title": "Manhishop",
+    "description": "Manhishop — your online shop."
+  },
+  "nav": {
+    "home": "Home",
+    "catalogue": "Catalogue",
+    "search": "Search",
+    "cart": "Cart",
+    "account": "Account"
+  },
+  "theme": {
+    "toggle": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "language": {
+    "label": "Language",
+    "fr": "French",
+    "en": "English"
+  },
+  "home": {
+    "hero": {
+      "title": "Welcome to Manhishop",
+      "subtitle": "Authentic products, delivered near you.",
+      "cta": "Browse the catalogue"
+    },
+    "categories": {
+      "title": "Categories"
+    },
+    "featured": {
+      "title": "Featured products"
+    },
+    "comingSoon": "The catalogue is coming soon."
+  },
+  "catalogue": {
+    "title": "Catalogue",
+    "empty": "No products yet.",
+    "comingSoon": "This section will be available in Phase 1."
+  },
+  "product": {
+    "addToCart": "Add to cart",
+    "outOfStock": "Out of stock",
+    "comingSoon": "Product page available in Phase 1."
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty.",
+    "total": "Total",
+    "checkout": "Checkout",
+    "comingSoon": "The cart will be available in Phase 2."
+  },
+  "checkout": {
+    "title": "Checkout",
+    "paymentMethod": "Payment method",
+    "card": "Credit card",
+    "mobileMoney": "Mobile Money",
+    "comingSoon": "Payment will be available in Phase 3."
+  },
+  "account": {
+    "title": "My account",
+    "orders": "My orders",
+    "addresses": "My addresses",
+    "comingSoon": "The account area will be available in Phase 2."
+  },
+  "admin": {
+    "title": "Administration",
+    "comingSoon": "The back office will be available in Phase 5."
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  }
+}
