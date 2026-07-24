@@ -1,5 +1,11 @@
+import { redirect } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ComingSoon } from "@/components/ui/coming-soon";
+import { createClient } from "@/lib/supabase/server";
+import { Link } from "@/i18n/navigation";
+import { ProfileForm } from "@/components/auth/profile-form";
+import { SignOutButton } from "@/components/auth/sign-out-button";
+
+export const dynamic = "force-dynamic";
 
 export default async function AccountPage({
   params,
@@ -10,5 +16,45 @@ export default async function AccountPage({
   setRequestLocale(locale);
   const t = await getTranslations("account");
 
-  return <ComingSoon title={t("title")} message={t("comingSoon")} />;
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect(`/${locale}/connexion`);
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("full_name, phone")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  return (
+    <div className="mx-auto max-w-sm px-4 py-10">
+      <h1 className="text-2xl font-semibold text-foreground">{t("title")}</h1>
+
+      <div className="mt-6">
+        <ProfileForm
+          email={user.email ?? ""}
+          initialFullName={profile?.full_name ?? ""}
+          initialPhone={profile?.phone ?? ""}
+        />
+      </div>
+
+      <div className="mt-8 flex flex-col gap-3 border-t border-border pt-6 text-sm">
+        <Link href="/favoris" className="text-primary hover:underline">
+          {t("wishlist")}
+        </Link>
+        <span className="text-muted-foreground">
+          {t("orders")} — {t("comingSoon")}
+        </span>
+        <span className="text-muted-foreground">
+          {t("addresses")} — {t("comingSoon")}
+        </span>
+      </div>
+
+      <div className="mt-6">
+        <SignOutButton />
+      </div>
+    </div>
+  );
 }

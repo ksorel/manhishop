@@ -58,11 +58,18 @@
   },
   "product": {
     "addToCart": "Add to cart",
-    "addToCartComingSoon": "The cart will be available in Phase 2",
+    "added": "Added to cart",
     "outOfStock": "Out of stock",
     "promo": "Sale",
     "similar": "Similar products",
     "notFound": "Product not found."
+  },
+  "wishlist": {
+    "title": "My wishlist",
+    "empty": "No favorites yet.",
+    "add": "Add to wishlist",
+    "remove": "Remove from wishlist",
+    "loginRequired": "Log in to add favorites."
   },
   "search": {
     "title": "Search",
@@ -74,9 +81,10 @@
   "cart": {
     "title": "Cart",
     "empty": "Your cart is empty.",
+    "quantity": "Quantity",
+    "remove": "Remove",
     "total": "Total",
-    "checkout": "Checkout",
-    "comingSoon": "The cart will be available in Phase 2."
+    "checkout": "Checkout"
   },
   "checkout": {
     "title": "Checkout",
@@ -85,11 +93,46 @@
     "mobileMoney": "Mobile Money",
     "comingSoon": "Payment will be available in Phase 3."
   },
+  "auth": {
+    "login": {
+      "title": "Log in",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Log in",
+      "noAccount": "No account yet?",
+      "createAccount": "Create an account"
+    },
+    "signup": {
+      "title": "Create an account",
+      "fullName": "Full name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create my account",
+      "hasAccount": "Already have an account?",
+      "login": "Log in",
+      "confirmEmail": "Account created. Check your inbox to confirm your registration before logging in."
+    },
+    "errors": {
+      "invalid_credentials": "Incorrect email or password.",
+      "user_exists": "An account already exists with this email.",
+      "weak_password": "Password must be at least 6 characters.",
+      "unknown": "Something went wrong. Please try again."
+    },
+    "signOut": "Log out"
+  },
   "account": {
     "title": "My account",
     "orders": "My orders",
     "addresses": "My addresses",
-    "comingSoon": "The account area will be available in Phase 2."
+    "wishlist": "My wishlist",
+    "comingSoon": "Available in Phase 4.",
+    "profile": {
+      "fullName": "Full name",
+      "phone": "Phone",
+      "email": "Email",
+      "save": "Save",
+      "saved": "Profile updated."
+    }
   },
   "admin": {
     "title": "Administration",

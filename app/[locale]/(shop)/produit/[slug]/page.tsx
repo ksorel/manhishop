@@ -2,9 +2,11 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getProductBySlug, getSimilarProducts } from "@/lib/catalogue/queries";
+import { getWishlistProductIds } from "@/lib/wishlist/actions";
 import { ProductGallery } from "@/components/shop/product-gallery";
 import { ProductGrid } from "@/components/shop/product-grid";
-import { buttonVariants } from "@/components/ui/button";
+import { AddToCartButton } from "@/components/shop/add-to-cart-button";
+import { WishlistButton } from "@/components/shop/wishlist-button";
 import { formatPrice } from "@/lib/format";
 import type { Locale } from "@/lib/catalogue/types";
 
@@ -43,11 +45,10 @@ export default async function ProductPage({
   const product = await getProductBySlug(slug, locale as Locale);
   if (!product) notFound();
 
-  const similarProducts = await getSimilarProducts(
-    product.categorySlug,
-    product.id,
-    locale as Locale,
-  );
+  const [similarProducts, wishlistProductIds] = await Promise.all([
+    getSimilarProducts(product.categorySlug, product.id, locale as Locale),
+    getWishlistProductIds(),
+  ]);
 
   const outOfStock = product.stock <= 0;
   const hasPromo = product.promoPrice !== null;
@@ -79,7 +80,13 @@ export default async function ProductPage({
         <ProductGallery images={product.images} alt={product.name} />
 
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">{product.name}</h1>
+          <div className="flex items-start justify-between gap-3">
+            <h1 className="text-2xl font-semibold text-foreground">{product.name}</h1>
+            <WishlistButton
+              productId={product.id}
+              initialInWishlist={wishlistProductIds.includes(product.id)}
+            />
+          </div>
 
           <div className="mt-3 flex items-baseline gap-3">
             <span className="text-xl font-semibold text-foreground">
@@ -100,17 +107,7 @@ export default async function ProductPage({
             {product.description}
           </p>
 
-          <button
-            type="button"
-            disabled
-            title={t("addToCartComingSoon")}
-            className={buttonVariants({
-              variant: "primary",
-              className: "mt-6 w-full opacity-60 sm:w-auto",
-            })}
-          >
-            {t("addToCart")}
-          </button>
+          <AddToCartButton product={product} className="mt-6 w-full sm:w-auto" />
         </div>
       </div>
 

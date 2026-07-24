@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { CartBadge } from "@/components/cart/cart-badge";
 
 export function SiteHeader() {
   const t = useTranslations("nav");
@@ -30,7 +31,10 @@ export function SiteHeader() {
         >
           <Link href="/">{t("home")}</Link>
           <Link href="/catalogue">{t("catalogue")}</Link>
-          <Link href="/panier">{t("cart")}</Link>
+          <Link href="/panier" className="relative">
+            {t("cart")}
+            <CartBadge />
+          </Link>
           <Link href="/compte">{t("account")}</Link>
         </nav>
 

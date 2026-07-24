@@ -58,11 +58,18 @@
   },
   "product": {
     "addToCart": "Ajouter au panier",
-    "addToCartComingSoon": "Le panier sera disponible en Phase 2",
+    "added": "Ajouté au panier",
     "outOfStock": "Rupture de stock",
     "promo": "Promo",
     "similar": "Produits similaires",
     "notFound": "Produit introuvable."
+  },
+  "wishlist": {
+    "title": "Mes favoris",
+    "empty": "Aucun favori pour le moment.",
+    "add": "Ajouter aux favoris",
+    "remove": "Retirer des favoris",
+    "loginRequired": "Connecte-toi pour ajouter des favoris."
   },
   "search": {
     "title": "Recherche",
@@ -74,9 +81,10 @@
   "cart": {
     "title": "Panier",
     "empty": "Votre panier est vide.",
+    "quantity": "Quantité",
+    "remove": "Retirer",
     "total": "Total",
-    "checkout": "Commander",
-    "comingSoon": "Le panier sera disponible en Phase 2."
+    "checkout": "Commander"
   },
   "checkout": {
     "title": "Commande",
@@ -85,11 +93,46 @@
     "mobileMoney": "Mobile Money",
     "comingSoon": "Le paiement sera disponible en Phase 3."
   },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "email": "Email",
+      "password": "Mot de passe",
+      "submit": "Se connecter",
+      "noAccount": "Pas encore de compte ?",
+      "createAccount": "Créer un compte"
+    },
+    "signup": {
+      "title": "Créer un compte",
+      "fullName": "Nom complet",
+      "email": "Email",
+      "password": "Mot de passe",
+      "submit": "Créer mon compte",
+      "hasAccount": "Déjà un compte ?",
+      "login": "Se connecter",
+      "confirmEmail": "Compte créé. Vérifie ta boîte mail pour confirmer ton inscription avant de te connecter."
+    },
+    "errors": {
+      "invalid_credentials": "Email ou mot de passe incorrect.",
+      "user_exists": "Un compte existe déjà avec cet email.",
+      "weak_password": "Le mot de passe doit contenir au moins 6 caractères.",
+      "unknown": "Une erreur est survenue. Réessaie."
+    },
+    "signOut": "Se déconnecter"
+  },
   "account": {
     "title": "Mon compte",
     "orders": "Mes commandes",
     "addresses": "Mes adresses",
-    "comingSoon": "L'espace compte sera disponible en Phase 2."
+    "wishlist": "Mes favoris",
+    "comingSoon": "Disponible en Phase 4.",
+    "profile": {
+      "fullName": "Nom complet",
+      "phone": "Téléphone",
+      "email": "Email",
+      "save": "Enregistrer",
+      "saved": "Profil mis à jour."
+    }
   },
   "admin": {
     "title": "Administration",

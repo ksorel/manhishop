@@ -7,6 +7,10 @@ import { routing } from "@/i18n/routing";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SiteHeader } from "@/components/shop/site-header";
 import { BottomNav } from "@/components/shop/bottom-nav";
+import { CartProvider } from "@/components/cart/cart-provider";
+import { createClient } from "@/lib/supabase/server";
+import { getCartItems } from "@/lib/cart/actions";
+import type { Locale } from "@/lib/catalogue/types";
 import "../globals.css";
 
 const inter = Inter({
@@ -58,14 +62,26 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale);
 
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const cartItems = user ? await getCartItems(locale as Locale) : null;
+
   return (
     <html lang={locale} className={`${inter.variable}`} suppressHydrationWarning>
       <body className="flex min-h-screen flex-col antialiased">
         <ThemeProvider>
           <NextIntlClientProvider locale={locale}>
-            <SiteHeader />
-            <main className="flex-1 pb-16 sm:pb-0">{children}</main>
-            <BottomNav />
+            <CartProvider
+              userId={user?.id ?? null}
+              initialItems={cartItems ?? []}
+              locale={locale as Locale}
+            >
+              <SiteHeader />
+              <main className="flex-1 pb-16 sm:pb-0">{children}</main>
+              <BottomNav />
+            </CartProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

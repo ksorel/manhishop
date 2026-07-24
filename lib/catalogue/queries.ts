@@ -198,6 +198,26 @@ export async function getProductBySlug(
   };
 }
 
+export async function getProductsByIds(
+  ids: string[],
+  locale: Locale,
+): Promise<ProductSummary[]> {
+  if (ids.length === 0) return [];
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select(PRODUCT_SUMMARY_COLUMNS)
+    .eq("status", "active")
+    .in("id", ids);
+
+  if (error) throw error;
+
+  return (data ?? []).map((row) =>
+    toProductSummary(row as unknown as ProductSummaryRow, locale),
+  );
+}
+
 export async function searchProducts(
   locale: Locale,
   query: string,
