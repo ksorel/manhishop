@@ -28,22 +28,48 @@
       "cta": "Browse the catalogue"
     },
     "categories": {
-      "title": "Categories"
+      "title": "Categories",
+      "viewAll": "View all categories",
+      "empty": "Categories are coming soon."
     },
     "featured": {
-      "title": "Featured products"
-    },
-    "comingSoon": "The catalogue is coming soon."
+      "title": "Featured products",
+      "empty": "Featured products are coming soon."
+    }
   },
   "catalogue": {
     "title": "Catalogue",
-    "empty": "No products yet.",
-    "comingSoon": "This section will be available in Phase 1."
+    "allCategories": "All categories",
+    "empty": "No products match these filters.",
+    "categoryNotFound": "Category not found.",
+    "results": "{count, plural, =0 {No products} one {# product} other {# products}}",
+    "filters": {
+      "sort": "Sort by",
+      "sortNewest": "Newest",
+      "sortPriceAsc": "Price: low to high",
+      "sortPriceDesc": "Price: high to low",
+      "price": "Price",
+      "priceMin": "Min",
+      "priceMax": "Max",
+      "inStockOnly": "In stock only",
+      "apply": "Apply",
+      "reset": "Reset"
+    }
   },
   "product": {
     "addToCart": "Add to cart",
+    "addToCartComingSoon": "The cart will be available in Phase 2",
     "outOfStock": "Out of stock",
-    "comingSoon": "Product page available in Phase 1."
+    "promo": "Sale",
+    "similar": "Similar products",
+    "notFound": "Product not found."
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search for a product…",
+    "submit": "Search",
+    "prompt": "Type a keyword to search for a product.",
+    "empty": "No results for \"{query}\"."
   },
   "cart": {
     "title": "Cart",

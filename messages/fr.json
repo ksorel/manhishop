@@ -28,22 +28,48 @@
       "cta": "Découvrir le catalogue"
     },
     "categories": {
-      "title": "Catégories"
+      "title": "Catégories",
+      "viewAll": "Voir toutes les catégories",
+      "empty": "Les catégories arrivent bientôt."
     },
     "featured": {
-      "title": "Produits phares"
-    },
-    "comingSoon": "Le catalogue arrive bientôt."
+      "title": "Produits phares",
+      "empty": "Les produits phares arrivent bientôt."
+    }
   },
   "catalogue": {
     "title": "Catalogue",
-    "empty": "Aucun produit pour le moment.",
-    "comingSoon": "Cette section sera disponible en Phase 1."
+    "allCategories": "Toutes les catégories",
+    "empty": "Aucun produit ne correspond à ces critères.",
+    "categoryNotFound": "Catégorie introuvable.",
+    "results": "{count, plural, =0 {Aucun produit} one {# produit} other {# produits}}",
+    "filters": {
+      "sort": "Trier par",
+      "sortNewest": "Nouveautés",
+      "sortPriceAsc": "Prix croissant",
+      "sortPriceDesc": "Prix décroissant",
+      "price": "Prix",
+      "priceMin": "Min",
+      "priceMax": "Max",
+      "inStockOnly": "En stock uniquement",
+      "apply": "Appliquer",
+      "reset": "Réinitialiser"
+    }
   },
   "product": {
     "addToCart": "Ajouter au panier",
+    "addToCartComingSoon": "Le panier sera disponible en Phase 2",
     "outOfStock": "Rupture de stock",
-    "comingSoon": "Fiche produit disponible en Phase 1."
+    "promo": "Promo",
+    "similar": "Produits similaires",
+    "notFound": "Produit introuvable."
+  },
+  "search": {
+    "title": "Recherche",
+    "placeholder": "Rechercher un produit…",
+    "submit": "Rechercher",
+    "prompt": "Tapez un mot-clé pour rechercher un produit.",
+    "empty": "Aucun résultat pour « {query} »."
   },
   "cart": {
     "title": "Panier",
