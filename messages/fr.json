@@ -93,6 +93,8 @@
     "email": "Email",
     "phone": "Téléphone",
     "addressTitle": "Adresse de livraison",
+    "savedAddresses": "Adresses enregistrées",
+    "useNewAddress": "Utiliser une nouvelle adresse",
     "fullName": "Nom complet",
     "line1": "Adresse",
     "line2": "Complément d'adresse (optionnel)",
@@ -156,7 +158,6 @@
     "orders": "Mes commandes",
     "addresses": "Mes adresses",
     "wishlist": "Mes favoris",
-    "comingSoon": "Disponible en Phase 4.",
     "profile": {
       "fullName": "Nom complet",
       "phone": "Téléphone",
@@ -164,6 +165,50 @@
       "save": "Enregistrer",
       "saved": "Profil mis à jour."
     }
+  },
+  "orders": {
+    "title": "Mes commandes",
+    "empty": "Aucune commande pour le moment.",
+    "orderNumber": "Commande",
+    "date": "Date",
+    "total": "Total",
+    "viewDetail": "Voir le détail",
+    "backToList": "Retour aux commandes",
+    "shippingAddress": "Adresse de livraison",
+    "items": "Articles",
+    "notFound": "Commande introuvable.",
+    "status": {
+      "pending": "En attente de paiement",
+      "paid": "Payée",
+      "shipped": "Expédiée",
+      "delivered": "Livrée",
+      "cancelled": "Annulée"
+    }
+  },
+  "addresses": {
+    "title": "Mes adresses",
+    "empty": "Aucune adresse enregistrée.",
+    "add": "Ajouter une adresse",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "confirmDelete": "Supprimer cette adresse ?",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "fullName": "Nom complet",
+    "line1": "Adresse",
+    "line2": "Complément d'adresse (optionnel)",
+    "city": "Ville",
+    "country": "Pays",
+    "countrySelect": "Sélectionner un pays",
+    "countries": {
+      "ci": "Côte d'Ivoire",
+      "sn": "Sénégal",
+      "ml": "Mali",
+      "bf": "Burkina Faso",
+      "tg": "Togo",
+      "bj": "Bénin"
+    },
+    "phone": "Téléphone"
   },
   "admin": {
     "title": "Administration",

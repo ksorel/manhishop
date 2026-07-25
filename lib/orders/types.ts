@@ -1,4 +1,4 @@
-export interface CheckoutAddressInput {
+export interface NewAddressInput {
   fullName: string;
   line1: string;
   line2?: string;
@@ -6,6 +6,12 @@ export interface CheckoutAddressInput {
   country: string;
   phone: string;
 }
+
+export interface SavedAddressInput {
+  addressId: string;
+}
+
+export type CheckoutAddressInput = SavedAddressInput | NewAddressInput;
 
 export interface CheckoutItemInput {
   productId: string;

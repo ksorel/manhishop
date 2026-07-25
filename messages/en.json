@@ -93,6 +93,8 @@
     "email": "Email",
     "phone": "Phone",
     "addressTitle": "Shipping address",
+    "savedAddresses": "Saved addresses",
+    "useNewAddress": "Use a new address",
     "fullName": "Full name",
     "line1": "Address",
     "line2": "Apartment, suite, etc. (optional)",
@@ -156,7 +158,6 @@
     "orders": "My orders",
     "addresses": "My addresses",
     "wishlist": "My wishlist",
-    "comingSoon": "Available in Phase 4.",
     "profile": {
       "fullName": "Full name",
       "phone": "Phone",
@@ -164,6 +165,50 @@
       "save": "Save",
       "saved": "Profile updated."
     }
+  },
+  "orders": {
+    "title": "My orders",
+    "empty": "No orders yet.",
+    "orderNumber": "Order",
+    "date": "Date",
+    "total": "Total",
+    "viewDetail": "View details",
+    "backToList": "Back to orders",
+    "shippingAddress": "Shipping address",
+    "items": "Items",
+    "notFound": "Order not found.",
+    "status": {
+      "pending": "Awaiting payment",
+      "paid": "Paid",
+      "shipped": "Shipped",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled"
+    }
+  },
+  "addresses": {
+    "title": "My addresses",
+    "empty": "No saved addresses.",
+    "add": "Add an address",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Delete this address?",
+    "save": "Save",
+    "cancel": "Cancel",
+    "fullName": "Full name",
+    "line1": "Address",
+    "line2": "Apartment, suite, etc. (optional)",
+    "city": "City",
+    "country": "Country",
+    "countrySelect": "Select a country",
+    "countries": {
+      "ci": "Côte d'Ivoire",
+      "sn": "Senegal",
+      "ml": "Mali",
+      "bf": "Burkina Faso",
+      "tg": "Togo",
+      "bj": "Benin"
+    },
+    "phone": "Phone"
   },
   "admin": {
     "title": "Administration",

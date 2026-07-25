@@ -48,21 +48,42 @@ export async function createPendingOrder(
 
   const admin = createAdminClient();
 
-  const { data: address, error: addressError } = await admin
-    .from("addresses")
-    .insert({
-      user_id: userId,
-      full_name: input.address.fullName,
-      line1: input.address.line1,
-      line2: input.address.line2 ?? null,
-      city: input.address.city,
-      country: input.address.country,
-      phone: input.address.phone,
-    })
-    .select("id")
-    .single();
+  let shippingAddressId: string;
 
-  if (addressError) throw addressError;
+  if ("addressId" in input.address) {
+    // Adresse enregistrée réutilisée : on vérifie qu'elle appartient
+    // bien à cet utilisateur avant de la lier à la commande.
+    const { data: existing, error: existingError } = await admin
+      .from("addresses")
+      .select("id")
+      .eq("id", input.address.addressId)
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (existingError) throw existingError;
+    if (!existing) throw new Error("address_not_found");
+    shippingAddressId = existing.id;
+  } else {
+    // Nouvelle adresse : si l'utilisateur est connecté, elle est
+    // automatiquement rattachée à son compte (visible dans son carnet
+    // d'adresses ensuite) grâce à user_id.
+    const { data: address, error: addressError } = await admin
+      .from("addresses")
+      .insert({
+        user_id: userId,
+        full_name: input.address.fullName,
+        line1: input.address.line1,
+        line2: input.address.line2 ?? null,
+        city: input.address.city,
+        country: input.address.country,
+        phone: input.address.phone,
+      })
+      .select("id")
+      .single();
+
+    if (addressError) throw addressError;
+    shippingAddressId = address.id;
+  }
 
   const { data: order, error: orderError } = await admin
     .from("orders")
@@ -74,7 +95,7 @@ export async function createPendingOrder(
       subtotal,
       delivery_fee: deliveryFee,
       total,
-      shipping_address_id: address.id,
+      shipping_address_id: shippingAddressId,
     })
     .select("id, access_token")
     .single();

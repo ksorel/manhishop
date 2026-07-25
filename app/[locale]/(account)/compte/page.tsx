@@ -41,15 +41,15 @@ export default async function AccountPage({
       </div>
 
       <div className="mt-8 flex flex-col gap-3 border-t border-border pt-6 text-sm">
+        <Link href="/commandes" className="text-primary hover:underline">
+          {t("orders")}
+        </Link>
+        <Link href="/adresses" className="text-primary hover:underline">
+          {t("addresses")}
+        </Link>
         <Link href="/favoris" className="text-primary hover:underline">
           {t("wishlist")}
         </Link>
-        <span className="text-muted-foreground">
-          {t("orders")} — {t("comingSoon")}
-        </span>
-        <span className="text-muted-foreground">
-          {t("addresses")} — {t("comingSoon")}
-        </span>
       </div>
 
       <div className="mt-6">
