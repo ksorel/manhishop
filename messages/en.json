@@ -88,10 +88,41 @@
   },
   "checkout": {
     "title": "Checkout",
-    "paymentMethod": "Payment method",
-    "card": "Credit card",
-    "mobileMoney": "Mobile Money",
-    "comingSoon": "Payment will be available in Phase 3."
+    "emptyCart": "Your cart is empty.",
+    "contactTitle": "Contact",
+    "email": "Email",
+    "phone": "Phone",
+    "addressTitle": "Shipping address",
+    "fullName": "Full name",
+    "line1": "Address",
+    "line2": "Apartment, suite, etc. (optional)",
+    "city": "City",
+    "country": "Country",
+    "countrySelect": "Select a country",
+    "countries": {
+      "ci": "Côte d'Ivoire",
+      "sn": "Senegal",
+      "ml": "Mali",
+      "bf": "Burkina Faso",
+      "tg": "Togo",
+      "bj": "Benin"
+    },
+    "subtotal": "Subtotal",
+    "delivery": "Delivery",
+    "total": "Total",
+    "paymentNote": "You'll choose your payment method (card, Orange Money, MTN, Wave...) on the next step.",
+    "submit": "Pay",
+    "processing": "Processing…",
+    "error": "Something went wrong. Please try again."
+  },
+  "confirmation": {
+    "title": "Order confirmed",
+    "orderNumber": "Order number",
+    "paid": "Payment received, thank you for your order!",
+    "pending": "Payment verification in progress — this can take a few moments (Mobile Money isn't always instant). Refresh this page shortly.",
+    "cancelled": "Order cancelled.",
+    "notFound": "Order not found.",
+    "backHome": "Back to home"
   },
   "auth": {
     "login": {

@@ -88,10 +88,41 @@
   },
   "checkout": {
     "title": "Commande",
-    "paymentMethod": "Moyen de paiement",
-    "card": "Carte bancaire",
-    "mobileMoney": "Mobile Money",
-    "comingSoon": "Le paiement sera disponible en Phase 3."
+    "emptyCart": "Votre panier est vide.",
+    "contactTitle": "Contact",
+    "email": "Email",
+    "phone": "Téléphone",
+    "addressTitle": "Adresse de livraison",
+    "fullName": "Nom complet",
+    "line1": "Adresse",
+    "line2": "Complément d'adresse (optionnel)",
+    "city": "Ville",
+    "country": "Pays",
+    "countrySelect": "Sélectionner un pays",
+    "countries": {
+      "ci": "Côte d'Ivoire",
+      "sn": "Sénégal",
+      "ml": "Mali",
+      "bf": "Burkina Faso",
+      "tg": "Togo",
+      "bj": "Bénin"
+    },
+    "subtotal": "Sous-total",
+    "delivery": "Livraison",
+    "total": "Total",
+    "paymentNote": "Tu choisiras ton moyen de paiement (carte, Orange Money, MTN, Wave...) à l'étape suivante.",
+    "submit": "Payer",
+    "processing": "Traitement…",
+    "error": "Une erreur est survenue. Réessaie."
+  },
+  "confirmation": {
+    "title": "Commande confirmée",
+    "orderNumber": "Numéro de commande",
+    "paid": "Paiement reçu, merci pour votre commande !",
+    "pending": "Paiement en cours de vérification — cela peut prendre quelques instants (Mobile Money n'est pas toujours instantané). Actualisez cette page dans un moment.",
+    "cancelled": "Commande annulée.",
+    "notFound": "Commande introuvable.",
+    "backHome": "Retour à l'accueil"
   },
   "auth": {
     "login": {

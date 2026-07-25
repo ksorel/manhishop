@@ -1,6 +1,6 @@
 # Manhishop
 
-Boutique en ligne mobile-first (PWA) — Next.js 14+ (App Router), Supabase, Stripe, agrégateur Mobile Money, Serwist.
+Boutique en ligne mobile-first (PWA) — Next.js 14+ (App Router), Supabase, Paystack, agrégateur Mobile Money, Serwist.
 
 Voir `manhishop-spec.md` pour le cahier des charges complet et `CLAUDE.md` pour les règles de travail.
 
@@ -27,4 +27,4 @@ node scripts/generate-pwa-icons.mjs   # régénère public/icons/ à partir du l
 
 ## Phase actuelle
 
-**Phase 0 — Setup** : Next.js + i18n (fr/en) + thème clair/sombre + design system + PWA de base. Voir section 11 de `manhishop-spec.md` pour la suite.
+**Phase 3 — Paiement** : commandes, paiement carte et Mobile Money via Paystack (agrégateur unique), webhook, page de confirmation, emails transactionnels. Voir section 11 de `manhishop-spec.md` pour la suite.

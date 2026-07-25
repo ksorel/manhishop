@@ -6,9 +6,9 @@ Ce fichier est chargé automatiquement par Claude Code au démarrage. Il sert de
 
 Manhishop est une boutique en ligne (PWA mobile-first) en cours de construction. Spécifications complètes : voir `manhishop-spec.md`. Résumé des points non négociables :
 
-- **Stack** : Next.js 14+ (App Router) + Supabase (DB Postgres, Auth, Storage) + Stripe (paiement carte) + agrégateur Mobile Money (CinetPay par défaut, voir ci-dessous) + Vercel (hébergement) + Serwist (PWA). Pas de Firebase.
-- **100% gratuit** : n'utiliser que des services avec un plan gratuit suffisant (Supabase Free, Vercel Hobby, Resend Free, next-intl, next-themes, Google Fonts). Ne jamais introduire une dépendance payante (Algolia, CDN image payant, police payante, etc.) sans le signaler explicitement avant de l'ajouter. Stripe et l'agrégateur Mobile Money sont acceptés malgré leur commission par transaction : pas d'abonnement fixe, donc pas de coût tant qu'il n'y a pas de vente.
-- **Paiement Mobile Money** : marché cible = Afrique de l'Ouest francophone (Côte d'Ivoire, Sénégal, Mali, Burkina Faso, Togo, Bénin...). Intégrer un agrégateur unique (CinetPay recommandé, PayDunya en repli) plutôt que chaque opérateur séparément — couvre Orange Money, MTN Mobile Money, Moov Money, Wave. Toujours développer et tester en mode sandbox du fournisseur avant de basculer sur des clés réelles. Vérifier les tarifs/pays couverts/délai de validation du compte marchand directement sur la doc du fournisseur au moment de l'implémentation (ces informations changent souvent).
+- **Stack** : Next.js 14+ (App Router) + Supabase (DB Postgres, Auth, Storage) + Paystack (paiement carte ET Mobile Money, agrégateur unique) + Vercel (hébergement) + Serwist (PWA). Pas de Firebase.
+- **100% gratuit** : n'utiliser que des services avec un plan gratuit suffisant (Supabase Free, Vercel Hobby, Resend Free, next-intl, next-themes, Google Fonts). Ne jamais introduire une dépendance payante (Algolia, CDN image payant, police payante, etc.) sans le signaler explicitement avant de l'ajouter. Paystack est accepté malgré sa commission par transaction : pas d'abonnement fixe, donc pas de coût tant qu'il n'y a pas de vente.
+- **Paiement carte + Mobile Money (Paystack)** : agrégateur unique choisi par le client (basé en Côte d'Ivoire, Stripe n'y opère pas). Paystack couvre carte bancaire et Mobile Money (Orange Money, MTN, Wave) en Côte d'Ivoire via une seule page de paiement hébergée (Paystack Checkout, paramètre `channels`) — le client choisit son moyen de paiement directement sur cette page, pas dans notre UI. Toujours développer et tester en mode Test Paystack avant de basculer sur des clés live. Vérifier les pays/opérateurs couverts directement sur la doc Paystack au moment de l'implémentation (ces informations changent souvent).
 - Le checkout doit proposer les deux moyens de paiement (carte et Mobile Money) — le client choisit à l'étape paiement.
 - **Mode clair/sombre** : implémenté avec `next-themes` + tokens CSS Tailwind (`dark:`), bascule manuelle + détection système, dès la Phase 0.
 - **Multilingue** : `next-intl`, français par défaut, anglais disponible, sélecteur de langue visible partout, aucun texte d'UI en dur (tout dans `messages/fr.json` et `messages/en.json`).
@@ -19,8 +19,8 @@ Manhishop est une boutique en ligne (PWA mobile-first) en cours de construction.
 
 1. **Avance phase par phase** (voir section 11 de `manhishop-spec.md`). Ne pas sauter une phase ni anticiper la suivante sans validation.
 2. **Marque une pause de revue à la fin de chaque phase** : résume ce qui a été fait, montre comment le tester en local, attends un go avant de continuer.
-3. **Ne jamais committer de secret** (clés Stripe, clé API agrégateur Mobile Money, service role key Supabase) — tout passe par des variables d'environnement (`.env.local`, jamais commit ; documenter les clés attendues dans `.env.example`).
-3bis. **Webhooks de paiement (Stripe et Mobile Money)** : toujours vérifier la signature, gérer l'idempotence (rejouer un webhook ne doit jamais créer deux commandes payées), ne jamais faire confiance à une simple redirection côté client pour valider un paiement.
+3. **Ne jamais committer de secret** (clés Paystack, service role key Supabase) — tout passe par des variables d'environnement (`.env.local`, jamais commit ; documenter les clés attendues dans `.env.example`).
+3bis. **Webhook de paiement (Paystack)** : toujours vérifier la signature (`x-paystack-signature`, HMAC SHA512), gérer l'idempotence (rejouer un webhook ne doit jamais créer deux commandes payées), ne jamais faire confiance à une simple redirection côté client pour valider un paiement.
 4. **RLS d'abord** : toute nouvelle table Supabase doit avoir ses policies Row Level Security écrites et testées avant d'être utilisée côté client.
 5. **Prix recalculés côté serveur** : jamais confiance dans un prix/total envoyé par le client au moment du paiement.
 6. **Mobile-first** : concevoir et tester chaque écran d'abord en viewport ~375–414px.
@@ -46,16 +46,10 @@ npm run test:e2e      # tests end-to-end (Playwright)
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
-STRIPE_SECRET_KEY=
-STRIPE_WEBHOOK_SECRET=
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
-CINETPAY_API_KEY=
-CINETPAY_SITE_ID=
-CINETPAY_SECRET_KEY=
+PAYSTACK_SECRET_KEY=
+NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=
 RESEND_API_KEY=
 ```
-
-(noms de variables Mobile Money à adapter si l'agrégateur retenu n'est finalement pas CinetPay)
 
 ## Structure du projet
 
@@ -69,8 +63,10 @@ Prompt de départ suggéré (Phase 0) :
 
 ## À trancher avec le client (ne pas décider seul)
 
-- Palette finale dérivée du logo (proposer, faire valider)
-- Catalogue traduit en fr/en ou uniquement affichage d'interface traduit (contenu produit en une seule langue) — impacte le modèle de données (section 6.6 de la spec)
-- Zones de livraison, grille tarifaire
-- Agrégateur Mobile Money définitif (CinetPay vs PayDunya vs autre) selon validation réelle du compte marchand dans le(s) pays de lancement
-- Opérateurs Mobile Money à activer en priorité (Orange Money, MTN, Moov, Wave)
+Décisions déjà prises pendant le développement (pour référence) :
+- Palette : vert `#3F7D33` / or `#C9950E`, dérivée du logo — validée Phase 0
+- Catalogue traduit fr/en (pas seulement l'UI) — validé avant la Phase 1
+- Livraison : tarif fixe 1000 FCFA, zone unique pour démarrer — à affiner par zone plus tard
+- Paiement : agrégateur unique Paystack (carte + Mobile Money : Orange Money, MTN, Wave en Côte d'Ivoire), remplace Stripe (non disponible en CI) et CinetPay
+
+Rien d'autre en attente pour l'instant — remettre à jour cette liste si de nouveaux points ouverts apparaissent en Phase 4/5 (ex. zones de livraison élargies, catégories/catalogue réel).
