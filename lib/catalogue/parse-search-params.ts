@@ -12,13 +12,17 @@ export function parseCatalogueSearchParams(
     return Array.isArray(value) ? value[0] : value;
   };
 
-  const minPrice = get("minPrice");
-  const maxPrice = get("maxPrice");
+  const parsePrice = (value: string | undefined) => {
+    if (!value) return undefined;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : undefined;
+  };
+
   const sort = get("sort");
 
   return {
-    minPrice: minPrice ? Number(minPrice) : undefined,
-    maxPrice: maxPrice ? Number(maxPrice) : undefined,
+    minPrice: parsePrice(get("minPrice")),
+    maxPrice: parsePrice(get("maxPrice")),
     inStockOnly: get("inStock") === "1",
     sort: SORT_OPTIONS.includes(sort as SortOption)
       ? (sort as SortOption)
