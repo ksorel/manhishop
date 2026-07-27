@@ -148,6 +148,26 @@ export async function getFeaturedProducts(
   );
 }
 
+export async function getPromotedProducts(
+  locale: Locale,
+  limit = 8,
+): Promise<ProductSummary[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select(PRODUCT_SUMMARY_COLUMNS)
+    .eq("status", "active")
+    .or("featured.eq.true,promo_price.not.is.null")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) throw error;
+
+  return (data ?? [])
+    .map((row) => toProductSummary(row as unknown as ProductSummaryRow, locale))
+    .filter((product) => product.image !== null);
+}
+
 export async function getSimilarProducts(
   categorySlug: string | null,
   excludeProductId: string,

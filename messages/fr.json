@@ -35,6 +35,9 @@
     "featured": {
       "title": "Produits phares",
       "empty": "Les produits phares arrivent bientôt."
+    },
+    "promo": {
+      "title": "En ce moment"
     }
   },
   "catalogue": {

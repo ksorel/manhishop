@@ -35,6 +35,9 @@
     "featured": {
       "title": "Featured products",
       "empty": "Featured products are coming soon."
+    },
+    "promo": {
+      "title": "Right now"
     }
   },
   "catalogue": {

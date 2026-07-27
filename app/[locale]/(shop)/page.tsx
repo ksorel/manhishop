@@ -4,7 +4,12 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CategoryPills } from "@/components/shop/category-pills";
 import { ProductGrid } from "@/components/shop/product-grid";
-import { getCategories, getFeaturedProducts } from "@/lib/catalogue/queries";
+import { PromoCarousel } from "@/components/shop/promo-carousel";
+import {
+  getCategories,
+  getFeaturedProducts,
+  getPromotedProducts,
+} from "@/lib/catalogue/queries";
 import type { Locale } from "@/lib/catalogue/types";
 
 // Lecture Supabase à chaque requête (pas de pré-rendu au build) — ISR à
@@ -20,9 +25,10 @@ export default async function HomePage({
   setRequestLocale(locale);
   const t = await getTranslations("home");
 
-  const [categories, featuredProducts] = await Promise.all([
+  const [categories, featuredProducts, promotedProducts] = await Promise.all([
     getCategories(locale as Locale),
     getFeaturedProducts(locale as Locale),
+    getPromotedProducts(locale as Locale),
   ]);
 
   return (
@@ -39,6 +45,17 @@ export default async function HomePage({
           {t("hero.cta")}
         </Link>
       </section>
+
+      {promotedProducts.length > 0 && (
+        <section className="mt-12">
+          <h2 className="text-xl font-semibold text-foreground">
+            {t("promo.title")}
+          </h2>
+          <div className="mt-4">
+            <PromoCarousel products={promotedProducts} />
+          </div>
+        </section>
+      )}
 
       <section className="mt-12">
         <h2 className="text-xl font-semibold text-foreground">
