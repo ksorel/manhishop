@@ -48,8 +48,8 @@ export function SignupForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <h1 className="text-2xl font-semibold text-foreground">{t("signup.title")}</h1>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      <h1 className="text-xl font-semibold text-foreground">{t("signup.title")}</h1>
 
       {error && <p className="text-sm font-medium text-error">{error}</p>}
 
