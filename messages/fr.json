@@ -259,6 +259,7 @@
         "status": "Statut",
         "featured": "Produit phare",
         "images": "Images",
+        "addImage": "Ajouter",
         "removeImage": "Retirer",
         "uploading": "Envoi en cours…",
         "uploadError": "Échec de l'envoi de l'image. Réessaie.",

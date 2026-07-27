@@ -3,8 +3,10 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { ImagePlus, X } from "lucide-react";
 import { useRouter } from "@/i18n/navigation";
 import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   createProduct,
   deleteProductImage,
@@ -272,55 +274,62 @@ export function ProductForm({
 
         {uploadError && <p className="text-sm font-medium text-error">{uploadError}</p>}
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3">
           {images.map((image) => (
-            <div key={image.id} className="relative size-20 overflow-hidden rounded border border-border">
+            <div
+              key={image.id}
+              className="group relative size-20 overflow-hidden rounded-lg border border-border shadow-sm"
+            >
               <Image src={image.url} alt="" fill sizes="80px" className="object-cover" />
               <button
                 type="button"
                 onClick={() => handleDeleteImage(image.id)}
-                className="absolute right-0 top-0 rounded-bl bg-error px-1 text-xs text-error-foreground"
+                aria-label={t("removeImage")}
+                className="absolute right-1 top-1 flex size-6 items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-error"
               >
-                ×
+                <X className="size-3.5" aria-hidden="true" />
               </button>
             </div>
           ))}
           {pendingFiles.map((file, index) => (
             <div
               key={`${file.name}-${index}`}
-              className="relative size-20 overflow-hidden rounded border border-border"
+              className="group relative size-20 overflow-hidden rounded-lg border border-border shadow-sm"
             >
               {/* Aperçu local avant création du produit : pas encore une URL Supabase, next/image (optimisation distante) ne s'applique pas. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={pendingPreviews[index]}
-                alt=""
-                className="size-full object-cover"
-              />
+              <img src={pendingPreviews[index]} alt="" className="size-full object-cover" />
               <button
                 type="button"
                 onClick={() => handleRemovePendingFile(index)}
-                className="absolute right-0 top-0 rounded-bl bg-error px-1 text-xs text-error-foreground"
+                aria-label={t("removeImage")}
+                className="absolute right-1 top-1 flex size-6 items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-error"
               >
-                ×
+                <X className="size-3.5" aria-hidden="true" />
               </button>
             </div>
           ))}
+
+          <label
+            className={cn(
+              "flex size-20 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary",
+              uploading && "pointer-events-none opacity-50",
+            )}
+          >
+            <ImagePlus className="size-5" aria-hidden="true" />
+            <span className="text-[11px] font-medium">{t("addImage")}</span>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleFilesSelected}
+              disabled={uploading}
+              className="sr-only"
+            />
+          </label>
         </div>
 
-        <div className="flex items-center gap-2">
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleFilesSelected}
-            disabled={uploading}
-            className="text-sm"
-          />
-          {uploading && (
-            <span className="text-sm text-muted-foreground">{t("uploading")}</span>
-          )}
-        </div>
+        {uploading && <p className="text-sm text-muted-foreground">{t("uploading")}</p>}
       </div>
 
       {formError && <p className="text-sm font-medium text-error">{formError}</p>}

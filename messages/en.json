@@ -259,6 +259,7 @@
         "status": "Status",
         "featured": "Featured product",
         "images": "Images",
+        "addImage": "Add",
         "removeImage": "Remove",
         "uploading": "Uploading…",
         "uploadError": "Couldn't upload the image. Please try again.",
