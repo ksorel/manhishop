@@ -140,7 +140,8 @@ export async function uploadProductImage(
   const file = formData.get("file") as File | null;
   if (!file) throw new Error("no_file");
 
-  const path = `${productId}/${crypto.randomUUID()}-${file.name}`;
+  const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+  const path = `${productId}/${crypto.randomUUID()}-${safeName}`;
   const { error: uploadError } = await supabase.storage
     .from("product-images")
     .upload(path, file);

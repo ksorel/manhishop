@@ -259,8 +259,10 @@
         "status": "Status",
         "featured": "Featured product",
         "images": "Images",
-        "addImage": "Add an image",
         "removeImage": "Remove",
+        "uploading": "Uploading…",
+        "uploadError": "Couldn't upload the image. Please try again.",
+        "saveError": "Something went wrong. Please try again.",
         "save": "Save",
         "cancel": "Cancel"
       }

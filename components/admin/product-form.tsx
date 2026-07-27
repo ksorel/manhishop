@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
@@ -26,7 +26,6 @@ export function ProductForm({
   const t = useTranslations("admin.products.form");
   const tStatus = useTranslations("admin.products");
   const router = useRouter();
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [slug, setSlug] = useState(initialProduct?.slug ?? "");
   const [nameFr, setNameFr] = useState(initialProduct?.nameFr ?? "");
@@ -40,12 +39,24 @@ export function ProductForm({
   const [status, setStatus] = useState<"active" | "draft">(initialProduct?.status ?? "draft");
   const [featured, setFeatured] = useState(initialProduct?.featured ?? false);
   const [images, setImages] = useState<AdminProductImage[]>(initialProduct?.images ?? []);
+  const [pendingFiles, setPendingFiles] = useState<File[]>([]);
   const [pending, setPending] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const pendingPreviews = useMemo(
+    () => pendingFiles.map((file) => URL.createObjectURL(file)),
+    [pendingFiles],
+  );
+  useEffect(() => {
+    return () => pendingPreviews.forEach((url) => URL.revokeObjectURL(url));
+  }, [pendingPreviews]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setPending(true);
+    setFormError(null);
 
     const input: AdminProductInput = {
       slug,
@@ -61,29 +72,68 @@ export function ProductForm({
       featured,
     };
 
-    if (initialProduct) {
-      await updateProduct(initialProduct.id, input);
+    try {
+      if (initialProduct) {
+        await updateProduct(initialProduct.id, input);
+        setPending(false);
+      } else {
+        const created = await createProduct(input);
+        for (const file of pendingFiles) {
+          try {
+            const formData = new FormData();
+            formData.append("file", file);
+            await uploadProductImage(created.id, formData);
+          } catch {
+            // Le produit est créé ; les images en échec pourront être
+            // rajoutées depuis la page d'édition qui suit.
+          }
+        }
+        router.push(`/admin/produits/${created.id}`);
+      }
+    } catch {
+      setFormError(t("saveError"));
       setPending(false);
-    } else {
-      const created = await createProduct(input);
-      router.push(`/admin/produits/${created.id}`);
     }
   }
 
-  async function handleUploadImage() {
-    if (!initialProduct || !fileInputRef.current?.files?.[0]) return;
+  async function handleFilesSelected(event: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files ?? []);
+    event.target.value = "";
+    if (files.length === 0) return;
+    setUploadError(null);
+
+    if (!initialProduct) {
+      setPendingFiles((prev) => [...prev, ...files]);
+      return;
+    }
+
     setUploading(true);
-    const formData = new FormData();
-    formData.append("file", fileInputRef.current.files[0]);
-    const image = await uploadProductImage(initialProduct.id, formData);
-    setImages((prev) => [...prev, image]);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-    setUploading(false);
+    try {
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append("file", file);
+        const image = await uploadProductImage(initialProduct.id, formData);
+        setImages((prev) => [...prev, image]);
+      }
+    } catch {
+      setUploadError(t("uploadError"));
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  function handleRemovePendingFile(index: number) {
+    setPendingFiles((prev) => prev.filter((_, i) => i !== index));
   }
 
   async function handleDeleteImage(imageId: string) {
-    await deleteProductImage(imageId);
-    setImages((prev) => prev.filter((img) => img.id !== imageId));
+    setUploadError(null);
+    try {
+      await deleteProductImage(imageId);
+      setImages((prev) => prev.filter((img) => img.id !== imageId));
+    } catch {
+      setUploadError(t("uploadError"));
+    }
   }
 
   return (
@@ -217,36 +267,63 @@ export function ProductForm({
         {t("featured")}
       </label>
 
-      {initialProduct && (
-        <div className="flex flex-col gap-2">
-          <span className="text-sm font-medium text-foreground">{t("images")}</span>
-          <div className="flex flex-wrap gap-2">
-            {images.map((image) => (
-              <div key={image.id} className="relative size-20 overflow-hidden rounded border border-border">
-                <Image src={image.url} alt="" fill sizes="80px" className="object-cover" />
-                <button
-                  type="button"
-                  onClick={() => handleDeleteImage(image.id)}
-                  className="absolute right-0 top-0 rounded-bl bg-error px-1 text-xs text-error-foreground"
-                >
-                  ×
-                </button>
-              </div>
-            ))}
-          </div>
-          <div className="flex items-center gap-2">
-            <input ref={fileInputRef} type="file" accept="image/*" className="text-sm" />
-            <button
-              type="button"
-              onClick={handleUploadImage}
-              disabled={uploading}
-              className={buttonVariants({ variant: "secondary" })}
+      <div className="flex flex-col gap-2">
+        <span className="text-sm font-medium text-foreground">{t("images")}</span>
+
+        {uploadError && <p className="text-sm font-medium text-error">{uploadError}</p>}
+
+        <div className="flex flex-wrap gap-2">
+          {images.map((image) => (
+            <div key={image.id} className="relative size-20 overflow-hidden rounded border border-border">
+              <Image src={image.url} alt="" fill sizes="80px" className="object-cover" />
+              <button
+                type="button"
+                onClick={() => handleDeleteImage(image.id)}
+                className="absolute right-0 top-0 rounded-bl bg-error px-1 text-xs text-error-foreground"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+          {pendingFiles.map((file, index) => (
+            <div
+              key={`${file.name}-${index}`}
+              className="relative size-20 overflow-hidden rounded border border-border"
             >
-              {t("addImage")}
-            </button>
-          </div>
+              {/* Aperçu local avant création du produit : pas encore une URL Supabase, next/image (optimisation distante) ne s'applique pas. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={pendingPreviews[index]}
+                alt=""
+                className="size-full object-cover"
+              />
+              <button
+                type="button"
+                onClick={() => handleRemovePendingFile(index)}
+                className="absolute right-0 top-0 rounded-bl bg-error px-1 text-xs text-error-foreground"
+              >
+                ×
+              </button>
+            </div>
+          ))}
         </div>
-      )}
+
+        <div className="flex items-center gap-2">
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleFilesSelected}
+            disabled={uploading}
+            className="text-sm"
+          />
+          {uploading && (
+            <span className="text-sm text-muted-foreground">{t("uploading")}</span>
+          )}
+        </div>
+      </div>
+
+      {formError && <p className="text-sm font-medium text-error">{formError}</p>}
 
       <button
         type="submit"
