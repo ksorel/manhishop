@@ -111,6 +111,7 @@
     },
     "subtotal": "Sous-total",
     "delivery": "Livraison",
+    "deliveryPending": "Selon le pays choisi",
     "total": "Total",
     "paymentNote": "Tu choisiras ton moyen de paiement (carte, Orange Money, MTN, Wave...) à l'étape suivante.",
     "submit": "Payer",
@@ -218,6 +219,7 @@
       "products": "Produits",
       "categories": "Catégories",
       "orders": "Commandes",
+      "shipping": "Livraison",
       "users": "Utilisateurs"
     },
     "dashboard": {
@@ -286,6 +288,22 @@
       "empty": "Aucune commande.",
       "updateStatus": "Changer le statut",
       "statusUpdated": "Statut mis à jour."
+    },
+    "shipping": {
+      "title": "Livraison",
+      "add": "Ajouter un tarif",
+      "country": "Pays",
+      "city": "Ville (optionnel)",
+      "cityPlaceholder": "Ex. Abidjan",
+      "cityHint": "Laisse vide pour définir le tarif par défaut du pays.",
+      "fee": "Tarif (FCFA)",
+      "defaultRate": "tarif par défaut",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "confirmDelete": "Supprimer ce tarif ?",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "empty": "Aucun tarif configuré."
     },
     "users": {
       "title": "Utilisateurs",

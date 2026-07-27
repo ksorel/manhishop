@@ -6,21 +6,24 @@ import { useCart } from "@/components/cart/cart-provider";
 import { Card } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { formatPrice } from "@/lib/format";
+import { resolveShippingFee } from "@/lib/shipping/pricing";
 import type { Locale } from "@/lib/catalogue/types";
 import type { Address } from "@/lib/addresses/types";
+import type { ShippingRate } from "@/lib/shipping/types";
 
 const inputClass =
   "min-h-11 rounded border border-border bg-background px-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary";
 
 const COUNTRIES = ["ci", "sn", "ml", "bf", "tg", "bj"] as const;
-const DELIVERY_FEE_XOF = 1000;
 
 export function CheckoutView({
   initialEmail,
   savedAddresses,
+  shippingRates,
 }: {
   initialEmail: string;
   savedAddresses: Address[];
+  shippingRates: ShippingRate[];
 }) {
   const t = useTranslations("checkout");
   const locale = useLocale() as Locale;
@@ -45,20 +48,27 @@ export function CheckoutView({
     return <Card className="p-6 text-muted-foreground">{t("emptyCart")}</Card>;
   }
 
+  const reusingSelectedAddress = !usingNewAddress && selectedAddressId;
+  const selectedAddress = reusingSelectedAddress
+    ? savedAddresses.find((a) => a.id === selectedAddressId)
+    : undefined;
+  const effectiveCountry = selectedAddress?.country ?? country;
+  const effectiveCity = selectedAddress?.city ?? city;
+  const deliveryFee = effectiveCountry
+    ? resolveShippingFee(shippingRates, effectiveCountry, effectiveCity)
+    : 0;
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setPending(true);
     setError(null);
 
-    const reusingAddress = !usingNewAddress && selectedAddressId;
-    const contactPhone = reusingAddress
-      ? (savedAddresses.find((a) => a.id === selectedAddressId)?.phone ?? phone)
-      : phone;
+    const contactPhone = reusingSelectedAddress ? (selectedAddress?.phone ?? phone) : phone;
 
     const payload = {
       locale,
       items: items.map((line) => ({ productId: line.productId, quantity: line.quantity })),
-      address: reusingAddress
+      address: reusingSelectedAddress
         ? { addressId: selectedAddressId }
         : { fullName, line1, line2: line2 || undefined, city, country, phone },
       contactEmail: email,
@@ -240,13 +250,13 @@ export function CheckoutView({
         </div>
         <div className="flex justify-between">
           <span className="text-muted-foreground">{t("delivery")}</span>
-          <span className="text-foreground">{formatPrice(DELIVERY_FEE_XOF, locale)}</span>
+          <span className="text-foreground">
+            {effectiveCountry ? formatPrice(deliveryFee, locale) : t("deliveryPending")}
+          </span>
         </div>
         <div className="flex justify-between text-base font-semibold">
           <span className="text-foreground">{t("total")}</span>
-          <span className="text-foreground">
-            {formatPrice(totalPrice + DELIVERY_FEE_XOF, locale)}
-          </span>
+          <span className="text-foreground">{formatPrice(totalPrice + deliveryFee, locale)}</span>
         </div>
       </Card>
 

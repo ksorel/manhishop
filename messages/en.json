@@ -111,6 +111,7 @@
     },
     "subtotal": "Subtotal",
     "delivery": "Delivery",
+    "deliveryPending": "Depends on the selected country",
     "total": "Total",
     "paymentNote": "You'll choose your payment method (card, Orange Money, MTN, Wave...) on the next step.",
     "submit": "Pay",
@@ -218,6 +219,7 @@
       "products": "Products",
       "categories": "Categories",
       "orders": "Orders",
+      "shipping": "Shipping",
       "users": "Users"
     },
     "dashboard": {
@@ -286,6 +288,22 @@
       "empty": "No orders.",
       "updateStatus": "Update status",
       "statusUpdated": "Status updated."
+    },
+    "shipping": {
+      "title": "Shipping",
+      "add": "Add a rate",
+      "country": "Country",
+      "city": "City (optional)",
+      "cityPlaceholder": "E.g. Abidjan",
+      "cityHint": "Leave empty to set the country's default rate.",
+      "fee": "Fee (FCFA)",
+      "defaultRate": "default rate",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Delete this rate?",
+      "save": "Save",
+      "cancel": "Cancel",
+      "empty": "No rates configured."
     },
     "users": {
       "title": "Users",

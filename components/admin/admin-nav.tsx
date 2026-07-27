@@ -11,6 +11,7 @@ import {
   Package,
   Store,
   Tags,
+  Truck,
   Users,
 } from "lucide-react";
 
@@ -19,6 +20,7 @@ const NAV_ITEMS = [
   { href: "/admin/produits" as const, key: "products" as const, icon: Package },
   { href: "/admin/categories" as const, key: "categories" as const, icon: Tags },
   { href: "/admin/commandes" as const, key: "orders" as const, icon: ClipboardList },
+  { href: "/admin/livraison" as const, key: "shipping" as const, icon: Truck },
   { href: "/admin/utilisateurs" as const, key: "users" as const, icon: Users },
 ];
 
