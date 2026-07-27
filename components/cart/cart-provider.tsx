@@ -9,7 +9,7 @@ import {
   removeCartItem,
   updateCartItemQuantity,
 } from "@/lib/cart/actions";
-import { readGuestCart, writeGuestCart } from "@/lib/cart/storage";
+import { clearGuestCart, readGuestCart, writeGuestCart } from "@/lib/cart/storage";
 
 interface CartContextValue {
   items: CartLine[];
@@ -19,6 +19,7 @@ interface CartContextValue {
   addItem: (product: ProductSummary, quantity?: number) => Promise<void>;
   updateQuantity: (productId: string, quantity: number) => Promise<void>;
   removeItem: (productId: string) => Promise<void>;
+  clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -124,6 +125,11 @@ export function CartProvider({
     });
   }
 
+  function clearCart() {
+    setItems([]);
+    clearGuestCart();
+  }
+
   const totalCount = items.reduce((sum, line) => sum + line.quantity, 0);
   const totalPrice = items.reduce(
     (sum, line) => sum + (line.product.promoPrice ?? line.product.price) * line.quantity,
@@ -132,7 +138,16 @@ export function CartProvider({
 
   return (
     <CartContext.Provider
-      value={{ items, isLoading, totalCount, totalPrice, addItem, updateQuantity, removeItem }}
+      value={{
+        items,
+        isLoading,
+        totalCount,
+        totalPrice,
+        addItem,
+        updateQuantity,
+        removeItem,
+        clearCart,
+      }}
     >
       {children}
     </CartContext.Provider>

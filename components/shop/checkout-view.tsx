@@ -24,7 +24,7 @@ export function CheckoutView({
 }) {
   const t = useTranslations("checkout");
   const locale = useLocale() as Locale;
-  const { items, totalPrice } = useCart();
+  const { items, totalPrice, clearCart } = useCart();
 
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
     savedAddresses[0]?.id ?? null,
@@ -75,6 +75,10 @@ export function CheckoutView({
       const result = await response.json();
       if (!response.ok || !result.url) throw new Error(result.error ?? "checkout_failed");
 
+      // La commande est créée à ce stade (statut pending) : le panier est
+      // vidé maintenant, comme côté serveur pour un client connecté —
+      // avant même la confirmation du paiement.
+      clearCart();
       window.location.href = result.url;
     } catch {
       setError(t("error"));

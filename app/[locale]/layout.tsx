@@ -5,8 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { ThemeProvider } from "@/components/theme-provider";
-import { SiteHeader } from "@/components/shop/site-header";
-import { BottomNav } from "@/components/shop/bottom-nav";
+import { SiteChrome } from "@/components/shop/site-chrome";
 import { CartProvider } from "@/components/cart/cart-provider";
 import { createClient } from "@/lib/supabase/server";
 import { getCartItems } from "@/lib/cart/actions";
@@ -78,9 +77,7 @@ export default async function LocaleLayout({
               initialItems={cartItems ?? []}
               locale={locale as Locale}
             >
-              <SiteHeader />
-              <main className="flex-1 pb-16 sm:pb-0">{children}</main>
-              <BottomNav />
+              <SiteChrome>{children}</SiteChrome>
             </CartProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
