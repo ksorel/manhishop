@@ -37,11 +37,19 @@ export async function signUp(input: {
 export async function signIn(input: {
   email: string;
   password: string;
-}): Promise<{ code: AuthErrorCode | null }> {
+}): Promise<{ code: AuthErrorCode | null; isAdmin: boolean }> {
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword(input);
+  const { data, error } = await supabase.auth.signInWithPassword(input);
 
-  return { code: error ? mapAuthError(error.message) : null };
+  if (error) return { code: mapAuthError(error.message), isAdmin: false };
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", data.user.id)
+    .maybeSingle();
+
+  return { code: null, isAdmin: profile?.role === "admin" };
 }
 
 export async function signOut(): Promise<void> {

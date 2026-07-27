@@ -10,7 +10,7 @@ export function SignOutButton() {
 
   async function handleClick() {
     await signOut();
-    window.location.href = `/${locale}`;
+    window.location.href = `/${locale}/connexion`;
   }
 
   return (

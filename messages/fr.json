@@ -216,7 +216,8 @@
       "dashboard": "Tableau de bord",
       "products": "Produits",
       "categories": "Catégories",
-      "orders": "Commandes"
+      "orders": "Commandes",
+      "users": "Utilisateurs"
     },
     "dashboard": {
       "salesToday": "Ventes aujourd'hui",
@@ -284,6 +285,17 @@
       "empty": "Aucune commande.",
       "updateStatus": "Changer le statut",
       "statusUpdated": "Statut mis à jour."
+    },
+    "users": {
+      "title": "Utilisateurs",
+      "promote": "Passer admin",
+      "revoke": "Retirer l'accès admin",
+      "confirmPromote": "Donner les droits admin à ce compte ?",
+      "confirmDemote": "Retirer les droits admin à ce compte ?",
+      "role": {
+        "customer": "Client",
+        "admin": "Admin"
+      }
     }
   },
   "footer": {

@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Généré par Serwist au build — pas du code source.
+    "public/sw.js",
   ]),
 ]);
 

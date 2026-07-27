@@ -216,7 +216,8 @@
       "dashboard": "Dashboard",
       "products": "Products",
       "categories": "Categories",
-      "orders": "Orders"
+      "orders": "Orders",
+      "users": "Users"
     },
     "dashboard": {
       "salesToday": "Sales today",
@@ -284,6 +285,17 @@
       "empty": "No orders.",
       "updateStatus": "Update status",
       "statusUpdated": "Status updated."
+    },
+    "users": {
+      "title": "Users",
+      "promote": "Make admin",
+      "revoke": "Revoke admin access",
+      "confirmPromote": "Grant admin rights to this account?",
+      "confirmDemote": "Revoke admin rights from this account?",
+      "role": {
+        "customer": "Customer",
+        "admin": "Admin"
+      }
     }
   },
   "footer": {

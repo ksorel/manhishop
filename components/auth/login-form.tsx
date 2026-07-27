@@ -32,7 +32,10 @@ export function LoginForm() {
       return;
     }
 
-    await finishLoginAndRedirect(locale, `/${locale}/compte`);
+    await finishLoginAndRedirect(
+      locale,
+      result.isAdmin ? `/${locale}/admin` : `/${locale}/compte`,
+    );
   }
 
   return (
