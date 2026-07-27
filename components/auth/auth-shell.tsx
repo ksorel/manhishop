@@ -1,7 +1,13 @@
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 
-export function AuthShell({ children }: { children: React.ReactNode }) {
+export function AuthShell({
+  children,
+  subtitle,
+}: {
+  children: React.ReactNode;
+  subtitle?: string;
+}) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-surface via-background to-background px-4 py-12">
       <div className="w-full max-w-sm">
@@ -15,6 +21,11 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
             priority
           />
           <span className="text-lg font-semibold text-foreground">Manhishop</span>
+          {subtitle && (
+            <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              {subtitle}
+            </span>
+          )}
         </Link>
 
         <div className="rounded-2xl border border-border bg-background p-6 shadow-lg shadow-black/[0.03] sm:p-8">

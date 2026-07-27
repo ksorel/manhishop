@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { LoginForm } from "@/components/auth/login-form";
 import { AuthShell } from "@/components/auth/auth-shell";
@@ -20,8 +20,10 @@ export default async function LoginPage({
   } = await supabase.auth.getUser();
   if (user) redirect(`/${locale}/compte`);
 
+  const t = await getTranslations("admin");
+
   return (
-    <AuthShell>
+    <AuthShell subtitle={t("title")}>
       <LoginForm />
     </AuthShell>
   );
