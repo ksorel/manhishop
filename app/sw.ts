@@ -35,7 +35,11 @@ const noCacheForSensitivePages: RuntimeCaching = {
 };
 
 const serwist = new Serwist({
-  precacheEntries: [...(self.__SW_MANIFEST ?? []), "/offline.html"],
+  // /offline.html est un fichier statique de public/ : @serwist/next
+  // l'ajoute déjà (avec sa révision) à __SW_MANIFEST. L'y rajouter à la
+  // main créait une deuxième entrée en conflit pour la même URL et
+  // faisait planter l'installation du service worker.
+  precacheEntries: self.__SW_MANIFEST ?? [],
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: true,
