@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { CartBadge } from "@/components/cart/cart-badge";
+import { InstallAppButton } from "@/components/shop/install-app-button";
 
 export function SiteHeader() {
   const t = useTranslations("nav");
@@ -39,6 +40,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <InstallAppButton />
           <LanguageSwitcher />
           <ThemeToggle />
         </div>

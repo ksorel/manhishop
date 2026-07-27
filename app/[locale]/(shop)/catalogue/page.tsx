@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getCategories, getProducts } from "@/lib/catalogue/queries";
 import { parseCatalogueSearchParams } from "@/lib/catalogue/parse-search-params";
@@ -7,6 +8,17 @@ import { ProductGrid } from "@/components/shop/product-grid";
 import type { Locale } from "@/lib/catalogue/types";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "catalogue" });
+
+  return { title: `${t("title")} — Manhishop` };
+}
 
 export default async function CataloguePage({
   params,

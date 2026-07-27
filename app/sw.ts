@@ -35,7 +35,7 @@ const noCacheForSensitivePages: RuntimeCaching = {
 };
 
 const serwist = new Serwist({
-  precacheEntries: self.__SW_MANIFEST,
+  precacheEntries: [...(self.__SW_MANIFEST ?? []), "/offline.html"],
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: true,
@@ -44,6 +44,18 @@ const serwist = new Serwist({
   // règle ci-dessus est évaluée en premier et prend le pas dessus pour
   // les pages sensibles.
   runtimeCaching: [noCacheForSensitivePages, ...defaultCache],
+  // Catalogue/accueil/fiche produit déjà visités : page hors-ligne
+  // dédiée si le réseau échoue. Les pages sensibles (NetworkOnly
+  // ci-dessus) échouent franchement à la place, ce qui bloque bien tout
+  // paiement hors-ligne comme demandé par le cahier des charges.
+  fallbacks: {
+    entries: [
+      {
+        url: "/offline.html",
+        matcher: ({ request }) => request.destination === "document",
+      },
+    ],
+  },
 });
 
 serwist.addEventListeners();

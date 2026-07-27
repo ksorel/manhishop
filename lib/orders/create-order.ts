@@ -2,9 +2,9 @@ import { getProductsByIds } from "@/lib/catalogue/queries";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Locale } from "@/lib/catalogue/types";
 import type { CheckoutInput, PreparedOrder } from "./types";
+import { buildOrderLines, computeOrderTotals, DELIVERY_FEE_XOF } from "./pricing";
 
-/** Livraison à tarif fixe, zone unique — voir CLAUDE.md pour la grille définitive à trancher. */
-export const DELIVERY_FEE_XOF = 1000;
+export { DELIVERY_FEE_XOF };
 
 /**
  * Crée une commande en statut `pending` avec le total recalculé côté
@@ -25,26 +25,10 @@ export async function createPendingOrder(
     locale,
   );
 
-  const lines = input.items
-    .map((item) => {
-      const product = products.find((p) => p.id === item.productId);
-      if (!product) return null;
-      const quantity = Math.max(1, Math.min(Math.trunc(item.quantity), product.stock));
-      if (quantity <= 0) return null;
-      return {
-        productId: product.id,
-        name: product.name,
-        unitPrice: product.promoPrice ?? product.price,
-        quantity,
-      };
-    })
-    .filter((line): line is NonNullable<typeof line> => line !== null);
-
+  const lines = buildOrderLines(input.items, products);
   if (lines.length === 0) throw new Error("empty_cart");
 
-  const subtotal = lines.reduce((sum, line) => sum + line.unitPrice * line.quantity, 0);
-  const deliveryFee = DELIVERY_FEE_XOF;
-  const total = subtotal + deliveryFee;
+  const { subtotal, deliveryFee, total } = computeOrderTotals(lines);
 
   const admin = createAdminClient();
 

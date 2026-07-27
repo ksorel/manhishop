@@ -10,6 +10,7 @@ import {
   updateCartItemQuantity,
 } from "@/lib/cart/actions";
 import { clearGuestCart, readGuestCart, writeGuestCart } from "@/lib/cart/storage";
+import { computeCartTotals } from "@/lib/cart/totals";
 
 interface CartContextValue {
   items: CartLine[];
@@ -130,11 +131,7 @@ export function CartProvider({
     clearGuestCart();
   }
 
-  const totalCount = items.reduce((sum, line) => sum + line.quantity, 0);
-  const totalPrice = items.reduce(
-    (sum, line) => sum + (line.product.promoPrice ?? line.product.price) * line.quantity,
-    0,
-  );
+  const { totalCount, totalPrice } = computeCartTotals(items);
 
   return (
     <CartContext.Provider

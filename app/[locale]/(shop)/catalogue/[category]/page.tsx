@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
   getCategories,
@@ -12,6 +13,18 @@ import { ProductGrid } from "@/components/shop/product-grid";
 import type { Locale } from "@/lib/catalogue/types";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; category: string }>;
+}): Promise<Metadata> {
+  const { locale, category: categorySlug } = await params;
+  const category = await getCategoryBySlug(categorySlug, locale as Locale);
+  if (!category) return {};
+
+  return { title: `${category.name} — Manhishop` };
+}
 
 export default async function CategoryPage({
   params,

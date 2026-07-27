@@ -298,6 +298,9 @@
       }
     }
   },
+  "pwa": {
+    "install": "Installer l'application"
+  },
   "footer": {
     "rights": "Tous droits réservés."
   }

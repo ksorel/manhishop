@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Manhishop — Hors ligne</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 24px;
+        text-align: center;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: #fdfdfb;
+        color: #24261f;
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #17181a;
+          color: #f2f2ee;
+        }
+      }
+      h1 {
+        font-size: 20px;
+        margin: 0;
+      }
+      p {
+        margin: 0;
+        color: #6b6b62;
+        max-width: 320px;
+      }
+      button {
+        margin-top: 12px;
+        min-height: 44px;
+        padding: 0 20px;
+        border: none;
+        border-radius: 8px;
+        background: #3f7d33;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Vous êtes hors ligne</h1>
+    <p>
+      Cette page n'est pas disponible sans connexion. Le catalogue déjà consulté reste
+      accessible ; le paiement nécessite une connexion internet.
+    </p>
+    <button onclick="location.reload()">Réessayer</button>
+  </body>
+</html>
