@@ -212,7 +212,79 @@
   },
   "admin": {
     "title": "Administration",
-    "comingSoon": "The back office will be available in Phase 5."
+    "nav": {
+      "dashboard": "Dashboard",
+      "products": "Products",
+      "categories": "Categories",
+      "orders": "Orders"
+    },
+    "dashboard": {
+      "salesToday": "Sales today",
+      "salesWeek": "Sales last 7 days",
+      "outOfStock": "Out-of-stock products",
+      "pendingOrders": "Pending orders"
+    },
+    "products": {
+      "title": "Products",
+      "add": "Add a product",
+      "name": "Name",
+      "category": "Category",
+      "price": "Price",
+      "stock": "Stock",
+      "status": "Status",
+      "active": "Active",
+      "draft": "Draft",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Delete this product?",
+      "empty": "No products.",
+      "form": {
+        "nameFr": "Name (FR)",
+        "nameEn": "Name (EN)",
+        "descriptionFr": "Description (FR)",
+        "descriptionEn": "Description (EN)",
+        "slug": "Slug (URL)",
+        "price": "Price",
+        "promoPrice": "Sale price (optional)",
+        "category": "Category",
+        "noCategory": "None",
+        "stock": "Stock",
+        "status": "Status",
+        "featured": "Featured product",
+        "images": "Images",
+        "addImage": "Add an image",
+        "removeImage": "Remove",
+        "save": "Save",
+        "cancel": "Cancel"
+      }
+    },
+    "categories": {
+      "title": "Categories",
+      "add": "Add a category",
+      "nameFr": "Name (FR)",
+      "nameEn": "Name (EN)",
+      "slug": "Slug (URL)",
+      "displayOrder": "Display order",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Delete this category?",
+      "save": "Save",
+      "cancel": "Cancel",
+      "empty": "No categories."
+    },
+    "orders": {
+      "title": "Orders",
+      "orderNumber": "Order",
+      "customer": "Customer",
+      "total": "Total",
+      "status": "Status",
+      "date": "Date",
+      "viewDetail": "View",
+      "backToList": "Back to orders",
+      "empty": "No orders.",
+      "updateStatus": "Update status",
+      "statusUpdated": "Status updated."
+    }
   },
   "footer": {
     "rights": "All rights reserved."

@@ -212,7 +212,79 @@
   },
   "admin": {
     "title": "Administration",
-    "comingSoon": "Le back-office sera disponible en Phase 5."
+    "nav": {
+      "dashboard": "Tableau de bord",
+      "products": "Produits",
+      "categories": "Catégories",
+      "orders": "Commandes"
+    },
+    "dashboard": {
+      "salesToday": "Ventes aujourd'hui",
+      "salesWeek": "Ventes 7 derniers jours",
+      "outOfStock": "Produits en rupture",
+      "pendingOrders": "Commandes en attente"
+    },
+    "products": {
+      "title": "Produits",
+      "add": "Ajouter un produit",
+      "name": "Nom",
+      "category": "Catégorie",
+      "price": "Prix",
+      "stock": "Stock",
+      "status": "Statut",
+      "active": "Actif",
+      "draft": "Brouillon",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "confirmDelete": "Supprimer ce produit ?",
+      "empty": "Aucun produit.",
+      "form": {
+        "nameFr": "Nom (FR)",
+        "nameEn": "Nom (EN)",
+        "descriptionFr": "Description (FR)",
+        "descriptionEn": "Description (EN)",
+        "slug": "Slug (URL)",
+        "price": "Prix",
+        "promoPrice": "Prix promo (optionnel)",
+        "category": "Catégorie",
+        "noCategory": "Aucune",
+        "stock": "Stock",
+        "status": "Statut",
+        "featured": "Produit phare",
+        "images": "Images",
+        "addImage": "Ajouter une image",
+        "removeImage": "Retirer",
+        "save": "Enregistrer",
+        "cancel": "Annuler"
+      }
+    },
+    "categories": {
+      "title": "Catégories",
+      "add": "Ajouter une catégorie",
+      "nameFr": "Nom (FR)",
+      "nameEn": "Nom (EN)",
+      "slug": "Slug (URL)",
+      "displayOrder": "Ordre d'affichage",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "confirmDelete": "Supprimer cette catégorie ?",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "empty": "Aucune catégorie."
+    },
+    "orders": {
+      "title": "Commandes",
+      "orderNumber": "Commande",
+      "customer": "Client",
+      "total": "Total",
+      "status": "Statut",
+      "date": "Date",
+      "viewDetail": "Voir",
+      "backToList": "Retour aux commandes",
+      "empty": "Aucune commande.",
+      "updateStatus": "Changer le statut",
+      "statusUpdated": "Statut mis à jour."
+    }
   },
   "footer": {
     "rights": "Tous droits réservés."
