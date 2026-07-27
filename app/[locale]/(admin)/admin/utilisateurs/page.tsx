@@ -1,8 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { getAdminUsers } from "@/lib/admin/users";
-import { Card } from "@/components/ui/card";
-import { UserRoleToggle } from "@/components/admin/user-role-toggle";
+import { UserManager } from "@/components/admin/user-manager";
 
 export default async function AdminUsersPage({
   params,
@@ -23,26 +22,9 @@ export default async function AdminUsersPage({
   return (
     <div>
       <h1 className="text-2xl font-semibold text-foreground">{t("title")}</h1>
-
-      <ul className="mt-6 flex flex-col gap-2">
-        {users.map((user) => (
-          <li key={user.id}>
-            <Card className="flex items-center justify-between gap-3 p-3 text-sm">
-              <div>
-                <p className="font-medium text-foreground">{user.email}</p>
-                <p className="text-xs text-muted-foreground">
-                  {user.fullName ?? "—"} · {t(`role.${user.role}`)}
-                </p>
-              </div>
-              <UserRoleToggle
-                userId={user.id}
-                role={user.role}
-                disabled={user.id === currentUser?.id}
-              />
-            </Card>
-          </li>
-        ))}
-      </ul>
+      <div className="mt-6">
+        <UserManager initialUsers={users} currentUserId={currentUser?.id} />
+      </div>
     </div>
   );
 }

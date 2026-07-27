@@ -288,6 +288,11 @@
     },
     "users": {
       "title": "Utilisateurs",
+      "create": "Créer un compte",
+      "fullName": "Nom complet",
+      "email": "Email",
+      "password": "Mot de passe",
+      "roleLabel": "Rôle",
       "promote": "Passer admin",
       "revoke": "Retirer l'accès admin",
       "confirmPromote": "Donner les droits admin à ce compte ?",
@@ -295,6 +300,12 @@
       "role": {
         "customer": "Client",
         "admin": "Admin"
+      },
+      "createErrors": {
+        "unauthorized": "Tu dois être admin pour créer un compte.",
+        "user_exists": "Un compte existe déjà avec cet email.",
+        "weak_password": "Le mot de passe doit contenir au moins 6 caractères.",
+        "unknown": "Une erreur est survenue. Réessaie."
       }
     }
   },

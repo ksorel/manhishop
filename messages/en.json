@@ -288,6 +288,11 @@
     },
     "users": {
       "title": "Users",
+      "create": "Create an account",
+      "fullName": "Full name",
+      "email": "Email",
+      "password": "Password",
+      "roleLabel": "Role",
       "promote": "Make admin",
       "revoke": "Revoke admin access",
       "confirmPromote": "Grant admin rights to this account?",
@@ -295,6 +300,12 @@
       "role": {
         "customer": "Customer",
         "admin": "Admin"
+      },
+      "createErrors": {
+        "unauthorized": "You must be an admin to create an account.",
+        "user_exists": "An account already exists with this email.",
+        "weak_password": "Password must be at least 6 characters.",
+        "unknown": "Something went wrong. Please try again."
       }
     }
   },
