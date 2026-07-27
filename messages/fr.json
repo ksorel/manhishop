@@ -212,6 +212,7 @@
   },
   "admin": {
     "title": "Administration",
+    "backToShop": "Voir la boutique",
     "nav": {
       "dashboard": "Tableau de bord",
       "products": "Produits",

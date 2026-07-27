@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { LoginForm } from "@/components/auth/login-form";
+import { AuthShell } from "@/components/auth/auth-shell";
 
 export const dynamic = "force-dynamic";
 
@@ -20,8 +21,8 @@ export default async function LoginPage({
   if (user) redirect(`/${locale}/compte`);
 
   return (
-    <div className="mx-auto max-w-sm px-4 py-10">
+    <AuthShell>
       <LoginForm />
-    </div>
+    </AuthShell>
   );
 }

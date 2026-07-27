@@ -212,6 +212,7 @@
   },
   "admin": {
     "title": "Administration",
+    "backToShop": "View the shop",
     "nav": {
       "dashboard": "Dashboard",
       "products": "Products",
