@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { createUserAccount, type UserRole } from "@/lib/admin/users";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 const inputClass =
@@ -92,13 +92,9 @@ export function CreateUserForm({ onCreated }: { onCreated: () => void }) {
           </select>
         </label>
 
-        <button
-          type="submit"
-          disabled={pending}
-          className={buttonVariants({ variant: "primary", className: "self-start" })}
-        >
+        <Button type="submit" loading={pending} className="self-start">
           {t("create")}
-        </button>
+        </Button>
       </form>
     </Card>
   );

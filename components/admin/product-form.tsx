@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { ImagePlus, X } from "lucide-react";
 import { useRouter } from "@/i18n/navigation";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
   createProduct,
@@ -77,7 +77,6 @@ export function ProductForm({
     try {
       if (initialProduct) {
         await updateProduct(initialProduct.id, input);
-        setPending(false);
       } else {
         const created = await createProduct(input);
         for (const file of pendingFiles) {
@@ -87,11 +86,11 @@ export function ProductForm({
             await uploadProductImage(created.id, formData);
           } catch {
             // Le produit est créé ; les images en échec pourront être
-            // rajoutées depuis la page d'édition qui suit.
+            // rajoutées depuis la page d'édition (accessible via la liste).
           }
         }
-        router.push(`/admin/produits/${created.id}`);
       }
+      router.push("/admin/produits");
     } catch {
       setFormError(t("saveError"));
       setPending(false);
@@ -334,13 +333,9 @@ export function ProductForm({
 
       {formError && <p className="text-sm font-medium text-error">{formError}</p>}
 
-      <button
-        type="submit"
-        disabled={pending}
-        className={buttonVariants({ variant: "primary", className: "self-start" })}
-      >
+      <Button type="submit" loading={pending} className="self-start">
         {t("save")}
-      </button>
+      </Button>
     </form>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import type { ShippingRate, ShippingRateInput } from "@/lib/shipping/types";
 
 const inputClass =
@@ -71,9 +71,9 @@ export function ShippingRateForm({
       </label>
 
       <div className="flex gap-3">
-        <button type="submit" disabled={pending} className={buttonVariants({ variant: "primary" })}>
+        <Button type="submit" loading={pending}>
           {t("save")}
-        </button>
+        </Button>
         {onCancel && (
           <button type="button" onClick={onCancel} className={buttonVariants({ variant: "text" })}>
             {t("cancel")}

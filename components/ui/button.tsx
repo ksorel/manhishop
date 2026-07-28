@@ -1,4 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
+import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ButtonHTMLAttributes } from "react";
 
@@ -41,6 +42,7 @@ export function Button({
       aria-busy={loading}
       {...props}
     >
+      {loading && <Loader2 className="size-4 animate-spin" aria-hidden="true" />}
       {children}
     </button>
   );
