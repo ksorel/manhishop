@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { ShippingRateForm } from "@/components/admin/shipping-rate-form";
 import {
   createShippingRate,
@@ -18,6 +19,7 @@ export function ShippingRateManager({ initialRates }: { initialRates: ShippingRa
   const t = useTranslations("admin.shipping");
   const tCountries = useTranslations("checkout.countries");
   const locale = useLocale() as Locale;
+  const confirm = useConfirm();
   const [rates, setRates] = useState(initialRates);
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -35,7 +37,7 @@ export function ShippingRateManager({ initialRates }: { initialRates: ShippingRa
   }
 
   async function handleDelete(id: string) {
-    if (!window.confirm(t("confirmDelete"))) return;
+    if (!(await confirm({ message: t("confirmDelete"), danger: true }))) return;
     await deleteShippingRate(id);
     setRates((prev) => prev.filter((r) => r.id !== id));
   }

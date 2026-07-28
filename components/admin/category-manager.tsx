@@ -4,12 +4,14 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { CategoryForm } from "@/components/admin/category-form";
 import { createCategory, deleteCategory, updateCategory } from "@/lib/admin/categories";
 import type { AdminCategory, AdminCategoryInput } from "@/lib/admin/types";
 
 export function CategoryManager({ initialCategories }: { initialCategories: AdminCategory[] }) {
   const t = useTranslations("admin.categories");
+  const confirm = useConfirm();
   const [categories, setCategories] = useState(initialCategories);
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -29,7 +31,7 @@ export function CategoryManager({ initialCategories }: { initialCategories: Admi
   }
 
   async function handleDelete(id: string) {
-    if (!window.confirm(t("confirmDelete"))) return;
+    if (!(await confirm({ message: t("confirmDelete"), danger: true }))) return;
     await deleteCategory(id);
     setCategories((prev) => prev.filter((c) => c.id !== id));
   }

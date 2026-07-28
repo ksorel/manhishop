@@ -4,12 +4,14 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { AddressForm } from "@/components/account/address-form";
 import { createAddress, deleteAddress, updateAddress } from "@/lib/addresses/actions";
 import type { Address, AddressInput } from "@/lib/addresses/types";
 
 export function AddressBook({ initialAddresses }: { initialAddresses: Address[] }) {
   const t = useTranslations("addresses");
+  const confirm = useConfirm();
   const [addresses, setAddresses] = useState(initialAddresses);
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -27,7 +29,7 @@ export function AddressBook({ initialAddresses }: { initialAddresses: Address[] 
   }
 
   async function handleDelete(id: string) {
-    if (!window.confirm(t("confirmDelete"))) return;
+    if (!(await confirm({ message: t("confirmDelete"), danger: true }))) return;
     await deleteAddress(id);
     setAddresses((prev) => prev.filter((a) => a.id !== id));
   }

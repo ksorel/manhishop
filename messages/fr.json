@@ -3,6 +3,10 @@
     "title": "Manhishop",
     "description": "Manhishop — votre boutique en ligne."
   },
+  "common": {
+    "cancel": "Annuler",
+    "confirm": "Confirmer"
+  },
   "nav": {
     "home": "Accueil",
     "catalogue": "Catalogue",
