@@ -7,6 +7,7 @@ import { SignOutButton } from "@/components/auth/sign-out-button";
 import { cn } from "@/lib/utils";
 import {
   ClipboardList,
+  FileText,
   LayoutDashboard,
   Package,
   Store,
@@ -21,6 +22,7 @@ const NAV_ITEMS = [
   { href: "/admin/categories" as const, key: "categories" as const, icon: Tags },
   { href: "/admin/commandes" as const, key: "orders" as const, icon: ClipboardList },
   { href: "/admin/livraison" as const, key: "shipping" as const, icon: Truck },
+  { href: "/admin/contenu" as const, key: "content" as const, icon: FileText },
   { href: "/admin/utilisateurs" as const, key: "users" as const, icon: Users },
 ];
 

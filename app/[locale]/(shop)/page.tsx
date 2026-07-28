@@ -10,6 +10,7 @@ import {
   getFeaturedProducts,
   getPromotedProducts,
 } from "@/lib/catalogue/queries";
+import { getHomeContent } from "@/lib/content/queries";
 import type { Locale } from "@/lib/catalogue/types";
 
 // Lecture Supabase à chaque requête (pas de pré-rendu au build) — ISR à
@@ -25,19 +26,23 @@ export default async function HomePage({
   setRequestLocale(locale);
   const t = await getTranslations("home");
 
-  const [categories, featuredProducts, promotedProducts] = await Promise.all([
+  const [categories, featuredProducts, promotedProducts, homeContent] = await Promise.all([
     getCategories(locale as Locale),
     getFeaturedProducts(locale as Locale),
     getPromotedProducts(locale as Locale),
+    getHomeContent(),
   ]);
+  const heroTitle = locale === "fr" ? homeContent.heroTitleFr : homeContent.heroTitleEn;
+  const heroSubtitle =
+    locale === "fr" ? homeContent.heroSubtitleFr : homeContent.heroSubtitleEn;
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
       <section className="rounded bg-surface p-8 text-center sm:p-16">
         <h1 className="text-2xl font-semibold text-foreground sm:text-4xl">
-          {t("hero.title")}
+          {heroTitle}
         </h1>
-        <p className="mt-3 text-muted-foreground">{t("hero.subtitle")}</p>
+        <p className="mt-3 text-muted-foreground">{heroSubtitle}</p>
         <Link
           href="/catalogue"
           className={buttonVariants({ variant: "primary", className: "mt-6" })}

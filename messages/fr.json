@@ -27,8 +27,6 @@
   },
   "home": {
     "hero": {
-      "title": "Bienvenue chez Manhishop",
-      "subtitle": "Des produits authentiques, livrés près de chez vous.",
       "cta": "Découvrir le catalogue"
     },
     "categories": {
@@ -228,6 +226,7 @@
       "categories": "Catégories",
       "orders": "Commandes",
       "shipping": "Livraison",
+      "content": "Contenu",
       "users": "Utilisateurs"
     },
     "dashboard": {
@@ -315,6 +314,16 @@
       "save": "Enregistrer",
       "cancel": "Annuler",
       "empty": "Aucun tarif configuré."
+    },
+    "content": {
+      "title": "Contenu de l'accueil",
+      "heroTitleFr": "Titre (FR)",
+      "heroTitleEn": "Titre (EN)",
+      "heroSubtitleFr": "Sous-titre (FR)",
+      "heroSubtitleEn": "Sous-titre (EN)",
+      "save": "Enregistrer",
+      "saved": "Contenu mis à jour.",
+      "saveError": "Une erreur est survenue. Réessaie."
     },
     "users": {
       "title": "Utilisateurs",
