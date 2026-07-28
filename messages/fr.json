@@ -47,6 +47,7 @@
   "catalogue": {
     "title": "Catalogue",
     "allCategories": "Toutes les catégories",
+    "loading": "Chargement des produits…",
     "empty": "Aucun produit ne correspond à ces critères.",
     "categoryNotFound": "Catégorie introuvable.",
     "results": "{count, plural, =0 {Aucun produit} one {# produit} other {# produits}}",
