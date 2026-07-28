@@ -70,37 +70,34 @@ export function PromoCarousel({ products }: { products: ProductSummary[] }) {
             <Link
               key={product.id}
               href={`/produit/${product.slug}`}
-              className="relative aspect-[16/9] w-full shrink-0 snap-start"
+              className="flex w-full shrink-0 snap-start flex-col overflow-hidden bg-surface"
             >
-              <Image
-                src={product.image ?? "/img/placeholder-product.svg"}
-                alt={product.name}
-                fill
-                sizes="100vw"
-                className="object-cover"
-                priority={product === products[0]}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4 sm:p-6">
-                <div>
+              <div className="relative aspect-[2/1] w-full bg-surface">
+                <Image
+                  src={product.image ?? "/img/placeholder-product.svg"}
+                  alt={product.name}
+                  fill
+                  sizes="100vw"
+                  className="object-contain p-4"
+                  priority={product === products[0]}
+                />
+                {hasPromo && (
+                  <span className="absolute left-3 top-3 rounded bg-warning px-2 py-0.5 text-xs font-medium text-warning-foreground">
+                    {t("promo")}
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center justify-between gap-3 border-t border-border px-4 py-3">
+                <p className="text-sm font-medium text-foreground">{product.name}</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-sm font-semibold text-foreground">
+                    {formatPrice(hasPromo ? product.promoPrice! : product.price, locale)}
+                  </span>
                   {hasPromo && (
-                    <span className="mb-1 inline-block rounded bg-warning px-2 py-0.5 text-xs font-medium text-warning-foreground">
-                      {t("promo")}
+                    <span className="text-xs text-muted-foreground line-through">
+                      {formatPrice(product.price, locale)}
                     </span>
                   )}
-                  <p className="text-lg font-semibold text-white sm:text-xl">
-                    {product.name}
-                  </p>
-                  <div className="mt-1 flex items-baseline gap-2">
-                    <span className="font-semibold text-white">
-                      {formatPrice(hasPromo ? product.promoPrice! : product.price, locale)}
-                    </span>
-                    {hasPromo && (
-                      <span className="text-sm text-white/70 line-through">
-                        {formatPrice(product.price, locale)}
-                      </span>
-                    )}
-                  </div>
                 </div>
               </div>
             </Link>
