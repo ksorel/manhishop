@@ -36,8 +36,8 @@ export function AdminNav() {
         <Image
           src="/logo/manhishop.jpeg"
           alt="Manhishop"
-          width={52}
-          height={52}
+          width={60}
+          height={60}
           className="rounded-full"
         />
         <p className="text-xs text-muted-foreground">{t("title")}</p>

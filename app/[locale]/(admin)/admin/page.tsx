@@ -45,7 +45,7 @@ export default async function AdminPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-foreground">{t("title")}</h1>
+      <h1 className="text-2xl font-semibold text-foreground">{t("nav.dashboard")}</h1>
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {tiles.map((tile) => (
           <Card key={tile.label} className="flex items-start gap-4 p-5">

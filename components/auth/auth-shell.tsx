@@ -15,8 +15,8 @@ export function AuthShell({
           <Image
             src="/logo/manhishop.jpeg"
             alt="Manhishop"
-            width={72}
-            height={72}
+            width={84}
+            height={84}
             className="rounded-full shadow-sm"
             priority
           />

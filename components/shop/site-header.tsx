@@ -16,8 +16,8 @@ export function SiteHeader() {
           <Image
             src="/logo/manhishop.jpeg"
             alt="Manhishop"
-            width={56}
-            height={56}
+            width={60}
+            height={60}
             className="rounded-full"
             priority
           />
