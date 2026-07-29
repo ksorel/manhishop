@@ -66,6 +66,13 @@ export function LoginForm() {
         />
       </label>
 
+      <Link
+        href="/mot-de-passe-oublie"
+        className="self-end text-sm text-primary hover:underline"
+      >
+        {t("login.forgotPassword")}
+      </Link>
+
       <button
         type="submit"
         disabled={pending}

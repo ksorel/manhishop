@@ -1,5 +1,6 @@
 "use server";
 
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 
 export type AuthErrorCode =
@@ -55,6 +56,34 @@ export async function signIn(input: {
 export async function signOut(): Promise<void> {
   const supabase = await createClient();
   await supabase.auth.signOut();
+}
+
+export async function requestPasswordReset(input: {
+  email: string;
+  locale: string;
+}): Promise<{ code: AuthErrorCode | null }> {
+  const supabase = await createClient();
+  const requestHeaders = await headers();
+  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+  const origin = `${protocol}://${requestHeaders.get("host")}`;
+
+  const { error } = await supabase.auth.resetPasswordForEmail(input.email, {
+    redirectTo: `${origin}/${input.locale}/reinitialiser-mot-de-passe`,
+  });
+
+  // Supabase ne signale jamais si l'email existe ou non (anti-énumération
+  // de comptes) : on ne remonte donc qu'une erreur générique éventuelle,
+  // jamais "email introuvable".
+  return { code: error ? "unknown" : null };
+}
+
+export async function updatePassword(input: {
+  password: string;
+}): Promise<{ code: AuthErrorCode | null }> {
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({ password: input.password });
+
+  return { code: error ? mapAuthError(error.message) : null };
 }
 
 export async function updateProfile(input: {

@@ -4,7 +4,12 @@ import { usePathname } from "@/i18n/navigation";
 import { SiteHeader } from "@/components/shop/site-header";
 import { BottomNav } from "@/components/shop/bottom-nav";
 
-const BARE_PATHS = ["/connexion", "/inscription"];
+const BARE_PATHS = [
+  "/connexion",
+  "/inscription",
+  "/mot-de-passe-oublie",
+  "/reinitialiser-mot-de-passe",
+];
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

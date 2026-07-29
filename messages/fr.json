@@ -140,7 +140,25 @@
       "password": "Mot de passe",
       "submit": "Se connecter",
       "noAccount": "Pas encore de compte ?",
-      "createAccount": "Créer un compte"
+      "createAccount": "Créer un compte",
+      "forgotPassword": "Mot de passe oublié ?"
+    },
+    "forgotPassword": {
+      "title": "Mot de passe oublié",
+      "instructions": "Indique ton email, on t'envoie un lien pour choisir un nouveau mot de passe.",
+      "submit": "Envoyer le lien",
+      "sent": "Si un compte existe avec cet email, un lien de réinitialisation vient d'être envoyé.",
+      "backToLogin": "Retour à la connexion"
+    },
+    "resetPassword": {
+      "title": "Choisir un nouveau mot de passe",
+      "checking": "Vérification du lien…",
+      "invalidLink": "Ce lien est invalide ou a expiré.",
+      "requestNewLink": "Demander un nouveau lien",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "mismatch": "Les mots de passe ne correspondent pas.",
+      "submit": "Enregistrer le nouveau mot de passe"
     },
     "signup": {
       "title": "Créer un compte",
@@ -171,6 +189,14 @@
       "email": "Email",
       "save": "Enregistrer",
       "saved": "Profil mis à jour."
+    },
+    "changePassword": {
+      "title": "Changer de mot de passe",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "mismatch": "Les mots de passe ne correspondent pas.",
+      "save": "Enregistrer",
+      "saved": "Mot de passe mis à jour."
     }
   },
   "orders": {

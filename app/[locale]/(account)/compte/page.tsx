@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { Link } from "@/i18n/navigation";
 import { ProfileForm } from "@/components/auth/profile-form";
+import { ChangePasswordForm } from "@/components/auth/change-password-form";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 
 export const dynamic = "force-dynamic";
@@ -38,6 +39,10 @@ export default async function AccountPage({
           initialFullName={profile?.full_name ?? ""}
           initialPhone={profile?.phone ?? ""}
         />
+      </div>
+
+      <div className="mt-8 border-t border-border pt-6">
+        <ChangePasswordForm />
       </div>
 
       <div className="mt-8 flex flex-col gap-3 border-t border-border pt-6 text-sm">

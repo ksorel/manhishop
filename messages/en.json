@@ -140,7 +140,25 @@
       "password": "Password",
       "submit": "Log in",
       "noAccount": "No account yet?",
-      "createAccount": "Create an account"
+      "createAccount": "Create an account",
+      "forgotPassword": "Forgot your password?"
+    },
+    "forgotPassword": {
+      "title": "Forgot password",
+      "instructions": "Enter your email and we'll send you a link to choose a new password.",
+      "submit": "Send the link",
+      "sent": "If an account exists with this email, a reset link was just sent.",
+      "backToLogin": "Back to login"
+    },
+    "resetPassword": {
+      "title": "Choose a new password",
+      "checking": "Checking the link…",
+      "invalidLink": "This link is invalid or has expired.",
+      "requestNewLink": "Request a new link",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "mismatch": "Passwords don't match.",
+      "submit": "Save new password"
     },
     "signup": {
       "title": "Create an account",
@@ -171,6 +189,14 @@
       "email": "Email",
       "save": "Save",
       "saved": "Profile updated."
+    },
+    "changePassword": {
+      "title": "Change password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "mismatch": "Passwords don't match.",
+      "save": "Save",
+      "saved": "Password updated."
     }
   },
   "orders": {
