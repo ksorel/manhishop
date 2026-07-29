@@ -15,12 +15,11 @@ export function AuthShell({
           <Image
             src="/logo/manhishop.jpeg"
             alt="Manhishop"
-            width={44}
-            height={44}
+            width={72}
+            height={72}
             className="rounded-full shadow-sm"
             priority
           />
-          <span className="text-base font-semibold text-foreground">Manhishop</span>
           {subtitle && (
             <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
               {subtitle}

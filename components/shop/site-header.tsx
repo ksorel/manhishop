@@ -12,18 +12,15 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center">
           <Image
             src="/logo/manhishop.jpeg"
             alt="Manhishop"
-            width={36}
-            height={36}
+            width={56}
+            height={56}
             className="rounded-full"
             priority
           />
-          <span className="text-lg font-semibold text-foreground">
-            Manhishop
-          </span>
         </Link>
 
         <nav

@@ -36,14 +36,11 @@ export function AdminNav() {
         <Image
           src="/logo/manhishop.jpeg"
           alt="Manhishop"
-          width={32}
-          height={32}
+          width={52}
+          height={52}
           className="rounded-full"
         />
-        <div className="leading-tight">
-          <p className="text-sm font-semibold text-foreground">Manhishop</p>
-          <p className="text-xs text-muted-foreground">{t("title")}</p>
-        </div>
+        <p className="text-xs text-muted-foreground">{t("title")}</p>
       </Link>
 
       <div className="flex gap-1 overflow-x-auto sm:flex-col sm:overflow-visible">
