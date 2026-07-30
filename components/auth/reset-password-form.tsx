@@ -23,9 +23,40 @@ export function ResetPasswordForm() {
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getSession().then(({ data }) => {
-      setStatus(data.session ? "ready" : "invalid");
+    let settled = false;
+
+    // Le client Supabase traite le lien de récupération (fragment/`code`
+    // dans l'URL) de façon asynchrone après son initialisation : un simple
+    // getSession() immédiat peut donc arriver avant que la session ne soit
+    // établie et faire croire à tort que le lien est invalide. On écoute
+    // aussi les changements d'état, avec un délai maximum d'attente.
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session && !settled) {
+        settled = true;
+        setStatus("ready");
+      }
     });
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session && !settled) {
+        settled = true;
+        setStatus("ready");
+      }
+    });
+
+    const timeout = setTimeout(() => {
+      if (!settled) {
+        settled = true;
+        setStatus("invalid");
+      }
+    }, 6000);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timeout);
+    };
   }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
