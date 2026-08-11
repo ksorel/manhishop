@@ -19,6 +19,12 @@
     "title": "Guide des tailles",
     "empty": "Les guides des tailles arrivent bientôt."
   },
+  "cgvPage": {
+    "title": "Conditions générales de vente"
+  },
+  "privacyPage": {
+    "title": "Politique de confidentialité"
+  },
   "theme": {
     "toggle": "Changer de thème",
     "light": "Clair",
@@ -388,11 +394,24 @@
       "empty": "Aucun tarif configuré."
     },
     "content": {
-      "title": "Contenu de l'accueil",
+      "title": "Contenu",
+      "heroSection": "Bannière d'accueil",
       "heroTitleFr": "Titre (FR)",
       "heroTitleEn": "Titre (EN)",
       "heroSubtitleFr": "Sous-titre (FR)",
       "heroSubtitleEn": "Sous-titre (EN)",
+      "footerSection": "Pied de page",
+      "footerHint": "Un champ laissé vide n'apparaît pas dans le pied de page de la boutique.",
+      "contactSection": "Contact",
+      "contactEmail": "Email",
+      "contactPhone": "Téléphone",
+      "socialSection": "Réseaux sociaux",
+      "cgvSection": "Conditions générales de vente",
+      "cgvFr": "CGV (FR)",
+      "cgvEn": "CGV (EN)",
+      "privacySection": "Politique de confidentialité",
+      "privacyFr": "Confidentialité (FR)",
+      "privacyEn": "Confidentialité (EN)",
       "save": "Enregistrer",
       "saved": "Contenu mis à jour.",
       "saveError": "Une erreur est survenue. Réessaie."
@@ -424,6 +443,9 @@
     "install": "Installer l'application"
   },
   "footer": {
-    "rights": "Tous droits réservés."
+    "rights": "Tous droits réservés.",
+    "linksLabel": "Liens utiles",
+    "cgv": "CGV",
+    "privacy": "Confidentialité"
   }
 }

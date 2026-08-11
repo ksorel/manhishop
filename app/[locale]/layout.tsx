@@ -10,6 +10,7 @@ import { CartProvider } from "@/components/cart/cart-provider";
 import { ConfirmDialogProvider } from "@/components/ui/confirm-dialog";
 import { createClient } from "@/lib/supabase/server";
 import { getCartItems } from "@/lib/cart/actions";
+import { getFooterContent } from "@/lib/content/queries";
 import type { Locale } from "@/lib/catalogue/types";
 import "../globals.css";
 
@@ -67,6 +68,7 @@ export default async function LocaleLayout({
     data: { user },
   } = await supabase.auth.getUser();
   const cartItems = user ? await getCartItems(locale as Locale) : null;
+  const footerContent = await getFooterContent();
 
   return (
     <html lang={locale} className={`${inter.variable}`} suppressHydrationWarning>
@@ -79,7 +81,7 @@ export default async function LocaleLayout({
                 initialItems={cartItems ?? []}
                 locale={locale as Locale}
               >
-                <SiteChrome>{children}</SiteChrome>
+                <SiteChrome footerContent={footerContent}>{children}</SiteChrome>
               </CartProvider>
             </ConfirmDialogProvider>
           </NextIntlClientProvider>

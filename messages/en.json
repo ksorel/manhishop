@@ -19,6 +19,12 @@
     "title": "Size guide",
     "empty": "Size guides are coming soon."
   },
+  "cgvPage": {
+    "title": "Terms of sale"
+  },
+  "privacyPage": {
+    "title": "Privacy policy"
+  },
   "theme": {
     "toggle": "Toggle theme",
     "light": "Light",
@@ -388,11 +394,24 @@
       "empty": "No rates configured."
     },
     "content": {
-      "title": "Homepage content",
+      "title": "Content",
+      "heroSection": "Homepage banner",
       "heroTitleFr": "Title (FR)",
       "heroTitleEn": "Title (EN)",
       "heroSubtitleFr": "Subtitle (FR)",
       "heroSubtitleEn": "Subtitle (EN)",
+      "footerSection": "Footer",
+      "footerHint": "A field left empty won't appear in the shop's footer.",
+      "contactSection": "Contact",
+      "contactEmail": "Email",
+      "contactPhone": "Phone",
+      "socialSection": "Social media",
+      "cgvSection": "Terms of sale",
+      "cgvFr": "Terms of sale (FR)",
+      "cgvEn": "Terms of sale (EN)",
+      "privacySection": "Privacy policy",
+      "privacyFr": "Privacy policy (FR)",
+      "privacyEn": "Privacy policy (EN)",
       "save": "Save",
       "saved": "Content updated.",
       "saveError": "Something went wrong. Please try again."
@@ -424,6 +443,9 @@
     "install": "Install the app"
   },
   "footer": {
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "linksLabel": "Useful links",
+    "cgv": "Terms of sale",
+    "privacy": "Privacy"
   }
 }
