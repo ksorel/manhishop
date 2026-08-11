@@ -39,7 +39,6 @@ export function ProductForm({
   const tStatus = useTranslations("admin.products");
   const router = useRouter();
 
-  const [slug, setSlug] = useState(initialProduct?.slug ?? "");
   const [nameFr, setNameFr] = useState(initialProduct?.nameFr ?? "");
   const [nameEn, setNameEn] = useState(initialProduct?.nameEn ?? "");
   const [descriptionFr, setDescriptionFr] = useState(initialProduct?.descriptionFr ?? "");
@@ -79,7 +78,9 @@ export function ProductForm({
     setFormError(null);
 
     const input: AdminProductInput = {
-      slug: slugify(slug),
+      // Dérivé du nom par le système ; figé après création pour ne pas
+      // casser un lien produit déjà partagé si le nom est modifié.
+      slug: initialProduct ? initialProduct.slug : slugify(nameFr),
       nameFr,
       nameEn,
       descriptionFr,
@@ -188,17 +189,6 @@ export function ProductForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <label className="flex flex-col gap-1 text-sm">
-        <span className="text-foreground">{t("slug")}</span>
-        <input
-          type="text"
-          required
-          value={slug}
-          onChange={(e) => setSlug(e.target.value)}
-          className={inputClass}
-        />
-      </label>
-
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="flex flex-col gap-1 text-sm">
           <span className="text-foreground">{t("nameFr")}</span>

@@ -23,7 +23,6 @@ export function CategoryForm({
   onCancel?: () => void;
 }) {
   const t = useTranslations("admin.categories");
-  const [slug, setSlug] = useState(initialCategory?.slug ?? "");
   const [nameFr, setNameFr] = useState(initialCategory?.nameFr ?? "");
   const [nameEn, setNameEn] = useState(initialCategory?.nameEn ?? "");
   const [displayOrder, setDisplayOrder] = useState(
@@ -38,7 +37,10 @@ export function CategoryForm({
     setFormError(null);
     try {
       await onSubmit({
-        slug: slugify(slug),
+        // Le slug est dérivé du nom par le système, jamais saisi à la
+        // main (évite les slugs invalides) — figé après création pour
+        // ne pas casser les liens déjà partagés d'une catégorie renommée.
+        slug: initialCategory ? initialCategory.slug : slugify(nameFr),
         nameFr,
         nameEn,
         displayOrder: Number(displayOrder),
@@ -55,16 +57,6 @@ export function CategoryForm({
       {!initialCategory && parentName && (
         <p className="text-sm text-muted-foreground">{t("subcategoryOf", { name: parentName })}</p>
       )}
-      <label className="flex flex-col gap-1 text-sm">
-        <span className="text-foreground">{t("slug")}</span>
-        <input
-          type="text"
-          required
-          value={slug}
-          onChange={(e) => setSlug(e.target.value)}
-          className={inputClass}
-        />
-      </label>
       <label className="flex flex-col gap-1 text-sm">
         <span className="text-foreground">{t("nameFr")}</span>
         <input

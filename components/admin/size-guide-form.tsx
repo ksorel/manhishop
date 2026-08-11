@@ -27,7 +27,6 @@ export function SizeGuideForm({
   onCancel?: () => void;
 }) {
   const t = useTranslations("admin.sizeGuides");
-  const [slug, setSlug] = useState(initialGuide?.slug ?? "");
   const [titleFr, setTitleFr] = useState(initialGuide?.titleFr ?? "");
   const [titleEn, setTitleEn] = useState(initialGuide?.titleEn ?? "");
   const [displayOrder, setDisplayOrder] = useState(
@@ -47,7 +46,6 @@ export function SizeGuideForm({
     setTitleEn(template.titleEn);
     setHeaders(template.headers);
     setRows(template.rows);
-    if (!slug) setSlug(slugify(template.titleFr));
   }
 
   function addColumn() {
@@ -84,7 +82,8 @@ export function SizeGuideForm({
     setFormError(null);
     try {
       await onSubmit({
-        slug: slugify(slug),
+        // Dérivé du titre par le système ; figé après création.
+        slug: initialGuide ? initialGuide.slug : slugify(titleFr),
         titleFr,
         titleEn,
         displayOrder: Number(displayOrder),
@@ -118,16 +117,6 @@ export function SizeGuideForm({
       )}
 
       <div className="grid gap-3 sm:grid-cols-2">
-        <label className="flex flex-col gap-1 text-sm">
-          <span className="text-foreground">{t("slug")}</span>
-          <input
-            type="text"
-            required
-            value={slug}
-            onChange={(e) => setSlug(e.target.value)}
-            className={inputClass}
-          />
-        </label>
         <label className="flex flex-col gap-1 text-sm">
           <span className="text-foreground">{t("displayOrder")}</span>
           <input
