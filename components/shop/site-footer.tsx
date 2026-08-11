@@ -2,33 +2,46 @@
 
 import { useTranslations } from "next-intl";
 import { Mail, Phone } from "lucide-react";
+import { FaCcMastercard, FaCcVisa, FaFacebook, FaInstagram, FaTiktok, FaWhatsapp } from "react-icons/fa6";
+import { SiOrange } from "react-icons/si";
 import { Link } from "@/i18n/navigation";
 import type { FooterContent } from "@/lib/content/types";
 
-const PAYMENT_METHODS = ["Visa", "Mastercard", "Orange Money", "MTN Mobile Money", "Wave"];
+const SOCIAL_ICONS = {
+  instagram: FaInstagram,
+  facebook: FaFacebook,
+  tiktok: FaTiktok,
+  whatsapp: FaWhatsapp,
+} as const;
 
 export function SiteFooter({ content }: { content: FooterContent }) {
   const t = useTranslations("nav");
   const tFooter = useTranslations("footer");
 
   const socialLinks = [
-    { href: content.socialInstagram, label: "Instagram" },
-    { href: content.socialFacebook, label: "Facebook" },
-    { href: content.socialTiktok, label: "TikTok" },
-    { href: content.socialWhatsapp, label: "WhatsApp" },
+    { key: "instagram" as const, href: content.socialInstagram, label: "Instagram" },
+    { key: "facebook" as const, href: content.socialFacebook, label: "Facebook" },
+    { key: "tiktok" as const, href: content.socialTiktok, label: "TikTok" },
+    { key: "whatsapp" as const, href: content.socialWhatsapp, label: "WhatsApp" },
   ].filter((link) => link.href);
 
   return (
-    <footer className="mt-12 flex flex-col items-center gap-4 border-t border-border px-4 py-6 text-center text-sm text-muted-foreground">
-      <div className="flex flex-wrap items-center justify-center gap-2">
-        {PAYMENT_METHODS.map((method) => (
-          <span
-            key={method}
-            className="rounded border border-border px-2 py-1 text-xs font-medium text-muted-foreground"
-          >
-            {method}
-          </span>
-        ))}
+    <footer className="mt-12 flex flex-col items-center gap-5 border-t border-border bg-background px-4 py-8 text-center text-sm text-muted-foreground">
+      <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+        <span className="inline-flex items-center gap-1.5">
+          <FaCcVisa className="size-6" aria-hidden="true" />
+          Visa
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <FaCcMastercard className="size-6" aria-hidden="true" />
+          Mastercard
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <SiOrange className="size-4" aria-hidden="true" />
+          Orange Money
+        </span>
+        <span>MTN Mobile Money</span>
+        <span>Wave</span>
       </div>
 
       <nav aria-label={tFooter("linksLabel")} className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
@@ -71,18 +84,22 @@ export function SiteFooter({ content }: { content: FooterContent }) {
       )}
 
       {socialLinks.length > 0 && (
-        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
-          {socialLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-foreground hover:underline"
-            >
-              {link.label}
-            </a>
-          ))}
+        <div className="flex items-center justify-center gap-4">
+          {socialLinks.map((link) => {
+            const Icon = SOCIAL_ICONS[link.key];
+            return (
+              <a
+                key={link.key}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={link.label}
+                className="flex size-9 items-center justify-center rounded-full hover:bg-surface hover:text-foreground"
+              >
+                <Icon className="size-4" aria-hidden="true" />
+              </a>
+            );
+          })}
         </div>
       )}
     </footer>
