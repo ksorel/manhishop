@@ -12,7 +12,12 @@
     "catalogue": "Catalogue",
     "search": "Search",
     "cart": "Cart",
-    "account": "Account"
+    "account": "Account",
+    "sizeGuide": "Size guide"
+  },
+  "sizeGuidePage": {
+    "title": "Size guide",
+    "empty": "Size guides are coming soon."
   },
   "theme": {
     "toggle": "Toggle theme",

@@ -12,7 +12,12 @@
     "catalogue": "Catalogue",
     "search": "Recherche",
     "cart": "Panier",
-    "account": "Compte"
+    "account": "Compte",
+    "sizeGuide": "Guide des tailles"
+  },
+  "sizeGuidePage": {
+    "title": "Guide des tailles",
+    "empty": "Les guides des tailles arrivent bientôt."
   },
   "theme": {
     "toggle": "Changer de thème",

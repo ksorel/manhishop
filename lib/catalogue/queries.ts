@@ -6,6 +6,7 @@ import type {
   Locale,
   Product,
   ProductSummary,
+  SizeGuide,
 } from "./types";
 
 const PRODUCT_SUMMARY_COLUMNS =
@@ -85,6 +86,22 @@ export async function getAllCategories(locale: Locale): Promise<Category[]> {
 
   if (error) throw error;
   return (data ?? []).map((row) => toCategory(row, locale));
+}
+
+export async function getSizeGuides(locale: Locale): Promise<SizeGuide[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("size_guides")
+    .select("id, title_fr, title_en, content")
+    .order("display_order", { ascending: true });
+
+  if (error) throw error;
+
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    title: locale === "fr" ? row.title_fr : row.title_en,
+    content: row.content,
+  }));
 }
 
 export async function getCategoryBySlug(

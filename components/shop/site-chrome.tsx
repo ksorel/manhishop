@@ -2,6 +2,7 @@
 
 import { usePathname } from "@/i18n/navigation";
 import { SiteHeader } from "@/components/shop/site-header";
+import { SiteFooter } from "@/components/shop/site-footer";
 import { BottomNav } from "@/components/shop/bottom-nav";
 
 const BARE_PATHS = [
@@ -22,7 +23,10 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   return (
     <>
       <SiteHeader />
-      <main className="flex-1 pb-16 sm:pb-0">{children}</main>
+      <main className="flex-1 pb-16 sm:pb-0">
+        {children}
+        <SiteFooter />
+      </main>
       <BottomNav />
     </>
   );

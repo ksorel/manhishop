@@ -23,6 +23,7 @@ export function SiteHeader() {
     { href: "/catalogue" as const, label: t("catalogue") },
     { href: "/panier" as const, label: t("cart") },
     { href: "/compte" as const, label: t("account") },
+    { href: "/guide-tailles" as const, label: t("sizeGuide") },
   ];
 
   return (

@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { Ruler, X } from "lucide-react";
+import { SizeGuideTable } from "@/components/shop/size-guide-table";
 import type { SizeGuide } from "@/lib/catalogue/types";
-import type { Locale } from "@/lib/catalogue/types";
 
 export function SizeGuideModal({ guide }: { guide: SizeGuide }) {
   const t = useTranslations("product");
-  const locale = useLocale() as Locale;
   const [open, setOpen] = useState(false);
 
   return (
@@ -47,35 +46,8 @@ export function SizeGuideModal({ guide }: { guide: SizeGuide }) {
               </button>
             </div>
 
-            <div className="mt-4 overflow-x-auto">
-              <table className="w-full min-w-max border-collapse text-sm">
-                <thead>
-                  <tr>
-                    {guide.content.headers.map((header, index) => (
-                      <th
-                        key={index}
-                        className="border-b border-border px-3 py-2 text-left font-medium text-foreground"
-                      >
-                        {locale === "fr" ? header.fr : header.en}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {guide.content.rows.map((row, rowIndex) => (
-                    <tr key={rowIndex}>
-                      {row.map((cell, cellIndex) => (
-                        <td
-                          key={cellIndex}
-                          className="border-b border-border px-3 py-2 text-muted-foreground"
-                        >
-                          {cell}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="mt-4">
+              <SizeGuideTable content={guide.content} />
             </div>
           </div>
         </div>
