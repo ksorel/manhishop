@@ -48,7 +48,7 @@ export async function sendOrderConfirmationEmail(order: PreparedOrder, locale: L
   try {
     const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({
-      from: "Manhishop <onboarding@resend.dev>",
+      from: "Manhishop <commandes@manhishopci.com>",
       to: order.contactEmail,
       subject: SUBJECT[locale],
       html: renderHtml(order, locale),
