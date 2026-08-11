@@ -7,6 +7,7 @@ import { ImagePlus, X } from "lucide-react";
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { flattenCategoriesWithDepth } from "@/lib/admin/category-tree";
 import {
   createProduct,
   deleteProductImage,
@@ -46,6 +47,8 @@ export function ProductForm({
   const [uploading, setUploading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const categoryOptions = useMemo(() => flattenCategoriesWithDepth(categories), [categories]);
 
   const pendingPreviews = useMemo(
     () => pendingFiles.map((file) => URL.createObjectURL(file)),
@@ -238,8 +241,9 @@ export function ProductForm({
             className={inputClass}
           >
             <option value="">{t("noCategory")}</option>
-            {categories.map((category) => (
+            {categoryOptions.map(({ category, depth }) => (
               <option key={category.id} value={category.id}>
+                {"— ".repeat(depth - 1)}
                 {category.nameFr}
               </option>
             ))}

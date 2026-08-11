@@ -50,6 +50,7 @@ export async function getCategories(locale: Locale): Promise<Category[]> {
   const { data, error } = await supabase
     .from("categories")
     .select("id, slug, name_fr, name_en, image")
+    .is("parent_id", null)
     .order("display_order", { ascending: true });
 
   if (error) throw error;

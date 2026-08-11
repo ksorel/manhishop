@@ -301,6 +301,8 @@
     "categories": {
       "title": "Catégories",
       "add": "Ajouter une catégorie",
+      "addSubcategory": "Ajouter une sous-catégorie",
+      "subcategoryOf": "Sous-catégorie de : {name}",
       "nameFr": "Nom (FR)",
       "nameEn": "Nom (EN)",
       "slug": "Slug (URL)",
@@ -310,7 +312,9 @@
       "confirmDelete": "Supprimer cette catégorie ?",
       "save": "Enregistrer",
       "cancel": "Annuler",
-      "empty": "Aucune catégorie."
+      "empty": "Aucune catégorie.",
+      "saveError": "Une erreur est survenue lors de l'enregistrement.",
+      "deleteBlockedError": "Impossible de supprimer : supprimez d'abord ses sous-catégories."
     },
     "orders": {
       "title": "Commandes",

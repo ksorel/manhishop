@@ -9,6 +9,7 @@ function toAdminCategory(row: {
   name_fr: string;
   name_en: string;
   display_order: number;
+  parent_id: string | null;
 }): AdminCategory {
   return {
     id: row.id,
@@ -16,14 +17,17 @@ function toAdminCategory(row: {
     nameFr: row.name_fr,
     nameEn: row.name_en,
     displayOrder: row.display_order,
+    parentId: row.parent_id,
   };
 }
+
+const COLUMNS = "id, slug, name_fr, name_en, display_order, parent_id";
 
 export async function getAdminCategories(): Promise<AdminCategory[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("categories")
-    .select("id, slug, name_fr, name_en, display_order")
+    .select(COLUMNS)
     .order("display_order", { ascending: true });
 
   if (error) throw error;
@@ -39,8 +43,9 @@ export async function createCategory(input: AdminCategoryInput): Promise<AdminCa
       name_fr: input.nameFr,
       name_en: input.nameEn,
       display_order: input.displayOrder,
+      parent_id: input.parentId,
     })
-    .select("id, slug, name_fr, name_en, display_order")
+    .select(COLUMNS)
     .single();
 
   if (error) throw error;
@@ -61,7 +66,7 @@ export async function updateCategory(
       display_order: input.displayOrder,
     })
     .eq("id", id)
-    .select("id, slug, name_fr, name_en, display_order")
+    .select(COLUMNS)
     .single();
 
   if (error) throw error;

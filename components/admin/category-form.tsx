@@ -10,10 +10,14 @@ const inputClass =
 
 export function CategoryForm({
   initialCategory,
+  parentId = null,
+  parentName,
   onSubmit,
   onCancel,
 }: {
   initialCategory?: AdminCategory;
+  parentId?: string | null;
+  parentName?: string;
   onSubmit: (input: AdminCategoryInput) => Promise<void>;
   onCancel?: () => void;
 }) {
@@ -25,16 +29,31 @@ export function CategoryForm({
     initialCategory?.displayOrder?.toString() ?? "0",
   );
   const [pending, setPending] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setPending(true);
-    await onSubmit({ slug, nameFr, nameEn, displayOrder: Number(displayOrder) });
-    setPending(false);
+    setFormError(null);
+    try {
+      await onSubmit({
+        slug,
+        nameFr,
+        nameEn,
+        displayOrder: Number(displayOrder),
+        parentId: initialCategory ? initialCategory.parentId : parentId,
+      });
+    } catch {
+      setFormError(t("saveError"));
+      setPending(false);
+    }
   }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      {!initialCategory && parentName && (
+        <p className="text-sm text-muted-foreground">{t("subcategoryOf", { name: parentName })}</p>
+      )}
       <label className="flex flex-col gap-1 text-sm">
         <span className="text-foreground">{t("slug")}</span>
         <input
@@ -74,6 +93,7 @@ export function CategoryForm({
           className={inputClass}
         />
       </label>
+      {formError && <p className="text-sm font-medium text-error">{formError}</p>}
       <div className="flex gap-3">
         <Button type="submit" loading={pending}>
           {t("save")}

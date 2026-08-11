@@ -301,6 +301,8 @@
     "categories": {
       "title": "Categories",
       "add": "Add a category",
+      "addSubcategory": "Add a subcategory",
+      "subcategoryOf": "Subcategory of: {name}",
       "nameFr": "Name (FR)",
       "nameEn": "Name (EN)",
       "slug": "Slug (URL)",
@@ -310,7 +312,9 @@
       "confirmDelete": "Delete this category?",
       "save": "Save",
       "cancel": "Cancel",
-      "empty": "No categories."
+      "empty": "No categories.",
+      "saveError": "Something went wrong while saving.",
+      "deleteBlockedError": "Can't delete: remove its subcategories first."
     },
     "orders": {
       "title": "Orders",

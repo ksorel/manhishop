@@ -39,6 +39,7 @@ export interface AdminCategoryInput {
   nameFr: string;
   nameEn: string;
   displayOrder: number;
+  parentId: string | null;
 }
 
 export interface AdminCategory extends AdminCategoryInput {
