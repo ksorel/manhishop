@@ -27,13 +27,13 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
+      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4">
         <Link href="/" className="flex items-center">
           <Image
             src="/logo/manhishop.jpeg"
             alt="Manhishop"
-            width={60}
-            height={60}
+            width={72}
+            height={72}
             className="rounded-full"
             priority
           />

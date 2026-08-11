@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { Card } from "@/components/ui/card";
+import { buttonVariants } from "@/components/ui/button";
 import { WishlistButton } from "@/components/shop/wishlist-button";
 import { AddToCartButton } from "@/components/shop/add-to-cart-button";
 import { formatPrice } from "@/lib/format";
@@ -56,7 +57,16 @@ export function ProductCard({ product }: { product: ProductSummary }) {
           )}
         </div>
 
-        <AddToCartButton product={product} className="mt-auto w-full" />
+        {product.hasSizes ? (
+          <Link
+            href={`/produit/${product.slug}`}
+            className={buttonVariants({ variant: "primary", className: "mt-auto w-full" })}
+          >
+            {t("chooseSize")}
+          </Link>
+        ) : (
+          <AddToCartButton product={product} className="mt-auto w-full" />
+        )}
       </div>
     </Card>
   );

@@ -49,7 +49,7 @@ export async function POST(request: Request) {
     const { data: order } = await admin
       .from("orders")
       .select(
-        "id, status, contact_email, locale, subtotal, delivery_fee, total, access_token, order_items(product_id, product_name, quantity, unit_price)",
+        "id, status, contact_email, locale, subtotal, delivery_fee, total, access_token, order_items(product_id, product_name, size_label, quantity, unit_price)",
       )
       .eq("id", reference)
       .maybeSingle();
@@ -77,6 +77,7 @@ export async function POST(request: Request) {
         lines: (order.order_items ?? []).map((item) => ({
           productId: item.product_id,
           name: item.product_name,
+          sizeLabel: item.size_label,
           unitPrice: Number(item.unit_price),
           quantity: item.quantity,
         })),

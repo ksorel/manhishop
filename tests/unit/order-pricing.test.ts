@@ -12,6 +12,7 @@ function product(overrides: Partial<ProductSummary> = {}): ProductSummary {
     stock: 10,
     image: null,
     categorySlug: null,
+    hasSizes: false,
     ...overrides,
   };
 }
@@ -21,7 +22,9 @@ describe("buildOrderLines", () => {
     const products = [product({ id: "p1", price: 1000 })];
     const lines = buildOrderLines([{ productId: "p1", quantity: 2 }], products);
 
-    expect(lines).toEqual([{ productId: "p1", name: "Produit", unitPrice: 1000, quantity: 2 }]);
+    expect(lines).toEqual([
+      { productId: "p1", name: "Produit", sizeLabel: null, unitPrice: 1000, quantity: 2 },
+    ]);
   });
 
   it("prefers the promo price when one is set", () => {
@@ -53,8 +56,8 @@ describe("buildOrderLines", () => {
 describe("computeOrderTotals", () => {
   it("adds the fixed delivery fee to the sum of the lines", () => {
     const lines = [
-      { productId: "p1", name: "A", unitPrice: 1000, quantity: 2 },
-      { productId: "p2", name: "B", unitPrice: 500, quantity: 1 },
+      { productId: "p1", name: "A", sizeLabel: null, unitPrice: 1000, quantity: 2 },
+      { productId: "p2", name: "B", sizeLabel: null, unitPrice: 500, quantity: 1 },
     ];
 
     expect(computeOrderTotals(lines)).toEqual({

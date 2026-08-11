@@ -68,7 +68,11 @@
     "outOfStock": "Rupture de stock",
     "promo": "Promo",
     "similar": "Produits similaires",
-    "notFound": "Produit introuvable."
+    "notFound": "Produit introuvable.",
+    "chooseSize": "Choisir une taille",
+    "sizeRequired": "Choisissez une taille pour ajouter au panier.",
+    "sizeGuide": "Guide des tailles",
+    "sizeGuideClose": "Fermer"
   },
   "wishlist": {
     "title": "Mes favoris",
@@ -88,6 +92,7 @@
     "title": "Panier",
     "empty": "Votre panier est vide.",
     "quantity": "Quantité",
+    "size": "Taille",
     "remove": "Retirer",
     "total": "Total",
     "checkout": "Commander"
@@ -250,6 +255,7 @@
       "dashboard": "Tableau de bord",
       "products": "Produits",
       "categories": "Catégories",
+      "sizeGuides": "Guides des tailles",
       "orders": "Commandes",
       "shipping": "Livraison",
       "content": "Contenu",
@@ -295,13 +301,24 @@
         "uploadError": "Échec de l'envoi de l'image. Réessaie.",
         "saveError": "Une erreur est survenue. Réessaie.",
         "save": "Enregistrer",
-        "cancel": "Annuler"
+        "cancel": "Annuler",
+        "sizes": "Tailles",
+        "sizesHint": "Si des tailles sont définies, le client doit en choisir une pour acheter et le stock se gère par taille (le champ Stock ci-dessus est alors ignoré).",
+        "sizeLabel": "Taille (ex. M, 42)",
+        "sizeStock": "Stock",
+        "addSize": "Ajouter une taille",
+        "removeSize": "Retirer cette taille",
+        "sizeGuide": "Guide des tailles",
+        "noSizeGuide": "Aucun",
+        "fillFromGuide": "Remplir les tailles depuis le guide"
       }
     },
     "categories": {
       "title": "Catégories",
       "add": "Ajouter une catégorie",
       "addSubcategory": "Ajouter une sous-catégorie",
+      "expand": "Déplier",
+      "collapse": "Replier",
       "subcategoryOf": "Sous-catégorie de : {name}",
       "nameFr": "Nom (FR)",
       "nameEn": "Nom (EN)",
@@ -315,6 +332,29 @@
       "empty": "Aucune catégorie.",
       "saveError": "Une erreur est survenue lors de l'enregistrement.",
       "deleteBlockedError": "Impossible de supprimer : supprimez d'abord ses sous-catégories."
+    },
+    "sizeGuides": {
+      "title": "Guides des tailles",
+      "add": "Ajouter un guide",
+      "startFromTemplate": "Partir d'un modèle",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "confirmDelete": "Supprimer ce guide des tailles ?",
+      "empty": "Aucun guide des tailles.",
+      "slug": "Slug",
+      "titleFr": "Titre (FR)",
+      "titleEn": "Titre (EN)",
+      "displayOrder": "Ordre d'affichage",
+      "table": "Tableau de correspondance",
+      "columnFr": "Colonne (FR)",
+      "columnEn": "Colonne (EN)",
+      "addColumn": "Ajouter une colonne",
+      "removeColumn": "Retirer",
+      "addRow": "Ajouter une ligne",
+      "removeRow": "Retirer cette ligne",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "saveError": "Une erreur est survenue lors de l'enregistrement."
     },
     "orders": {
       "title": "Commandes",

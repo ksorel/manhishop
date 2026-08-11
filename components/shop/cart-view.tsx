@@ -22,7 +22,7 @@ export function CartView() {
     <div className="flex flex-col gap-6">
       <ul className="flex flex-col gap-4">
         {items.map((line) => (
-          <li key={line.productId}>
+          <li key={`${line.productId}:${line.sizeId ?? ""}`}>
             <Card className="flex gap-4 p-3">
               <Link
                 href={`/produit/${line.product.slug}`}
@@ -44,6 +44,11 @@ export function CartView() {
                     className="text-sm font-medium text-foreground"
                   >
                     {line.product.name}
+                    {line.sizeLabel && (
+                      <span className="block text-xs font-normal text-muted-foreground">
+                        {t("size")} : {line.sizeLabel}
+                      </span>
+                    )}
                   </Link>
                   <span className="font-semibold text-foreground">
                     {formatPrice(
@@ -59,10 +64,10 @@ export function CartView() {
                     <input
                       type="number"
                       min={1}
-                      max={line.product.stock}
+                      max={line.sizeStock ?? line.product.stock}
                       value={line.quantity}
                       onChange={(e) =>
-                        updateQuantity(line.productId, Number(e.target.value))
+                        updateQuantity(line.productId, line.sizeId, Number(e.target.value))
                       }
                       className="min-h-11 w-16 rounded border border-border bg-background px-2 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                     />
@@ -70,7 +75,7 @@ export function CartView() {
 
                   <button
                     type="button"
-                    onClick={() => removeItem(line.productId)}
+                    onClick={() => removeItem(line.productId, line.sizeId)}
                     className="min-h-11 px-2 text-sm text-error hover:underline"
                   >
                     {t("remove")}

@@ -3,10 +3,10 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { ImagePlus, X } from "lucide-react";
+import { ImagePlus, Plus, X } from "lucide-react";
 import { useRouter } from "@/i18n/navigation";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn, slugify } from "@/lib/utils";
 import { flattenCategoriesWithDepth } from "@/lib/admin/category-tree";
 import {
   createProduct,
@@ -14,16 +14,25 @@ import {
   updateProduct,
   uploadProductImage,
 } from "@/lib/admin/products";
-import type { AdminCategory, AdminProduct, AdminProductImage, AdminProductInput } from "@/lib/admin/types";
+import type {
+  AdminCategory,
+  AdminProduct,
+  AdminProductImage,
+  AdminProductInput,
+  AdminProductSize,
+  AdminSizeGuide,
+} from "@/lib/admin/types";
 
 const inputClass =
   "min-h-11 rounded border border-border bg-background px-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary";
 
 export function ProductForm({
   categories,
+  sizeGuides,
   initialProduct,
 }: {
   categories: AdminCategory[];
+  sizeGuides: AdminSizeGuide[];
   initialProduct?: AdminProduct;
 }) {
   const t = useTranslations("admin.products.form");
@@ -38,6 +47,8 @@ export function ProductForm({
   const [price, setPrice] = useState(initialProduct?.price?.toString() ?? "");
   const [promoPrice, setPromoPrice] = useState(initialProduct?.promoPrice?.toString() ?? "");
   const [categoryId, setCategoryId] = useState(initialProduct?.categoryId ?? "");
+  const [sizeGuideId, setSizeGuideId] = useState(initialProduct?.sizeGuideId ?? "");
+  const [sizes, setSizes] = useState<AdminProductSize[]>(initialProduct?.sizes ?? []);
   const [stock, setStock] = useState(initialProduct?.stock?.toString() ?? "0");
   const [status, setStatus] = useState<"active" | "draft">(initialProduct?.status ?? "draft");
   const [featured, setFeatured] = useState(initialProduct?.featured ?? false);
@@ -49,6 +60,10 @@ export function ProductForm({
   const [uploadError, setUploadError] = useState<string | null>(null);
 
   const categoryOptions = useMemo(() => flattenCategoriesWithDepth(categories), [categories]);
+  const selectedSizeGuide = useMemo(
+    () => sizeGuides.find((guide) => guide.id === sizeGuideId) ?? null,
+    [sizeGuides, sizeGuideId],
+  );
 
   const pendingPreviews = useMemo(
     () => pendingFiles.map((file) => URL.createObjectURL(file)),
@@ -64,7 +79,7 @@ export function ProductForm({
     setFormError(null);
 
     const input: AdminProductInput = {
-      slug,
+      slug: slugify(slug),
       nameFr,
       nameEn,
       descriptionFr,
@@ -75,6 +90,10 @@ export function ProductForm({
       stock: Number(stock),
       status,
       featured,
+      sizeGuideId: sizeGuideId || null,
+      sizes: sizes
+        .filter((size) => size.label.trim() !== "")
+        .map((size) => ({ label: size.label.trim(), stock: size.stock })),
     };
 
     try {
@@ -124,6 +143,33 @@ export function ProductForm({
     } finally {
       setUploading(false);
     }
+  }
+
+  function handleFillFromGuide() {
+    if (!selectedSizeGuide) return;
+    const existingStockByLabel = new Map(sizes.map((size) => [size.label, size.stock]));
+    setSizes(
+      selectedSizeGuide.rows
+        .map((row) => row[0]?.trim())
+        .filter((label): label is string => !!label)
+        .map((label) => ({ label, stock: existingStockByLabel.get(label) ?? 0 })),
+    );
+  }
+
+  function handleAddSize() {
+    setSizes((prev) => [...prev, { label: "", stock: 0 }]);
+  }
+
+  function handleSizeLabelChange(index: number, label: string) {
+    setSizes((prev) => prev.map((size, i) => (i === index ? { ...size, label } : size)));
+  }
+
+  function handleSizeStockChange(index: number, stock: number) {
+    setSizes((prev) => prev.map((size, i) => (i === index ? { ...size, stock } : size)));
+  }
+
+  function handleRemoveSize(index: number) {
+    setSizes((prev) => prev.filter((_, i) => i !== index));
   }
 
   function handleRemovePendingFile(index: number) {
@@ -260,6 +306,81 @@ export function ProductForm({
             <option value="active">{tStatus("active")}</option>
           </select>
         </label>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <span className="text-sm font-medium text-foreground">{t("sizes")}</span>
+        <p className="text-xs text-muted-foreground">{t("sizesHint")}</p>
+
+        <label className="flex flex-col gap-1 text-sm">
+          <span className="text-foreground">{t("sizeGuide")}</span>
+          <select
+            value={sizeGuideId}
+            onChange={(e) => setSizeGuideId(e.target.value)}
+            className={inputClass}
+          >
+            <option value="">{t("noSizeGuide")}</option>
+            {sizeGuides.map((guide) => (
+              <option key={guide.id} value={guide.id}>
+                {guide.titleFr}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        {selectedSizeGuide && selectedSizeGuide.rows.length > 0 && (
+          <button
+            type="button"
+            onClick={handleFillFromGuide}
+            className="self-start text-sm text-primary hover:underline"
+          >
+            {t("fillFromGuide")}
+          </button>
+        )}
+
+        {sizes.length > 0 && (
+          <div className="mt-2 flex flex-col gap-2">
+            {sizes.map((size, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <input
+                  type="text"
+                  placeholder={t("sizeLabel")}
+                  value={size.label}
+                  onChange={(e) => handleSizeLabelChange(index, e.target.value)}
+                  className={cn(inputClass, "flex-1")}
+                />
+                <input
+                  type="number"
+                  min={0}
+                  placeholder={t("sizeStock")}
+                  value={size.stock}
+                  onChange={(e) => handleSizeStockChange(index, Number(e.target.value))}
+                  className={cn(inputClass, "w-24")}
+                />
+                <button
+                  type="button"
+                  onClick={() => handleRemoveSize(index)}
+                  aria-label={t("removeSize")}
+                  className="flex size-11 shrink-0 items-center justify-center rounded text-error hover:bg-surface"
+                >
+                  <X className="size-4" aria-hidden="true" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <button
+          type="button"
+          onClick={handleAddSize}
+          className={buttonVariants({
+            variant: "secondary",
+            className: "self-start px-3 text-xs",
+          })}
+        >
+          <Plus className="size-3.5" aria-hidden="true" />
+          {t("addSize")}
+        </button>
       </div>
 
       <label className="flex min-h-11 items-center gap-2 text-sm text-foreground">

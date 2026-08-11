@@ -16,7 +16,9 @@ function toAdminProduct(row: {
   stock: number;
   status: "active" | "draft";
   featured: boolean;
+  size_guide_id: string | null;
   product_images: { id: string; url: string; display_order: number }[] | null;
+  product_sizes: { label: string; stock: number; display_order: number }[] | null;
 }): AdminProduct {
   return {
     id: row.id,
@@ -31,11 +33,40 @@ function toAdminProduct(row: {
     stock: row.stock,
     status: row.status,
     featured: row.featured,
+    sizeGuideId: row.size_guide_id,
+    sizes: (row.product_sizes ?? [])
+      .slice()
+      .sort((a, b) => a.display_order - b.display_order)
+      .map((size) => ({ label: size.label, stock: size.stock })),
     images: (row.product_images ?? [])
       .slice()
       .sort((a, b) => a.display_order - b.display_order)
       .map((img) => ({ id: img.id, url: img.url, displayOrder: img.display_order })),
   };
+}
+
+async function replaceProductSizes(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  productId: string,
+  sizes: AdminProductInput["sizes"],
+) {
+  const { error: deleteError } = await supabase
+    .from("product_sizes")
+    .delete()
+    .eq("product_id", productId);
+  if (deleteError) throw deleteError;
+
+  if (sizes.length === 0) return;
+
+  const { error: insertError } = await supabase.from("product_sizes").insert(
+    sizes.map((size, index) => ({
+      product_id: productId,
+      label: size.label,
+      stock: size.stock,
+      display_order: index,
+    })),
+  );
+  if (insertError) throw insertError;
 }
 
 export async function getAdminProducts(): Promise<AdminProductSummary[]> {
@@ -70,7 +101,7 @@ export async function getAdminProductById(id: string): Promise<AdminProduct | nu
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id, slug, name_fr, name_en, description_fr, description_en, price, promo_price, category_id, stock, status, featured, product_images(id, url, display_order)",
+      "id, slug, name_fr, name_en, description_fr, description_en, price, promo_price, category_id, stock, status, featured, size_guide_id, product_images(id, url, display_order), product_sizes(label, stock, display_order)",
     )
     .eq("id", id)
     .maybeSingle();
@@ -96,11 +127,13 @@ export async function createProduct(input: AdminProductInput): Promise<{ id: str
       stock: input.stock,
       status: input.status,
       featured: input.featured,
+      size_guide_id: input.sizeGuideId,
     })
     .select("id")
     .single();
 
   if (error) throw error;
+  await replaceProductSizes(supabase, data.id, input.sizes);
   return { id: data.id };
 }
 
@@ -120,10 +153,12 @@ export async function updateProduct(id: string, input: AdminProductInput): Promi
       stock: input.stock,
       status: input.status,
       featured: input.featured,
+      size_guide_id: input.sizeGuideId,
     })
     .eq("id", id);
 
   if (error) throw error;
+  await replaceProductSizes(supabase, id, input.sizes);
 }
 
 export async function deleteProduct(id: string): Promise<void> {

@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { CartLine } from "@/lib/cart/types";
-import type { Locale, ProductSummary } from "@/lib/catalogue/types";
+import type { Locale, Product, ProductSummary } from "@/lib/catalogue/types";
 import {
   addCartItem,
   getProductsForGuestCart,
@@ -17,16 +17,32 @@ interface CartContextValue {
   isLoading: boolean;
   totalCount: number;
   totalPrice: number;
-  addItem: (product: ProductSummary, quantity?: number) => Promise<void>;
-  updateQuantity: (productId: string, quantity: number) => Promise<void>;
-  removeItem: (productId: string) => Promise<void>;
+  addItem: (
+    product: ProductSummary | Product,
+    quantity?: number,
+    size?: { id: string; label: string; stock: number } | null,
+  ) => Promise<void>;
+  updateQuantity: (productId: string, sizeId: string | null, quantity: number) => Promise<void>;
+  removeItem: (productId: string, sizeId: string | null) => Promise<void>;
   clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
 
 function persistGuestLines(lines: CartLine[]) {
-  writeGuestCart(lines.map((l) => ({ productId: l.productId, quantity: l.quantity })));
+  writeGuestCart(
+    lines.map((l) => ({
+      productId: l.productId,
+      sizeId: l.sizeId,
+      sizeLabel: l.sizeLabel,
+      sizeStock: l.sizeStock,
+      quantity: l.quantity,
+    })),
+  );
+}
+
+function sameLine(line: CartLine, productId: string, sizeId: string | null) {
+  return line.productId === productId && line.sizeId === sizeId;
 }
 
 export function CartProvider({
@@ -60,7 +76,14 @@ export function CartProvider({
         .map((entry) => {
           const product = products.find((p) => p.id === entry.productId);
           return product
-            ? { productId: entry.productId, quantity: entry.quantity, product }
+            ? {
+                productId: entry.productId,
+                sizeId: entry.sizeId,
+                sizeLabel: entry.sizeLabel,
+                sizeStock: entry.sizeStock,
+                quantity: entry.quantity,
+                product,
+              }
             : null;
         })
         .filter((line): line is CartLine => line !== null);
@@ -69,33 +92,41 @@ export function CartProvider({
     });
   }, [isAuthenticated, locale]);
 
-  async function addItem(product: ProductSummary, quantity = 1) {
+  async function addItem(
+    product: ProductSummary | Product,
+    quantity = 1,
+    size: { id: string; label: string; stock: number } | null = null,
+  ) {
+    const sizeId = size?.id ?? null;
+    const sizeLabel = size?.label ?? null;
+    const sizeStock = size?.stock ?? null;
+
     if (isAuthenticated) {
       setIsLoading(true);
-      setItems(await addCartItem(product.id, quantity, locale));
+      setItems(await addCartItem(product.id, sizeId, quantity, locale));
       setIsLoading(false);
       return;
     }
 
     setItems((prev) => {
-      const existing = prev.find((line) => line.productId === product.id);
+      const existing = prev.find((line) => sameLine(line, product.id, sizeId));
       const next = existing
         ? prev.map((line) =>
-            line.productId === product.id
+            sameLine(line, product.id, sizeId)
               ? { ...line, quantity: line.quantity + quantity }
               : line,
           )
-        : [...prev, { productId: product.id, quantity, product }];
+        : [...prev, { productId: product.id, sizeId, sizeLabel, sizeStock, quantity, product }];
 
       persistGuestLines(next);
       return next;
     });
   }
 
-  async function updateQuantity(productId: string, quantity: number) {
+  async function updateQuantity(productId: string, sizeId: string | null, quantity: number) {
     if (isAuthenticated) {
       setIsLoading(true);
-      setItems(await updateCartItemQuantity(productId, quantity, locale));
+      setItems(await updateCartItemQuantity(productId, sizeId, quantity, locale));
       setIsLoading(false);
       return;
     }
@@ -103,24 +134,26 @@ export function CartProvider({
     setItems((prev) => {
       const next =
         quantity <= 0
-          ? prev.filter((line) => line.productId !== productId)
-          : prev.map((line) => (line.productId === productId ? { ...line, quantity } : line));
+          ? prev.filter((line) => !sameLine(line, productId, sizeId))
+          : prev.map((line) =>
+              sameLine(line, productId, sizeId) ? { ...line, quantity } : line,
+            );
 
       persistGuestLines(next);
       return next;
     });
   }
 
-  async function removeItem(productId: string) {
+  async function removeItem(productId: string, sizeId: string | null) {
     if (isAuthenticated) {
       setIsLoading(true);
-      setItems(await removeCartItem(productId, locale));
+      setItems(await removeCartItem(productId, sizeId, locale));
       setIsLoading(false);
       return;
     }
 
     setItems((prev) => {
-      const next = prev.filter((line) => line.productId !== productId);
+      const next = prev.filter((line) => !sameLine(line, productId, sizeId));
       persistGuestLines(next);
       return next;
     });

@@ -13,8 +13,13 @@ function product(overrides: Partial<ProductSummary> = {}): ProductSummary {
     stock: 10,
     image: null,
     categorySlug: null,
+    hasSizes: false,
     ...overrides,
   };
+}
+
+function line(overrides: Partial<CartLine> & Pick<CartLine, "productId" | "quantity" | "product">): CartLine {
+  return { sizeId: null, sizeLabel: null, sizeStock: null, ...overrides };
 }
 
 describe("computeCartTotals", () => {
@@ -24,8 +29,8 @@ describe("computeCartTotals", () => {
 
   it("sums quantity and price across multiple lines", () => {
     const items: CartLine[] = [
-      { productId: "p1", quantity: 2, product: product({ id: "p1", price: 1000 }) },
-      { productId: "p2", quantity: 3, product: product({ id: "p2", price: 500 }) },
+      line({ productId: "p1", quantity: 2, product: product({ id: "p1", price: 1000 }) }),
+      line({ productId: "p2", quantity: 3, product: product({ id: "p2", price: 500 }) }),
     ];
 
     expect(computeCartTotals(items)).toEqual({ totalCount: 5, totalPrice: 3500 });
@@ -33,11 +38,11 @@ describe("computeCartTotals", () => {
 
   it("uses the promo price instead of the regular price when set", () => {
     const items: CartLine[] = [
-      {
+      line({
         productId: "p1",
         quantity: 2,
         product: product({ price: 1000, promoPrice: 700 }),
-      },
+      }),
     ];
 
     expect(computeCartTotals(items)).toEqual({ totalCount: 2, totalPrice: 1400 });

@@ -67,7 +67,11 @@ export function CheckoutView({
 
     const payload = {
       locale,
-      items: items.map((line) => ({ productId: line.productId, quantity: line.quantity })),
+      items: items.map((line) => ({
+        productId: line.productId,
+        sizeId: line.sizeId,
+        quantity: line.quantity,
+      })),
       address: reusingSelectedAddress
         ? { addressId: selectedAddressId }
         : { fullName, line1, line2: line2 || undefined, city, country, phone },

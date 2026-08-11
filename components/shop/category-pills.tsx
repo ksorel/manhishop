@@ -6,9 +6,11 @@ import type { Category } from "@/lib/catalogue/types";
 export function CategoryPills({
   categories,
   activeSlug,
+  showAllPill = true,
 }: {
   categories: Category[];
   activeSlug?: string;
+  showAllPill?: boolean;
 }) {
   const t = useTranslations("catalogue");
 
@@ -22,9 +24,11 @@ export function CategoryPills({
 
   return (
     <div className="flex gap-2 overflow-x-auto pb-2">
-      <Link href="/catalogue" className={pillClass(!activeSlug)}>
-        {t("allCategories")}
-      </Link>
+      {showAllPill && (
+        <Link href="/catalogue" className={pillClass(!activeSlug)}>
+          {t("allCategories")}
+        </Link>
+      )}
       {categories.map((category) => (
         <Link
           key={category.id}

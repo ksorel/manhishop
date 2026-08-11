@@ -68,7 +68,11 @@
     "outOfStock": "Out of stock",
     "promo": "Sale",
     "similar": "Similar products",
-    "notFound": "Product not found."
+    "notFound": "Product not found.",
+    "chooseSize": "Choose a size",
+    "sizeRequired": "Choose a size to add to cart.",
+    "sizeGuide": "Size guide",
+    "sizeGuideClose": "Close"
   },
   "wishlist": {
     "title": "My wishlist",
@@ -88,6 +92,7 @@
     "title": "Cart",
     "empty": "Your cart is empty.",
     "quantity": "Quantity",
+    "size": "Size",
     "remove": "Remove",
     "total": "Total",
     "checkout": "Checkout"
@@ -250,6 +255,7 @@
       "dashboard": "Dashboard",
       "products": "Products",
       "categories": "Categories",
+      "sizeGuides": "Size guides",
       "orders": "Orders",
       "shipping": "Shipping",
       "content": "Content",
@@ -295,13 +301,24 @@
         "uploadError": "Couldn't upload the image. Please try again.",
         "saveError": "Something went wrong. Please try again.",
         "save": "Save",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "sizes": "Sizes",
+        "sizesHint": "If sizes are set, customers must choose one to buy and stock is tracked per size (the Stock field above is then ignored).",
+        "sizeLabel": "Size (e.g. M, 42)",
+        "sizeStock": "Stock",
+        "addSize": "Add a size",
+        "removeSize": "Remove this size",
+        "sizeGuide": "Size guide",
+        "noSizeGuide": "None",
+        "fillFromGuide": "Fill sizes from the guide"
       }
     },
     "categories": {
       "title": "Categories",
       "add": "Add a category",
       "addSubcategory": "Add a subcategory",
+      "expand": "Expand",
+      "collapse": "Collapse",
       "subcategoryOf": "Subcategory of: {name}",
       "nameFr": "Name (FR)",
       "nameEn": "Name (EN)",
@@ -315,6 +332,29 @@
       "empty": "No categories.",
       "saveError": "Something went wrong while saving.",
       "deleteBlockedError": "Can't delete: remove its subcategories first."
+    },
+    "sizeGuides": {
+      "title": "Size guides",
+      "add": "Add a guide",
+      "startFromTemplate": "Start from a template",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Delete this size guide?",
+      "empty": "No size guides.",
+      "slug": "Slug",
+      "titleFr": "Title (FR)",
+      "titleEn": "Title (EN)",
+      "displayOrder": "Display order",
+      "table": "Size chart",
+      "columnFr": "Column (FR)",
+      "columnEn": "Column (EN)",
+      "addColumn": "Add a column",
+      "removeColumn": "Remove",
+      "addRow": "Add a row",
+      "removeRow": "Remove this row",
+      "save": "Save",
+      "cancel": "Cancel",
+      "saveError": "Something went wrong while saving."
     },
     "orders": {
       "title": "Orders",

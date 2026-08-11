@@ -15,6 +15,7 @@ export type CheckoutAddressInput = SavedAddressInput | NewAddressInput;
 
 export interface CheckoutItemInput {
   productId: string;
+  sizeId?: string | null;
   quantity: number;
 }
 
@@ -28,6 +29,7 @@ export interface CheckoutInput {
 export interface PreparedOrderLine {
   productId: string;
   name: string;
+  sizeLabel: string | null;
   unitPrice: number;
   quantity: number;
 }

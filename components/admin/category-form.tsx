@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { slugify } from "@/lib/utils";
 import type { AdminCategory, AdminCategoryInput } from "@/lib/admin/types";
 
 const inputClass =
@@ -37,7 +38,7 @@ export function CategoryForm({
     setFormError(null);
     try {
       await onSubmit({
-        slug,
+        slug: slugify(slug),
         nameFr,
         nameEn,
         displayOrder: Number(displayOrder),

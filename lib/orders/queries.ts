@@ -22,13 +22,13 @@ export interface OrderDetail extends OrderSummary {
     country: string;
     phone: string;
   } | null;
-  items: { productName: string; quantity: number; unitPrice: number }[];
+  items: { productName: string; sizeLabel: string | null; quantity: number; unitPrice: number }[];
 }
 
 const ORDER_DETAIL_COLUMNS = `
   id, status, subtotal, delivery_fee, total, contact_email, contact_phone, created_at,
   addresses (full_name, line1, line2, city, country, phone),
-  order_items (product_name, quantity, unit_price)
+  order_items (product_name, size_label, quantity, unit_price)
 `;
 
 export async function getMyOrders(): Promise<OrderSummary[] | null> {
@@ -87,6 +87,7 @@ export async function getMyOrderById(orderId: string): Promise<OrderDetail | nul
       : null,
     items: (data.order_items ?? []).map((item) => ({
       productName: item.product_name,
+      sizeLabel: item.size_label,
       quantity: item.quantity,
       unitPrice: Number(item.unit_price),
     })),

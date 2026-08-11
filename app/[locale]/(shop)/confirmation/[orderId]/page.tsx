@@ -10,7 +10,8 @@ import type { Locale } from "@/lib/catalogue/types";
 
 export const dynamic = "force-dynamic";
 
-const ORDER_COLUMNS = "id, status, total, order_items(product_name, quantity, unit_price)";
+const ORDER_COLUMNS =
+  "id, status, total, order_items(product_name, size_label, quantity, unit_price)";
 
 export default async function ConfirmationPage({
   params,
@@ -67,7 +68,8 @@ export default async function ConfirmationPage({
         {(order.order_items ?? []).map((item, index) => (
           <div key={index} className="flex justify-between">
             <span className="text-foreground">
-              {item.product_name} × {item.quantity}
+              {item.product_name}
+              {item.size_label && ` (${item.size_label})`} × {item.quantity}
             </span>
             <span className="text-muted-foreground">
               {formatPrice(Number(item.unit_price) * item.quantity, locale as Locale)}

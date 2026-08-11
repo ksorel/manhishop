@@ -30,7 +30,7 @@ async function buildCartLines(cartId: string, locale: Locale): Promise<CartLine[
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("cart_items")
-    .select("product_id, quantity")
+    .select("product_id, size_id, quantity, product_sizes(label, stock)")
     .eq("cart_id", cartId);
 
   if (error) throw error;
@@ -44,9 +44,16 @@ async function buildCartLines(cartId: string, locale: Locale): Promise<CartLine[
   return data
     .map((row) => {
       const product = products.find((p) => p.id === row.product_id);
-      return product
-        ? { productId: row.product_id, quantity: row.quantity, product }
-        : null;
+      if (!product) return null;
+      const size = Array.isArray(row.product_sizes) ? row.product_sizes[0] : row.product_sizes;
+      return {
+        productId: row.product_id,
+        sizeId: row.size_id,
+        sizeLabel: size?.label ?? null,
+        sizeStock: size?.stock ?? null,
+        quantity: row.quantity,
+        product,
+      };
     })
     .filter((line): line is CartLine => line !== null);
 }
@@ -76,6 +83,7 @@ export async function getCartItems(locale: Locale): Promise<CartLine[] | null> {
 
 export async function addCartItem(
   productId: string,
+  sizeId: string | null,
   quantity: number,
   locale: Locale,
 ): Promise<CartLine[]> {
@@ -87,23 +95,26 @@ export async function addCartItem(
 
   const cartId = await getOrCreateCartId(user.id);
 
-  const { data: existing } = await supabase
+  const existingQuery = supabase
     .from("cart_items")
     .select("quantity")
     .eq("cart_id", cartId)
-    .eq("product_id", productId)
-    .maybeSingle();
+    .eq("product_id", productId);
+  const { data: existing } = await (
+    sizeId === null ? existingQuery.is("size_id", null) : existingQuery.eq("size_id", sizeId)
+  ).maybeSingle();
 
   if (existing) {
-    await supabase
+    const updateQuery = supabase
       .from("cart_items")
       .update({ quantity: existing.quantity + quantity })
       .eq("cart_id", cartId)
       .eq("product_id", productId);
+    await (sizeId === null ? updateQuery.is("size_id", null) : updateQuery.eq("size_id", sizeId));
   } else {
     await supabase
       .from("cart_items")
-      .insert({ cart_id: cartId, product_id: productId, quantity });
+      .insert({ cart_id: cartId, product_id: productId, size_id: sizeId, quantity });
   }
 
   return buildCartLines(cartId, locale);
@@ -111,6 +122,7 @@ export async function addCartItem(
 
 export async function updateCartItemQuantity(
   productId: string,
+  sizeId: string | null,
   quantity: number,
   locale: Locale,
 ): Promise<CartLine[]> {
@@ -123,17 +135,19 @@ export async function updateCartItemQuantity(
   const cartId = await getOrCreateCartId(user.id);
 
   if (quantity <= 0) {
-    await supabase
+    const deleteQuery = supabase
       .from("cart_items")
       .delete()
       .eq("cart_id", cartId)
       .eq("product_id", productId);
+    await (sizeId === null ? deleteQuery.is("size_id", null) : deleteQuery.eq("size_id", sizeId));
   } else {
-    await supabase
+    const updateQuery = supabase
       .from("cart_items")
       .update({ quantity })
       .eq("cart_id", cartId)
       .eq("product_id", productId);
+    await (sizeId === null ? updateQuery.is("size_id", null) : updateQuery.eq("size_id", sizeId));
   }
 
   return buildCartLines(cartId, locale);
@@ -141,9 +155,10 @@ export async function updateCartItemQuantity(
 
 export async function removeCartItem(
   productId: string,
+  sizeId: string | null,
   locale: Locale,
 ): Promise<CartLine[]> {
-  return updateCartItemQuantity(productId, 0, locale);
+  return updateCartItemQuantity(productId, sizeId, 0, locale);
 }
 
 export async function mergeGuestCart(
@@ -161,26 +176,34 @@ export async function mergeGuestCart(
 
   const { data: existingRows } = await supabase
     .from("cart_items")
-    .select("product_id, quantity")
+    .select("product_id, size_id, quantity")
     .eq("cart_id", cartId);
 
+  const key = (productId: string, sizeId: string | null) => `${productId}:${sizeId ?? ""}`;
   const existingMap = new Map(
-    (existingRows ?? []).map((row) => [row.product_id, row.quantity]),
+    (existingRows ?? []).map((row) => [key(row.product_id, row.size_id), row.quantity]),
   );
 
   for (const entry of entries) {
-    const nextQuantity = (existingMap.get(entry.productId) ?? 0) + entry.quantity;
+    const entryKey = key(entry.productId, entry.sizeId);
+    const nextQuantity = (existingMap.get(entryKey) ?? 0) + entry.quantity;
 
-    if (existingMap.has(entry.productId)) {
-      await supabase
+    if (existingMap.has(entryKey)) {
+      const updateQuery = supabase
         .from("cart_items")
         .update({ quantity: nextQuantity })
         .eq("cart_id", cartId)
         .eq("product_id", entry.productId);
+      await (entry.sizeId === null
+        ? updateQuery.is("size_id", null)
+        : updateQuery.eq("size_id", entry.sizeId));
     } else {
-      await supabase
-        .from("cart_items")
-        .insert({ cart_id: cartId, product_id: entry.productId, quantity: entry.quantity });
+      await supabase.from("cart_items").insert({
+        cart_id: cartId,
+        product_id: entry.productId,
+        size_id: entry.sizeId,
+        quantity: entry.quantity,
+      });
     }
   }
 

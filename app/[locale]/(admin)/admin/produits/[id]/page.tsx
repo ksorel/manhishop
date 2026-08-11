@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { getAdminCategories } from "@/lib/admin/categories";
 import { getAdminProductById } from "@/lib/admin/products";
+import { getAdminSizeGuides } from "@/lib/admin/size-guides";
 import { ProductForm } from "@/components/admin/product-form";
 import { DeleteProductButton } from "@/components/admin/delete-product-button";
 
@@ -13,8 +14,9 @@ export default async function EditProductPage({
   const { locale, id } = await params;
   setRequestLocale(locale);
 
-  const [categories, product] = await Promise.all([
+  const [categories, sizeGuides, product] = await Promise.all([
     getAdminCategories(),
+    getAdminSizeGuides(),
     getAdminProductById(id),
   ]);
 
@@ -27,7 +29,7 @@ export default async function EditProductPage({
         <DeleteProductButton productId={product.id} />
       </div>
       <div className="mt-6">
-        <ProductForm categories={categories} initialProduct={product} />
+        <ProductForm categories={categories} sizeGuides={sizeGuides} initialProduct={product} />
       </div>
     </div>
   );

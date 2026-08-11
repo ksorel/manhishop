@@ -10,10 +10,10 @@ const SUBJECT: Record<Locale, string> = {
 
 function renderHtml(order: PreparedOrder, locale: Locale) {
   const rows = order.lines
-    .map(
-      (line) =>
-        `<tr><td>${line.name} × ${line.quantity}</td><td style="text-align:right">${formatPrice(line.unitPrice * line.quantity, locale)}</td></tr>`,
-    )
+    .map((line) => {
+      const label = line.sizeLabel ? `${line.name} (${line.sizeLabel})` : line.name;
+      return `<tr><td>${label} × ${line.quantity}</td><td style="text-align:right">${formatPrice(line.unitPrice * line.quantity, locale)}</td></tr>`;
+    })
     .join("");
 
   const deliveryLabel = locale === "fr" ? "Livraison" : "Delivery";

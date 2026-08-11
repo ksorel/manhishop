@@ -5,7 +5,7 @@ import { getProductBySlug, getSimilarProducts } from "@/lib/catalogue/queries";
 import { getWishlistProductIds } from "@/lib/wishlist/actions";
 import { ProductGallery } from "@/components/shop/product-gallery";
 import { ProductGrid } from "@/components/shop/product-grid";
-import { AddToCartButton } from "@/components/shop/add-to-cart-button";
+import { ProductPurchasePanel } from "@/components/shop/product-purchase-panel";
 import { WishlistButton } from "@/components/shop/wishlist-button";
 import { formatPrice } from "@/lib/format";
 import type { Locale } from "@/lib/catalogue/types";
@@ -107,7 +107,7 @@ export default async function ProductPage({
             {product.description}
           </p>
 
-          <AddToCartButton product={product} className="mt-6 w-full sm:w-auto" />
+          <ProductPurchasePanel product={product} />
         </div>
       </div>
 

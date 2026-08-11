@@ -5,6 +5,7 @@ export interface Category {
   slug: string;
   name: string;
   image: string | null;
+  parentId: string | null;
 }
 
 export interface ProductSummary {
@@ -16,11 +17,31 @@ export interface ProductSummary {
   stock: number;
   image: string | null;
   categorySlug: string | null;
+  hasSizes: boolean;
+}
+
+export interface ProductSize {
+  id: string;
+  label: string;
+  stock: number;
+}
+
+export interface SizeGuideContent {
+  headers: { fr: string; en: string }[];
+  rows: string[][];
+}
+
+export interface SizeGuide {
+  id: string;
+  title: string;
+  content: SizeGuideContent;
 }
 
 export interface Product extends ProductSummary {
   description: string;
   images: string[];
+  sizes: ProductSize[];
+  sizeGuide: SizeGuide | null;
 }
 
 export type SortOption = "newest" | "price-asc" | "price-desc";

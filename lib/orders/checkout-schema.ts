@@ -19,6 +19,7 @@ export const checkoutSchema = z.object({
     .array(
       z.object({
         productId: z.string().uuid(),
+        sizeId: z.string().uuid().nullable().optional(),
         quantity: z.number().int().positive(),
       }),
     )

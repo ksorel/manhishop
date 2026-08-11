@@ -44,7 +44,8 @@ export default async function AdminOrderDetailPage({
         {order.items.map((item, index) => (
           <div key={index} className="flex justify-between text-sm">
             <span className="text-foreground">
-              {item.productName} × {item.quantity}
+              {item.productName}
+              {item.sizeLabel && ` (${item.sizeLabel})`} × {item.quantity}
             </span>
             <span className="text-muted-foreground">
               {formatPrice(item.unitPrice * item.quantity, locale as Locale)}

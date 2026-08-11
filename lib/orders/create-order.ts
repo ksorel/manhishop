@@ -4,7 +4,7 @@ import { resolveShippingFee } from "@/lib/shipping/pricing";
 import type { ShippingRate } from "@/lib/shipping/types";
 import type { Locale } from "@/lib/catalogue/types";
 import type { CheckoutInput, PreparedOrder } from "./types";
-import { buildOrderLines, computeOrderTotals } from "./pricing";
+import { buildOrderLines, computeOrderTotals, type OrderSizeInfo } from "./pricing";
 
 /**
  * Crée une commande en statut `pending` avec le total recalculé côté
@@ -28,10 +28,27 @@ export async function createPendingOrder(
     locale,
   );
 
-  const lines = buildOrderLines(input.items, products);
-  if (lines.length === 0) throw new Error("empty_cart");
-
   const admin = createAdminClient();
+
+  const sizeIds = input.items
+    .map((item) => item.sizeId)
+    .filter((id): id is string => !!id);
+
+  const sizesById = new Map<string, OrderSizeInfo>();
+  if (sizeIds.length > 0) {
+    const { data: sizeRows, error: sizesError } = await admin
+      .from("product_sizes")
+      .select("id, product_id, label, stock")
+      .in("id", sizeIds);
+
+    if (sizesError) throw sizesError;
+    for (const row of sizeRows ?? []) {
+      sizesById.set(row.id, { productId: row.product_id, label: row.label, stock: row.stock });
+    }
+  }
+
+  const lines = buildOrderLines(input.items, products, sizesById);
+  if (lines.length === 0) throw new Error("empty_cart");
 
   let shippingAddressId: string;
   let country: string;
@@ -114,6 +131,7 @@ export async function createPendingOrder(
       order_id: order.id,
       product_id: line.productId,
       product_name: line.name,
+      size_label: line.sizeLabel,
       quantity: line.quantity,
       unit_price: line.unitPrice,
     })),

@@ -1,3 +1,8 @@
+export interface AdminProductSize {
+  label: string;
+  stock: number;
+}
+
 export interface AdminProductInput {
   slug: string;
   nameFr: string;
@@ -10,6 +15,8 @@ export interface AdminProductInput {
   stock: number;
   status: "active" | "draft";
   featured: boolean;
+  sizeGuideId: string | null;
+  sizes: AdminProductSize[];
 }
 
 export interface AdminProductImage {
@@ -43,5 +50,23 @@ export interface AdminCategoryInput {
 }
 
 export interface AdminCategory extends AdminCategoryInput {
+  id: string;
+}
+
+export interface SizeGuideHeader {
+  fr: string;
+  en: string;
+}
+
+export interface AdminSizeGuideInput {
+  slug: string;
+  titleFr: string;
+  titleEn: string;
+  displayOrder: number;
+  headers: SizeGuideHeader[];
+  rows: string[][];
+}
+
+export interface AdminSizeGuide extends AdminSizeGuideInput {
   id: string;
 }

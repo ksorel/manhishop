@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { getDescendantCategoryIds } from "./category-tree";
 import type {
   CatalogueFilters,
   Category,
@@ -8,7 +9,7 @@ import type {
 } from "./types";
 
 const PRODUCT_SUMMARY_COLUMNS =
-  "id, slug, name_fr, name_en, price, promo_price, stock, category:categories(slug), product_images(url, display_order)";
+  "id, slug, name_fr, name_en, price, promo_price, stock, category:categories(slug), product_images(url, display_order), product_sizes(id)";
 
 type ProductSummaryRow = {
   id: string;
@@ -20,6 +21,7 @@ type ProductSummaryRow = {
   stock: number;
   category: { slug: string } | { slug: string }[] | null;
   product_images: { url: string; display_order: number }[] | null;
+  product_sizes: { id: string }[] | null;
 };
 
 function firstImage(images: ProductSummaryRow["product_images"]) {
@@ -42,6 +44,20 @@ function toProductSummary(row: ProductSummaryRow, locale: Locale): ProductSummar
     stock: row.stock,
     image: firstImage(row.product_images),
     categorySlug: categorySlugOf(row.category),
+    hasSizes: (row.product_sizes ?? []).length > 0,
+  };
+}
+
+function toCategory(
+  row: { id: string; slug: string; name_fr: string; name_en: string; image: string | null; parent_id: string | null },
+  locale: Locale,
+): Category {
+  return {
+    id: row.id,
+    slug: row.slug,
+    name: locale === "fr" ? row.name_fr : row.name_en,
+    image: row.image,
+    parentId: row.parent_id,
   };
 }
 
@@ -49,18 +65,26 @@ export async function getCategories(locale: Locale): Promise<Category[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("categories")
-    .select("id, slug, name_fr, name_en, image")
+    .select("id, slug, name_fr, name_en, image, parent_id")
     .is("parent_id", null)
     .order("display_order", { ascending: true });
 
   if (error) throw error;
+  return (data ?? []).map((row) => toCategory(row, locale));
+}
 
-  return (data ?? []).map((row) => ({
-    id: row.id,
-    slug: row.slug,
-    name: locale === "fr" ? row.name_fr : row.name_en,
-    image: row.image,
-  }));
+/** Toutes les catégories (racines et sous-catégories), utilisé pour
+ * dériver la navigation en sous-catégories et le fil d'Ariane sur une
+ * page catégorie. */
+export async function getAllCategories(locale: Locale): Promise<Category[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("categories")
+    .select("id, slug, name_fr, name_en, image, parent_id")
+    .order("display_order", { ascending: true });
+
+  if (error) throw error;
+  return (data ?? []).map((row) => toCategory(row, locale));
 }
 
 export async function getCategoryBySlug(
@@ -70,19 +94,13 @@ export async function getCategoryBySlug(
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("categories")
-    .select("id, slug, name_fr, name_en, image")
+    .select("id, slug, name_fr, name_en, image, parent_id")
     .eq("slug", slug)
     .maybeSingle();
 
   if (error) throw error;
   if (!data) return null;
-
-  return {
-    id: data.id,
-    slug: data.slug,
-    name: locale === "fr" ? data.name_fr : data.name_en,
-    image: data.image,
-  };
+  return toCategory(data, locale);
 }
 
 export async function getProducts(
@@ -103,7 +121,17 @@ export async function getProducts(
       .maybeSingle();
 
     if (!category) return [];
-    query = query.eq("category_id", category.id);
+
+    const { data: allCategories, error: allCategoriesError } = await supabase
+      .from("categories")
+      .select("id, parent_id");
+    if (allCategoriesError) throw allCategoriesError;
+
+    const categoryIds = getDescendantCategoryIds(
+      (allCategories ?? []).map((row) => ({ id: row.id, parentId: row.parent_id })),
+      category.id,
+    );
+    query = query.in("category_id", categoryIds);
   }
 
   if (filters.minPrice !== undefined) query = query.gte("price", filters.minPrice);
@@ -189,7 +217,7 @@ export async function getProductBySlug(
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id, slug, name_fr, name_en, description_fr, description_en, price, promo_price, stock, category:categories(slug), product_images(url, display_order)",
+      "id, slug, name_fr, name_en, description_fr, description_en, price, promo_price, stock, category:categories(slug), product_images(url, display_order), product_sizes(id, label, stock, display_order), size_guide:size_guides(id, title_fr, title_en, content)",
     )
     .eq("slug", slug)
     .eq("status", "active")
@@ -202,6 +230,13 @@ export async function getProductBySlug(
     .slice()
     .sort((a, b) => a.display_order - b.display_order)
     .map((img) => img.url);
+
+  const sizes = (data.product_sizes ?? [])
+    .slice()
+    .sort((a, b) => a.display_order - b.display_order)
+    .map((size) => ({ id: size.id, label: size.label, stock: size.stock }));
+
+  const sizeGuideRow = Array.isArray(data.size_guide) ? data.size_guide[0] : data.size_guide;
 
   return {
     id: data.id,
@@ -216,6 +251,15 @@ export async function getProductBySlug(
     categorySlug: categorySlugOf(
       data.category as ProductSummaryRow["category"],
     ),
+    hasSizes: sizes.length > 0,
+    sizes,
+    sizeGuide: sizeGuideRow
+      ? {
+          id: sizeGuideRow.id,
+          title: locale === "fr" ? sizeGuideRow.title_fr : sizeGuideRow.title_en,
+          content: sizeGuideRow.content,
+        }
+      : null,
   };
 }
 
