@@ -10,18 +10,55 @@ import type { FooterContent } from "@/lib/content/types";
 const SOCIAL_ICONS = {
   instagram: { Icon: FaInstagram, colorClass: "text-[#E4405F]" },
   facebook: { Icon: FaFacebook, colorClass: "text-[#1877F2]" },
-  tiktok: { Icon: FaTiktok, colorClass: "text-[#000000] dark:text-white" },
+  // Un seul ton (plutôt qu'un bascule noir/blanc par thème) pour garantir
+  // un contraste correct sur fond clair ET sombre sans dépendre du thème.
+  tiktok: { Icon: FaTiktok, colorClass: "text-[#FE2C55]" },
   whatsapp: { Icon: FaWhatsapp, colorClass: "text-[#25D366]" },
 } as const;
 
-/** react-icons/lucide n'ont pas de marque Mastercard bicolore (juste des
- * pictos monochromes en currentColor) — les deux disques rouge/orange
- * officiels sont donc dessinés à la main ici. */
+/** Aucune librairie d'icônes gratuite ne couvre Mastercard (bicolore),
+ * MTN Mobile Money ou Wave (marques ouest-africaines) — reproduits ici
+ * à la main à partir de leurs couleurs de marque officielles. */
 function MastercardMark({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 32 20" className={className} aria-hidden="true">
       <circle cx="12" cy="10" r="10" fill="#EB001B" />
       <circle cx="20" cy="10" r="10" fill="#F79E1B" fillOpacity="0.85" />
+    </svg>
+  );
+}
+
+function MtnMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <circle cx="12" cy="12" r="12" fill="#FFCC00" />
+      <text
+        x="12"
+        y="15.5"
+        textAnchor="middle"
+        fontSize="9"
+        fontWeight="700"
+        fontFamily="sans-serif"
+        fill="#000000"
+      >
+        MTN
+      </text>
+    </svg>
+  );
+}
+
+function WaveMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <circle cx="12" cy="12" r="12" fill="#1DC8F2" />
+      <path
+        d="M5 13c1.2-2.5 2.4-2.5 3.6 0s2.4 2.5 3.6 0 2.4-2.5 3.6 0 2.4 2.5 3.6 0"
+        stroke="#ffffff"
+        strokeWidth="1.6"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -52,8 +89,14 @@ export function SiteFooter({ content }: { content: FooterContent }) {
           <SiOrange className="size-4 text-[#FF7900]" aria-hidden="true" />
           Orange Money
         </span>
-        <span>MTN Mobile Money</span>
-        <span>Wave</span>
+        <span className="inline-flex items-center gap-1.5">
+          <MtnMark className="size-5" />
+          MTN Mobile Money
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <WaveMark className="size-5" />
+          Wave
+        </span>
       </div>
 
       <nav aria-label={tFooter("linksLabel")} className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
