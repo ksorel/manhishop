@@ -1,9 +1,18 @@
 import { defineConfig, devices } from "@playwright/test";
 
+try {
+  // Absent en CI : les variables y sont injectées directement dans
+  // l'environnement (voir .github/workflows/ci.yml).
+  process.loadEnvFile(".env.local");
+} catch {
+  // .env.local introuvable — normal en CI.
+}
+
 export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: true,
   retries: process.env.CI ? 2 : 0,
+  globalSetup: "./tests/e2e/global-setup.ts",
   webServer: {
     command: "npm run dev",
     url: "http://localhost:3000",

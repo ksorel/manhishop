@@ -15,6 +15,10 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseHostname = supabaseUrl ? new URL(supabaseUrl).hostname : undefined;
 
 const nextConfig: NextConfig = {
+  // Le badge de statut du mode dev (coin de l'écran) intercepte les
+  // clics Playwright sur petit viewport (mobile-chrome) — désactivé,
+  // purement cosmétique et sans effet en production.
+  devIndicators: false,
   images: {
     remotePatterns: supabaseHostname
       ? [{ protocol: "https", hostname: supabaseHostname, pathname: "/storage/v1/object/public/**" }]

@@ -76,3 +76,32 @@ values
 
 insert into public.product_images (product_id, url, display_order)
 select id, '/img/placeholder-product.svg', 0 from public.products;
+
+-- Tailles de démonstration sur la robe exemple + guide des tailles
+-- associé : donne un produit avec sélection de taille obligatoire pour
+-- tester ce flux en local (tests e2e, recette manuelle). Sur la robe et
+-- non le T-shirt exemple, pour ne pas changer le comportement du
+-- T-shirt utilisé par un autre test e2e (purchase-flow.spec.ts) qui ne
+-- s'attend pas à une sélection de taille obligatoire. Idempotent :
+-- réexécutable sans erreur ni doublon.
+
+insert into public.size_guides (slug, title_fr, title_en, display_order, content)
+values (
+  'demo-vetements',
+  'Guide des tailles — Vêtements (démo)',
+  'Size guide — Clothing (demo)',
+  0,
+  '{"headers":[{"fr":"Taille","en":"Size"},{"fr":"Tour de poitrine (cm)","en":"Chest (cm)"}],"rows":[["S","82-85"],["M","86-90"],["L","91-95"]]}'::jsonb
+)
+on conflict (slug) do nothing;
+
+update public.products
+set size_guide_id = (select id from public.size_guides where slug = 'demo-vetements')
+where slug = 'exemple-robe-ete';
+
+insert into public.product_sizes (product_id, label, stock, display_order)
+select products.id, sizes.label, sizes.stock, sizes.display_order
+from public.products
+cross join (values ('S', 8, 0), ('M', 12, 1), ('L', 5, 2)) as sizes(label, stock, display_order)
+where products.slug = 'exemple-robe-ete'
+on conflict (product_id, label) do nothing;

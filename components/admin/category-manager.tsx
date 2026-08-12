@@ -158,7 +158,10 @@ function CategoryNode({
           />
         </Card>
       ) : (
-        <Card className="flex flex-col gap-3 p-4 text-sm">
+        <Card
+          className="flex flex-col gap-3 p-4 text-sm"
+          data-testid={`category-card-${node.id}`}
+        >
           <div className="flex items-center justify-between gap-3">
             <div className="flex min-w-0 items-center gap-1.5">
               {hasChildren ? (
