@@ -1,7 +1,9 @@
+import { Download } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getAdminOrders } from "@/lib/admin/orders";
 import { Link } from "@/i18n/navigation";
 import { Card } from "@/components/ui/card";
+import { buttonVariants } from "@/components/ui/button";
 import { OrderStatusBadge } from "@/components/account/order-status-badge";
 import { formatPrice } from "@/lib/format";
 import type { Locale } from "@/lib/catalogue/types";
@@ -19,7 +21,18 @@ export default async function AdminOrdersPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-foreground">{t("title")}</h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-2xl font-semibold text-foreground">{t("title")}</h1>
+        {orders.length > 0 && (
+          <a
+            href={`/api/admin/orders/export?locale=${locale}`}
+            className={buttonVariants({ variant: "secondary", className: "gap-1.5" })}
+          >
+            <Download className="size-4" aria-hidden="true" />
+            {t("exportCsv")}
+          </a>
+        )}
+      </div>
 
       {orders.length === 0 ? (
         <Card className="mt-6 p-6 text-muted-foreground">{t("empty")}</Card>

@@ -378,7 +378,23 @@
       "backToList": "Back to orders",
       "empty": "No orders.",
       "updateStatus": "Update status",
-      "statusUpdated": "Status updated."
+      "statusUpdated": "Status updated.",
+      "exportCsv": "Export as CSV"
+    },
+    "ordersExport": {
+      "orderId": "Order number",
+      "date": "Date",
+      "status": "Status",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "subtotal": "Subtotal",
+      "deliveryFee": "Delivery",
+      "total": "Total",
+      "paymentMethod": "Payment method",
+      "items": "Items",
+      "paymentCard": "Card",
+      "paymentMobileMoney": "Mobile Money"
     },
     "shipping": {
       "title": "Shipping",

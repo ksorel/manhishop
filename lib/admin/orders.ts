@@ -76,6 +76,72 @@ export async function getAdminOrderById(orderId: string): Promise<OrderDetail | 
   };
 }
 
+export interface AdminOrderExportRow {
+  id: string;
+  status: OrderStatus;
+  createdAt: string;
+  contactEmail: string;
+  contactPhone: string;
+  subtotal: number;
+  deliveryFee: number;
+  total: number;
+  paymentMethod: string | null;
+  address: {
+    fullName: string;
+    line1: string;
+    line2: string | null;
+    city: string;
+    country: string;
+  } | null;
+  items: { productName: string; sizeLabel: string | null; quantity: number; unitPrice: number }[];
+}
+
+const ORDER_EXPORT_COLUMNS = `
+  id, status, created_at, contact_email, contact_phone, subtotal, delivery_fee, total, payment_method,
+  addresses (full_name, line1, line2, city, country),
+  order_items (product_name, size_label, quantity, unit_price)
+`;
+
+export async function getAdminOrdersForExport(): Promise<AdminOrderExportRow[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("orders")
+    .select(ORDER_EXPORT_COLUMNS)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+
+  return (data ?? []).map((row) => {
+    const address = Array.isArray(row.addresses) ? row.addresses[0] : row.addresses;
+    return {
+      id: row.id,
+      status: row.status as OrderStatus,
+      createdAt: row.created_at,
+      contactEmail: row.contact_email,
+      contactPhone: row.contact_phone,
+      subtotal: Number(row.subtotal),
+      deliveryFee: Number(row.delivery_fee),
+      total: Number(row.total),
+      paymentMethod: row.payment_method,
+      address: address
+        ? {
+            fullName: address.full_name,
+            line1: address.line1,
+            line2: address.line2,
+            city: address.city,
+            country: address.country,
+          }
+        : null,
+      items: (row.order_items ?? []).map((item) => ({
+        productName: item.product_name,
+        sizeLabel: item.size_label,
+        quantity: item.quantity,
+        unitPrice: Number(item.unit_price),
+      })),
+    };
+  });
+}
+
 const UPDATABLE_STATUSES: OrderStatus[] = ["shipped", "delivered", "cancelled"];
 
 export async function updateOrderStatus(orderId: string, status: OrderStatus): Promise<void> {

@@ -378,7 +378,23 @@
       "backToList": "Retour aux commandes",
       "empty": "Aucune commande.",
       "updateStatus": "Changer le statut",
-      "statusUpdated": "Statut mis à jour."
+      "statusUpdated": "Statut mis à jour.",
+      "exportCsv": "Exporter en CSV"
+    },
+    "ordersExport": {
+      "orderId": "Numéro de commande",
+      "date": "Date",
+      "status": "Statut",
+      "email": "Email",
+      "phone": "Téléphone",
+      "address": "Adresse",
+      "subtotal": "Sous-total",
+      "deliveryFee": "Livraison",
+      "total": "Total",
+      "paymentMethod": "Moyen de paiement",
+      "items": "Articles",
+      "paymentCard": "Carte bancaire",
+      "paymentMobileMoney": "Mobile Money"
     },
     "shipping": {
       "title": "Livraison",
