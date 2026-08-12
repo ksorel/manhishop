@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Mail, Phone } from "lucide-react";
-import { FaCcVisa, FaFacebook, FaInstagram, FaTiktok, FaWhatsapp } from "react-icons/fa6";
+import { FaFacebook, FaInstagram, FaTiktok, FaWhatsapp } from "react-icons/fa6";
 import { Link } from "@/i18n/navigation";
 import type { FooterContent } from "@/lib/content/types";
 
@@ -16,20 +16,9 @@ const SOCIAL_ICONS = {
   whatsapp: { Icon: FaWhatsapp, colorClass: "text-[#25D366]" },
 } as const;
 
-/** Aucune librairie d'icônes gratuite ne couvre Mastercard (bicolore) —
- * reproduit ici à la main à partir des couleurs de marque officielles.
- * MTN Mobile Money, Orange Money et Wave utilisent les vrais fichiers
- * logo fournis par le client (public/logo/payments/). */
-function MastercardMark({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 32 20" className={className} aria-hidden="true">
-      <circle cx="12" cy="10" r="10" fill="#EB001B" />
-      <circle cx="20" cy="10" r="10" fill="#F79E1B" fillOpacity="0.85" />
-    </svg>
-  );
-}
-
-const IMAGE_PAYMENT_BADGES = [
+const PAYMENT_BADGES = [
+  { src: "/logo/payments/visa.png", alt: "Visa", width: 154, height: 148 },
+  { src: "/logo/payments/mastercard.png", alt: "Mastercard", width: 149, height: 148 },
   { src: "/logo/payments/mtn-momo.png", alt: "MTN MoMo", width: 270, height: 148 },
   { src: "/logo/payments/orange-money.png", alt: "Orange Money", width: 148, height: 148 },
   { src: "/logo/payments/wave.png", alt: "Wave", width: 264, height: 148 },
@@ -49,15 +38,7 @@ export function SiteFooter({ content }: { content: FooterContent }) {
   return (
     <footer className="mt-12 flex flex-col items-center gap-5 border-t border-border bg-black/[0.05] px-4 py-8 text-center text-sm text-muted-foreground">
       <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-        <span className="inline-flex items-center gap-1.5">
-          <FaCcVisa className="size-6 text-[#1A1F71]" aria-hidden="true" />
-          Visa
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <MastercardMark className="h-5 w-8" />
-          Mastercard
-        </span>
-        {IMAGE_PAYMENT_BADGES.map((badge) => (
+        {PAYMENT_BADGES.map((badge) => (
           <Image
             key={badge.src}
             src={badge.src}
