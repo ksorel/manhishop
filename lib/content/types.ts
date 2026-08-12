@@ -16,4 +16,6 @@ export interface FooterContent {
   cgvEn: string;
   privacyPolicyFr: string;
   privacyPolicyEn: string;
+  legalNoticeFr: string;
+  legalNoticeEn: string;
 }

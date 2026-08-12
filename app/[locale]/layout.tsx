@@ -11,6 +11,7 @@ import { ConfirmDialogProvider } from "@/components/ui/confirm-dialog";
 import { createClient } from "@/lib/supabase/server";
 import { getCartItems } from "@/lib/cart/actions";
 import { getFooterContent } from "@/lib/content/queries";
+import { SITE_URL } from "@/lib/site";
 import type { Locale } from "@/lib/catalogue/types";
 import "../globals.css";
 
@@ -32,6 +33,7 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "metadata" });
 
   return {
+    metadataBase: new URL(SITE_URL),
     title: t("title"),
     description: t("description"),
     manifest: "/manifest.json",

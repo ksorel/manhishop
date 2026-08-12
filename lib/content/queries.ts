@@ -43,6 +43,8 @@ const FALLBACK_FOOTER_CONTENT: FooterContent = {
   cgvEn: "",
   privacyPolicyFr: "",
   privacyPolicyEn: "",
+  legalNoticeFr: "",
+  legalNoticeEn: "",
 };
 
 export async function getFooterContent(): Promise<FooterContent> {
@@ -50,7 +52,7 @@ export async function getFooterContent(): Promise<FooterContent> {
   const { data, error } = await supabase
     .from("site_content")
     .select(
-      "contact_email, contact_phone, social_instagram, social_facebook, social_tiktok, social_whatsapp, cgv_fr, cgv_en, privacy_policy_fr, privacy_policy_en",
+      "contact_email, contact_phone, social_instagram, social_facebook, social_tiktok, social_whatsapp, cgv_fr, cgv_en, privacy_policy_fr, privacy_policy_en, legal_notice_fr, legal_notice_en",
     )
     .eq("id", 1)
     .maybeSingle();
@@ -68,5 +70,7 @@ export async function getFooterContent(): Promise<FooterContent> {
     cgvEn: data.cgv_en,
     privacyPolicyFr: data.privacy_policy_fr,
     privacyPolicyEn: data.privacy_policy_en,
+    legalNoticeFr: data.legal_notice_fr,
+    legalNoticeEn: data.legal_notice_en,
   };
 }

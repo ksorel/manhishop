@@ -25,6 +25,9 @@
   "privacyPage": {
     "title": "Privacy policy"
   },
+  "legalNoticePage": {
+    "title": "Legal notice"
+  },
   "theme": {
     "toggle": "Toggle theme",
     "light": "Light",
@@ -412,6 +415,9 @@
       "privacySection": "Privacy policy",
       "privacyFr": "Privacy policy (FR)",
       "privacyEn": "Privacy policy (EN)",
+      "legalSection": "Legal notice",
+      "legalFr": "Legal notice (FR)",
+      "legalEn": "Legal notice (EN)",
       "save": "Save",
       "saved": "Content updated.",
       "saveError": "Something went wrong. Please try again."
@@ -446,6 +452,7 @@
     "rights": "All rights reserved.",
     "linksLabel": "Useful links",
     "cgv": "Terms of sale",
-    "privacy": "Privacy"
+    "privacy": "Privacy",
+    "legalNotice": "Legal notice"
   }
 }

@@ -21,6 +21,8 @@ export function FooterContentForm({ initialContent }: { initialContent: FooterCo
   const [cgvEn, setCgvEn] = useState(initialContent.cgvEn);
   const [privacyPolicyFr, setPrivacyPolicyFr] = useState(initialContent.privacyPolicyFr);
   const [privacyPolicyEn, setPrivacyPolicyEn] = useState(initialContent.privacyPolicyEn);
+  const [legalNoticeFr, setLegalNoticeFr] = useState(initialContent.legalNoticeFr);
+  const [legalNoticeEn, setLegalNoticeEn] = useState(initialContent.legalNoticeEn);
   const [message, setMessage] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
@@ -41,6 +43,8 @@ export function FooterContentForm({ initialContent }: { initialContent: FooterCo
         cgvEn,
         privacyPolicyFr,
         privacyPolicyEn,
+        legalNoticeFr,
+        legalNoticeEn,
       });
       setMessage(t("saved"));
     } catch {
@@ -164,6 +168,30 @@ export function FooterContentForm({ initialContent }: { initialContent: FooterCo
               rows={4}
               value={privacyPolicyEn}
               onChange={(e) => setPrivacyPolicyEn(e.target.value)}
+              className={inputClass}
+            />
+          </label>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <h3 className="text-sm font-semibold text-foreground">{t("legalSection")}</h3>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="flex flex-col gap-1 text-sm">
+            <span className="text-foreground">{t("legalFr")}</span>
+            <textarea
+              rows={4}
+              value={legalNoticeFr}
+              onChange={(e) => setLegalNoticeFr(e.target.value)}
+              className={inputClass}
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm">
+            <span className="text-foreground">{t("legalEn")}</span>
+            <textarea
+              rows={4}
+              value={legalNoticeEn}
+              onChange={(e) => setLegalNoticeEn(e.target.value)}
               className={inputClass}
             />
           </label>

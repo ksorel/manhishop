@@ -25,6 +25,9 @@
   "privacyPage": {
     "title": "Politique de confidentialité"
   },
+  "legalNoticePage": {
+    "title": "Mentions légales"
+  },
   "theme": {
     "toggle": "Changer de thème",
     "light": "Clair",
@@ -412,6 +415,9 @@
       "privacySection": "Politique de confidentialité",
       "privacyFr": "Confidentialité (FR)",
       "privacyEn": "Confidentialité (EN)",
+      "legalSection": "Mentions légales",
+      "legalFr": "Mentions légales (FR)",
+      "legalEn": "Mentions légales (EN)",
       "save": "Enregistrer",
       "saved": "Contenu mis à jour.",
       "saveError": "Une erreur est survenue. Réessaie."
@@ -446,6 +452,7 @@
     "rights": "Tous droits réservés.",
     "linksLabel": "Liens utiles",
     "cgv": "Conditions générales de vente",
-    "privacy": "Confidentialité"
+    "privacy": "Confidentialité",
+    "legalNotice": "Mentions légales"
   }
 }

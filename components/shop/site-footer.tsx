@@ -64,6 +64,11 @@ export function SiteFooter({ content }: { content: FooterContent }) {
             {tFooter("privacy")}
           </Link>
         )}
+        {content.legalNoticeFr && (
+          <Link href="/mentions-legales" className="hover:text-foreground hover:underline">
+            {tFooter("legalNotice")}
+          </Link>
+        )}
       </nav>
 
       {(content.contactEmail || content.contactPhone) && (
