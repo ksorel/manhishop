@@ -1,9 +1,9 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { Mail, Phone } from "lucide-react";
 import { FaCcVisa, FaFacebook, FaInstagram, FaTiktok, FaWhatsapp } from "react-icons/fa6";
-import { SiOrange } from "react-icons/si";
 import { Link } from "@/i18n/navigation";
 import type { FooterContent } from "@/lib/content/types";
 
@@ -16,9 +16,10 @@ const SOCIAL_ICONS = {
   whatsapp: { Icon: FaWhatsapp, colorClass: "text-[#25D366]" },
 } as const;
 
-/** Aucune librairie d'icônes gratuite ne couvre Mastercard (bicolore),
- * MTN Mobile Money ou Wave (marques ouest-africaines) — reproduits ici
- * à la main à partir de leurs couleurs de marque officielles. */
+/** Aucune librairie d'icônes gratuite ne couvre Mastercard (bicolore) —
+ * reproduit ici à la main à partir des couleurs de marque officielles.
+ * MTN Mobile Money, Orange Money et Wave utilisent les vrais fichiers
+ * logo fournis par le client (public/logo/payments/). */
 function MastercardMark({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 32 20" className={className} aria-hidden="true">
@@ -28,40 +29,11 @@ function MastercardMark({ className }: { className?: string }) {
   );
 }
 
-function MtnMark({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
-      <circle cx="12" cy="12" r="12" fill="#FFCC00" />
-      <text
-        x="12"
-        y="15.5"
-        textAnchor="middle"
-        fontSize="9"
-        fontWeight="700"
-        fontFamily="sans-serif"
-        fill="#000000"
-      >
-        MTN
-      </text>
-    </svg>
-  );
-}
-
-function WaveMark({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
-      <circle cx="12" cy="12" r="12" fill="#1DC8F2" />
-      <path
-        d="M5 13c1.2-2.5 2.4-2.5 3.6 0s2.4 2.5 3.6 0 2.4-2.5 3.6 0 2.4 2.5 3.6 0"
-        stroke="#ffffff"
-        strokeWidth="1.6"
-        fill="none"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+const IMAGE_PAYMENT_BADGES = [
+  { src: "/logo/payments/mtn-momo.png", alt: "MTN MoMo", width: 270, height: 148 },
+  { src: "/logo/payments/orange-money.png", alt: "Orange Money", width: 148, height: 148 },
+  { src: "/logo/payments/wave.png", alt: "Wave", width: 264, height: 148 },
+] as const;
 
 export function SiteFooter({ content }: { content: FooterContent }) {
   const t = useTranslations("nav");
@@ -85,18 +57,16 @@ export function SiteFooter({ content }: { content: FooterContent }) {
           <MastercardMark className="h-5 w-8" />
           Mastercard
         </span>
-        <span className="inline-flex items-center gap-1.5">
-          <SiOrange className="size-4 text-[#FF7900]" aria-hidden="true" />
-          Orange Money
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <MtnMark className="size-5" />
-          MTN Mobile Money
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <WaveMark className="size-5" />
-          Wave
-        </span>
+        {IMAGE_PAYMENT_BADGES.map((badge) => (
+          <Image
+            key={badge.src}
+            src={badge.src}
+            alt={badge.alt}
+            width={badge.width}
+            height={badge.height}
+            className="h-7 w-auto rounded-md"
+          />
+        ))}
       </div>
 
       <nav aria-label={tFooter("linksLabel")} className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
