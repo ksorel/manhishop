@@ -57,12 +57,62 @@ export interface RawProductGroup {
 
 /** Retire les balises du gabarit de description bdroppy (`pdbDescContainer`)
  * et aplati le HTML en texte lisible. */
+
+// Entités HTML nommées les plus courantes dans les descriptions fournisseur
+// (accents français, ponctuation) ; les entités numériques (&#39;, &#x27;...)
+// sont décodées séparément, sans avoir besoin d'être listées ici.
+const NAMED_ENTITIES: Record<string, string> = {
+  nbsp: " ",
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: '"',
+  apos: "'",
+  eacute: "é",
+  Eacute: "É",
+  egrave: "è",
+  Egrave: "È",
+  ecirc: "ê",
+  euml: "ë",
+  agrave: "à",
+  Agrave: "À",
+  acirc: "â",
+  auml: "ä",
+  ocirc: "ô",
+  ouml: "ö",
+  ugrave: "ù",
+  ucirc: "û",
+  uuml: "ü",
+  icirc: "î",
+  iuml: "ï",
+  ccedil: "ç",
+  Ccedil: "Ç",
+  oelig: "œ",
+  aelig: "æ",
+  rsquo: "'",
+  lsquo: "'",
+  rdquo: '"',
+  ldquo: '"',
+  hellip: "…",
+  mdash: "—",
+  ndash: "–",
+};
+
+function decodeEntities(text: string): string {
+  return text.replace(/&(#x?[0-9a-fA-F]+|[a-zA-Z]+);/g, (match, entity: string) => {
+    if (entity[0] === "#") {
+      const isHex = entity[1] === "x" || entity[1] === "X";
+      const code = parseInt(entity.slice(isHex ? 2 : 1), isHex ? 16 : 10);
+      return Number.isFinite(code) ? String.fromCodePoint(code) : match;
+    }
+    return NAMED_ENTITIES[entity] ?? match;
+  });
+}
+
 export function stripHtml(html: string): string {
-  return html
+  return decodeEntities(html)
     .replace(/<\/div>/gi, "\n")
     .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/gi, "&")
     .replace(/[ \t]+/g, " ")
     .split("\n")
     .map((line) => line.trim())

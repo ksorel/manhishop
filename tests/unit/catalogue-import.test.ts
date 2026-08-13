@@ -90,6 +90,11 @@ describe("stripHtml", () => {
       "<div class='pdbDescSection'><span>Genre:</span><span>Femme</span></div><div>Autre</div>";
     expect(stripHtml(html)).toBe("Genre: Femme\nAutre");
   });
+
+  it("decodes named French accent entities and numeric entities", () => {
+    const html = "S&eacute;rum &agrave; l&#39;acide hyaluronique, id&eacute;al et &Eacute;clatant";
+    expect(stripHtml(html)).toBe("Sérum à l'acide hyaluronique, idéal et Éclatant");
+  });
 });
 
 describe("convertPrice", () => {
