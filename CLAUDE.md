@@ -54,6 +54,8 @@ NEXT_PUBLIC_SENTRY_DSN=
 SENTRY_ORG=
 SENTRY_PROJECT=
 SENTRY_AUTH_TOKEN=
+# Alerte stock faible (cron Vercel, gratuit) :
+CRON_SECRET=
 ```
 
 ## Structure du projet
