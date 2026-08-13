@@ -9,6 +9,7 @@ import { routing } from "@/i18n/routing";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SiteChrome } from "@/components/shop/site-chrome";
 import { CartProvider } from "@/components/cart/cart-provider";
+import { CompareProvider } from "@/components/compare/compare-provider";
 import { ConfirmDialogProvider } from "@/components/ui/confirm-dialog";
 import { createClient } from "@/lib/supabase/server";
 import { getCartItems } from "@/lib/cart/actions";
@@ -88,7 +89,9 @@ export default async function LocaleLayout({
                 initialItems={cartItems ?? []}
                 locale={locale as Locale}
               >
-                <SiteChrome footerContent={footerContent}>{children}</SiteChrome>
+                <CompareProvider>
+                  <SiteChrome footerContent={footerContent}>{children}</SiteChrome>
+                </CompareProvider>
               </CartProvider>
             </ConfirmDialogProvider>
           </NextIntlClientProvider>

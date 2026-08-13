@@ -100,6 +100,19 @@
     "remove": "Remove from wishlist",
     "loginRequired": "Log in to add favorites."
   },
+  "compare": {
+    "title": "Compare",
+    "add": "Add to compare",
+    "remove": "Remove from compare",
+    "barCount": "{count, plural, one {# product to compare} other {# products to compare}}",
+    "viewButton": "Compare",
+    "clear": "Clear comparison",
+    "empty": "No products to compare. Add products from the catalogue.",
+    "inStock": "In stock",
+    "outOfStock": "Out of stock",
+    "hasSizes": "Sizes available",
+    "noSizes": "One size"
+  },
   "reviews": {
     "title": "Customer reviews",
     "average": "{rating} out of 5 ({count, plural, =0 {no reviews} one {# review} other {# reviews}})",

@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { Card } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { WishlistButton } from "@/components/shop/wishlist-button";
+import { CompareToggleButton } from "@/components/shop/compare-toggle-button";
 import { AddToCartButton } from "@/components/shop/add-to-cart-button";
 import { formatPrice } from "@/lib/format";
 import type { Locale, ProductSummary } from "@/lib/catalogue/types";
@@ -39,6 +40,7 @@ export function ProductCard({ product }: { product: ProductSummary }) {
           )}
         </Link>
         <WishlistButton productId={product.id} className="absolute right-2 top-2" />
+        <CompareToggleButton productId={product.id} className="absolute left-2 top-2" />
       </div>
 
       <div className="flex flex-1 flex-col gap-2 p-3">

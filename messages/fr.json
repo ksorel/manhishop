@@ -100,6 +100,19 @@
     "remove": "Retirer des favoris",
     "loginRequired": "Connecte-toi pour ajouter des favoris."
   },
+  "compare": {
+    "title": "Comparateur",
+    "add": "Ajouter au comparateur",
+    "remove": "Retirer du comparateur",
+    "barCount": "{count, plural, one {# produit à comparer} other {# produits à comparer}}",
+    "viewButton": "Comparer",
+    "clear": "Vider le comparateur",
+    "empty": "Aucun produit à comparer. Ajoute des produits depuis le catalogue.",
+    "inStock": "En stock",
+    "outOfStock": "Rupture de stock",
+    "hasSizes": "Tailles disponibles",
+    "noSizes": "Taille unique"
+  },
   "reviews": {
     "title": "Avis clients",
     "average": "{rating} sur 5 ({count, plural, =0 {aucun avis} one {# avis} other {# avis}})",

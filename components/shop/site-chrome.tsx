@@ -4,6 +4,7 @@ import { usePathname } from "@/i18n/navigation";
 import { SiteHeader } from "@/components/shop/site-header";
 import { SiteFooter } from "@/components/shop/site-footer";
 import { BottomNav } from "@/components/shop/bottom-nav";
+import { CompareBar } from "@/components/shop/compare-bar";
 import type { FooterContent } from "@/lib/content/types";
 
 const BARE_PATHS = [
@@ -35,6 +36,7 @@ export function SiteChrome({
         <SiteFooter content={footerContent} />
       </main>
       <BottomNav />
+      <CompareBar />
     </>
   );
 }
