@@ -46,6 +46,56 @@ function toAdminProduct(row: {
   };
 }
 
+function extensionFromContentType(contentType: string): string {
+  if (contentType.includes("png")) return "png";
+  if (contentType.includes("webp")) return "webp";
+  if (contentType.includes("gif")) return "gif";
+  return "jpg";
+}
+
+/**
+ * Rapatrie vers notre Supabase Storage les images d'un produit encore
+ * hébergées ailleurs (ex. hotlink fournisseur lors d'un import catalogue) —
+ * appelé uniquement à l'activation, pour ne jamais stocker d'images de
+ * produits qui restent en brouillon. Best-effort : une image qu'on ne
+ * parvient pas à rapatrier reste simplement en hotlink, ce n'est jamais
+ * bloquant pour la sauvegarde du produit.
+ */
+async function rehostExternalImages(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  productId: string,
+) {
+  const ownStoragePrefix = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/product-images/`;
+
+  const { data: images } = await supabase
+    .from("product_images")
+    .select("id, url")
+    .eq("product_id", productId);
+
+  for (const image of images ?? []) {
+    if (image.url.startsWith(ownStoragePrefix)) continue;
+
+    try {
+      const response = await fetch(image.url);
+      if (!response.ok) continue;
+
+      const contentType = response.headers.get("content-type") ?? "image/jpeg";
+      const buffer = Buffer.from(await response.arrayBuffer());
+      const path = `${productId}/${crypto.randomUUID()}-rehosted.${extensionFromContentType(contentType)}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("product-images")
+        .upload(path, buffer, { contentType });
+      if (uploadError) continue;
+
+      const { data: publicUrlData } = supabase.storage.from("product-images").getPublicUrl(path);
+      await supabase.from("product_images").update({ url: publicUrlData.publicUrl }).eq("id", image.id);
+    } catch {
+      // Best-effort — l'image reste en hotlink si le rapatriement échoue.
+    }
+  }
+}
+
 async function replaceProductSizes(
   supabase: Awaited<ReturnType<typeof createClient>>,
   productId: string,
@@ -172,6 +222,9 @@ export async function updateProduct(id: string, input: AdminProductInput): Promi
 
   if (error) throw error;
   await replaceProductSizes(supabase, id, input.sizes);
+  if (input.status === "active") {
+    await rehostExternalImages(supabase, id);
+  }
 }
 
 export async function deleteProduct(id: string): Promise<void> {
