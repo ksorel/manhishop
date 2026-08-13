@@ -438,7 +438,10 @@
       "empty": "No orders.",
       "updateStatus": "Update status",
       "statusUpdated": "Status updated.",
-      "exportCsv": "Export as CSV"
+      "exportCsv": "Export as CSV",
+      "selectAll": "Select all",
+      "selectedCount": "{count, plural, one {# selected} other {# selected}}",
+      "bulkError": "Something went wrong. Please try again."
     },
     "ordersExport": {
       "orderId": "Order number",

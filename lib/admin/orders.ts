@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { fetchAllRows } from "@/lib/supabase/paginate";
 import type { OrderDetail, OrderStatus } from "@/lib/orders/queries";
 
 export interface AdminOrderSummary {
@@ -19,14 +20,21 @@ const ORDER_DETAIL_COLUMNS = `
 
 export async function getAdminOrders(): Promise<AdminOrderSummary[]> {
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("orders")
-    .select("id, status, total, contact_email, created_at")
-    .order("created_at", { ascending: false });
+  const data = await fetchAllRows<{
+    id: string;
+    status: string;
+    total: number;
+    contact_email: string;
+    created_at: string;
+  }>((from, to) =>
+    supabase
+      .from("orders")
+      .select("id, status, total, contact_email, created_at")
+      .order("created_at", { ascending: false })
+      .range(from, to),
+  );
 
-  if (error) throw error;
-
-  return (data ?? []).map((row) => ({
+  return data.map((row) => ({
     id: row.id,
     status: row.status as OrderStatus,
     total: Number(row.total),
@@ -151,5 +159,16 @@ export async function updateOrderStatus(orderId: string, status: OrderStatus): P
 
   const supabase = await createClient();
   const { error } = await supabase.from("orders").update({ status }).eq("id", orderId);
+  if (error) throw error;
+}
+
+export async function bulkUpdateOrderStatus(orderIds: string[], status: OrderStatus): Promise<void> {
+  if (!UPDATABLE_STATUSES.includes(status)) {
+    throw new Error("invalid_status");
+  }
+  if (orderIds.length === 0) return;
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("orders").update({ status }).in("id", orderIds);
   if (error) throw error;
 }

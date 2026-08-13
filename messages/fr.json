@@ -438,7 +438,10 @@
       "empty": "Aucune commande.",
       "updateStatus": "Changer le statut",
       "statusUpdated": "Statut mis à jour.",
-      "exportCsv": "Exporter en CSV"
+      "exportCsv": "Exporter en CSV",
+      "selectAll": "Tout sélectionner",
+      "selectedCount": "{count, plural, one {# sélectionnée} other {# sélectionnées}}",
+      "bulkError": "Une erreur est survenue. Réessaie."
     },
     "ordersExport": {
       "orderId": "Numéro de commande",
