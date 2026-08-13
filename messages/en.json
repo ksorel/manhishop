@@ -99,6 +99,18 @@
     "remove": "Remove from wishlist",
     "loginRequired": "Log in to add favorites."
   },
+  "reviews": {
+    "title": "Customer reviews",
+    "average": "{rating} out of 5 ({count, plural, =0 {no reviews} one {# review} other {# reviews}})",
+    "empty": "No reviews for this product yet.",
+    "yourRating": "Your rating",
+    "commentLabel": "Your comment (optional)",
+    "submit": "Submit my review",
+    "error": "Something went wrong. Please try again.",
+    "confirmDelete": "Delete your review?",
+    "deleteYourReview": "Delete my review",
+    "you": "You"
+  },
   "search": {
     "title": "Search",
     "placeholder": "Search for a product…",
@@ -274,6 +286,7 @@
       "products": "Products",
       "categories": "Categories",
       "sizeGuides": "Size guides",
+      "reviews": "Reviews",
       "orders": "Orders",
       "shipping": "Shipping",
       "content": "Content",
@@ -384,6 +397,12 @@
       "empty": "No categories.",
       "saveError": "Something went wrong while saving.",
       "deleteBlockedError": "Can't delete: remove its subcategories first."
+    },
+    "reviews": {
+      "title": "Customer reviews",
+      "empty": "No reviews yet.",
+      "delete": "Delete",
+      "confirmDelete": "Delete this review?"
     },
     "sizeGuides": {
       "title": "Size guides",

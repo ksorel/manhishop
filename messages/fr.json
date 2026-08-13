@@ -99,6 +99,18 @@
     "remove": "Retirer des favoris",
     "loginRequired": "Connecte-toi pour ajouter des favoris."
   },
+  "reviews": {
+    "title": "Avis clients",
+    "average": "{rating} sur 5 ({count, plural, =0 {aucun avis} one {# avis} other {# avis}})",
+    "empty": "Aucun avis pour ce produit pour le moment.",
+    "yourRating": "Votre note",
+    "commentLabel": "Votre commentaire (optionnel)",
+    "submit": "Envoyer mon avis",
+    "error": "Une erreur est survenue. Réessaie.",
+    "confirmDelete": "Supprimer votre avis ?",
+    "deleteYourReview": "Supprimer mon avis",
+    "you": "Vous"
+  },
   "search": {
     "title": "Recherche",
     "placeholder": "Rechercher un produit…",
@@ -274,6 +286,7 @@
       "products": "Produits",
       "categories": "Catégories",
       "sizeGuides": "Guides des tailles",
+      "reviews": "Avis",
       "orders": "Commandes",
       "shipping": "Livraison",
       "content": "Contenu",
@@ -384,6 +397,12 @@
       "empty": "Aucune catégorie.",
       "saveError": "Une erreur est survenue lors de l'enregistrement.",
       "deleteBlockedError": "Impossible de supprimer : supprimez d'abord ses sous-catégories."
+    },
+    "reviews": {
+      "title": "Avis clients",
+      "empty": "Aucun avis pour le moment.",
+      "delete": "Supprimer",
+      "confirmDelete": "Supprimer cet avis ?"
     },
     "sizeGuides": {
       "title": "Guides des tailles",

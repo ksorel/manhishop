@@ -3,9 +3,12 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getProductBySlug, getSimilarProducts } from "@/lib/catalogue/queries";
 import { getWishlistProductIds } from "@/lib/wishlist/actions";
+import { getProductReviews } from "@/lib/reviews/queries";
+import { getReviewEligibility } from "@/lib/reviews/actions";
 import { ProductGallery } from "@/components/shop/product-gallery";
 import { ProductGrid } from "@/components/shop/product-grid";
 import { ProductPurchasePanel } from "@/components/shop/product-purchase-panel";
+import { ProductReviews } from "@/components/shop/product-reviews";
 import { WishlistButton } from "@/components/shop/wishlist-button";
 import { formatPrice } from "@/lib/format";
 import type { Locale } from "@/lib/catalogue/types";
@@ -45,9 +48,11 @@ export default async function ProductPage({
   const product = await getProductBySlug(slug, locale as Locale);
   if (!product) notFound();
 
-  const [similarProducts, wishlistProductIds] = await Promise.all([
+  const [similarProducts, wishlistProductIds, reviews, reviewEligibility] = await Promise.all([
     getSimilarProducts(product.categorySlug, product.id, locale as Locale),
     getWishlistProductIds(),
+    getProductReviews(product.id),
+    getReviewEligibility(product.id),
   ]);
 
   const outOfStock = product.stock <= 0;
@@ -110,6 +115,12 @@ export default async function ProductPage({
           <ProductPurchasePanel product={product} />
         </div>
       </div>
+
+      <ProductReviews
+        productId={product.id}
+        initialReviews={reviews}
+        eligibility={reviewEligibility}
+      />
 
       {similarProducts.length > 0 && (
         <section className="mt-12">
