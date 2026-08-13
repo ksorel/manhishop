@@ -68,11 +68,14 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // getFooterContent() ne dépend pas de l'utilisateur : lancée en
+  // parallèle de la vérification d'auth plutôt qu'après (économise un
+  // aller-retour réseau complet sur chaque page, mesuré via Lighthouse).
+  const [{ data: { user } }, footerContent] = await Promise.all([
+    supabase.auth.getUser(),
+    getFooterContent(),
+  ]);
   const cartItems = user ? await getCartItems(locale as Locale) : null;
-  const footerContent = await getFooterContent();
 
   return (
     <html lang={locale} className={`${inter.variable}`} suppressHydrationWarning>
