@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { Upload } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 const inputClass =
   "min-h-11 rounded border border-border bg-background px-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary";
@@ -149,15 +151,28 @@ export function CatalogueImportForm() {
   return (
     <div className="flex flex-col gap-4">
       <Card className="flex flex-col gap-4 p-6">
-        <label className="flex flex-col gap-1 text-sm">
+        <div className="flex flex-col gap-1 text-sm">
           <span className="text-foreground">{t("fileLabel")}</span>
-          <input
-            type="file"
-            accept=".xlsx"
-            onChange={handleFileChange}
-            className="text-sm text-foreground"
-          />
-        </label>
+          <label
+            className={cn(
+              "flex min-h-28 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed border-border px-4 py-6 text-center transition-colors hover:border-primary hover:bg-surface",
+              file && "border-primary",
+            )}
+          >
+            <Upload className="size-6 text-primary" aria-hidden="true" />
+            <span className="text-sm font-medium text-primary">
+              {file ? file.name : t("filePrompt")}
+            </span>
+            {!file && <span className="text-xs text-muted-foreground">{t("fileHint")}</span>}
+            {file && <span className="text-xs text-muted-foreground">{t("fileChange")}</span>}
+            <input
+              type="file"
+              accept=".xlsx"
+              onChange={handleFileChange}
+              className="sr-only"
+            />
+          </label>
+        </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="flex flex-col gap-1 text-sm">
