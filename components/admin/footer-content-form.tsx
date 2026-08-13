@@ -13,6 +13,7 @@ export function FooterContentForm({ initialContent }: { initialContent: FooterCo
   const t = useTranslations("admin.content");
   const [contactEmail, setContactEmail] = useState(initialContent.contactEmail);
   const [contactPhone, setContactPhone] = useState(initialContent.contactPhone);
+  const [contactPhone2, setContactPhone2] = useState(initialContent.contactPhone2);
   const [socialInstagram, setSocialInstagram] = useState(initialContent.socialInstagram);
   const [socialFacebook, setSocialFacebook] = useState(initialContent.socialFacebook);
   const [socialTiktok, setSocialTiktok] = useState(initialContent.socialTiktok);
@@ -35,6 +36,7 @@ export function FooterContentForm({ initialContent }: { initialContent: FooterCo
       await updateFooterContent({
         contactEmail,
         contactPhone,
+        contactPhone2,
         socialInstagram,
         socialFacebook,
         socialTiktok,
@@ -78,6 +80,15 @@ export function FooterContentForm({ initialContent }: { initialContent: FooterCo
               type="tel"
               value={contactPhone}
               onChange={(e) => setContactPhone(e.target.value)}
+              className={inputClass}
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm">
+            <span className="text-foreground">{t("contactPhone2")}</span>
+            <input
+              type="tel"
+              value={contactPhone2}
+              onChange={(e) => setContactPhone2(e.target.value)}
               className={inputClass}
             />
           </label>

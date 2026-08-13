@@ -35,6 +35,7 @@ export async function getHomeContent(): Promise<HomeContent> {
 const FALLBACK_FOOTER_CONTENT: FooterContent = {
   contactEmail: "",
   contactPhone: "",
+  contactPhone2: "",
   socialInstagram: "",
   socialFacebook: "",
   socialTiktok: "",
@@ -52,7 +53,7 @@ export async function getFooterContent(): Promise<FooterContent> {
   const { data, error } = await supabase
     .from("site_content")
     .select(
-      "contact_email, contact_phone, social_instagram, social_facebook, social_tiktok, social_whatsapp, cgv_fr, cgv_en, privacy_policy_fr, privacy_policy_en, legal_notice_fr, legal_notice_en",
+      "contact_email, contact_phone, contact_phone_2, social_instagram, social_facebook, social_tiktok, social_whatsapp, cgv_fr, cgv_en, privacy_policy_fr, privacy_policy_en, legal_notice_fr, legal_notice_en",
     )
     .eq("id", 1)
     .maybeSingle();
@@ -62,6 +63,7 @@ export async function getFooterContent(): Promise<FooterContent> {
   return {
     contactEmail: data.contact_email,
     contactPhone: data.contact_phone,
+    contactPhone2: data.contact_phone_2,
     socialInstagram: data.social_instagram,
     socialFacebook: data.social_facebook,
     socialTiktok: data.social_tiktok,

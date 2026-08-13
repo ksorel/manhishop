@@ -41,7 +41,7 @@ export async function getAdminFooterContent(): Promise<FooterContent> {
   const { data, error } = await supabase
     .from("site_content")
     .select(
-      "contact_email, contact_phone, social_instagram, social_facebook, social_tiktok, social_whatsapp, cgv_fr, cgv_en, privacy_policy_fr, privacy_policy_en, legal_notice_fr, legal_notice_en",
+      "contact_email, contact_phone, contact_phone_2, social_instagram, social_facebook, social_tiktok, social_whatsapp, cgv_fr, cgv_en, privacy_policy_fr, privacy_policy_en, legal_notice_fr, legal_notice_en",
     )
     .eq("id", 1)
     .single();
@@ -51,6 +51,7 @@ export async function getAdminFooterContent(): Promise<FooterContent> {
   return {
     contactEmail: data.contact_email,
     contactPhone: data.contact_phone,
+    contactPhone2: data.contact_phone_2,
     socialInstagram: data.social_instagram,
     socialFacebook: data.social_facebook,
     socialTiktok: data.social_tiktok,
@@ -71,6 +72,7 @@ export async function updateFooterContent(input: FooterContent): Promise<void> {
     .update({
       contact_email: input.contactEmail,
       contact_phone: input.contactPhone,
+      contact_phone_2: input.contactPhone2,
       social_instagram: input.socialInstagram,
       social_facebook: input.socialFacebook,
       social_tiktok: input.socialTiktok,

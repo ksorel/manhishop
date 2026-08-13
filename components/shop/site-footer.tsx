@@ -71,7 +71,7 @@ export function SiteFooter({ content }: { content: FooterContent }) {
         )}
       </nav>
 
-      {(content.contactEmail || content.contactPhone) && (
+      {(content.contactEmail || content.contactPhone || content.contactPhone2) && (
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
           {content.contactEmail && (
             <a
@@ -89,6 +89,15 @@ export function SiteFooter({ content }: { content: FooterContent }) {
             >
               <Phone className="size-3.5" aria-hidden="true" />
               {content.contactPhone}
+            </a>
+          )}
+          {content.contactPhone2 && (
+            <a
+              href={`tel:${content.contactPhone2.replace(/\s+/g, "")}`}
+              className="inline-flex items-center gap-1.5 hover:text-foreground hover:underline"
+            >
+              <Phone className="size-3.5" aria-hidden="true" />
+              {content.contactPhone2}
             </a>
           )}
         </div>

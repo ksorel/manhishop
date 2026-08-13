@@ -8,6 +8,7 @@ export interface HomeContent {
 export interface FooterContent {
   contactEmail: string;
   contactPhone: string;
+  contactPhone2: string;
   socialInstagram: string;
   socialFacebook: string;
   socialTiktok: string;
