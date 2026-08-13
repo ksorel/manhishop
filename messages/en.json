@@ -296,6 +296,13 @@
       "delete": "Delete",
       "confirmDelete": "Delete this product?",
       "empty": "No products.",
+      "selectAll": "Select all",
+      "selectedCount": "{count, plural, one {# selected} other {# selected}}",
+      "bulkActivate": "Activate",
+      "bulkDraft": "Set back to draft",
+      "bulkDelete": "Delete",
+      "confirmBulkDelete": "{count, plural, one {Delete this product?} other {Delete these # products?}}",
+      "bulkError": "Something went wrong. Please try again.",
       "form": {
         "nameFr": "Name (FR)",
         "nameEn": "Name (EN)",

@@ -233,6 +233,29 @@ export async function deleteProduct(id: string): Promise<void> {
   if (error) throw error;
 }
 
+export async function bulkUpdateProductStatus(
+  ids: string[],
+  status: "active" | "draft",
+): Promise<void> {
+  if (ids.length === 0) return;
+  const supabase = await createClient();
+  const { error } = await supabase.from("products").update({ status }).in("id", ids);
+  if (error) throw error;
+
+  if (status === "active") {
+    for (const id of ids) {
+      await rehostExternalImages(supabase, id);
+    }
+  }
+}
+
+export async function bulkDeleteProducts(ids: string[]): Promise<void> {
+  if (ids.length === 0) return;
+  const supabase = await createClient();
+  const { error } = await supabase.from("products").delete().in("id", ids);
+  if (error) throw error;
+}
+
 export async function uploadProductImage(
   productId: string,
   formData: FormData,

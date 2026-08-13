@@ -296,6 +296,13 @@
       "delete": "Supprimer",
       "confirmDelete": "Supprimer ce produit ?",
       "empty": "Aucun produit.",
+      "selectAll": "Tout sélectionner",
+      "selectedCount": "{count, plural, one {# sélectionné} other {# sélectionnés}}",
+      "bulkActivate": "Activer",
+      "bulkDraft": "Repasser en brouillon",
+      "bulkDelete": "Supprimer",
+      "confirmBulkDelete": "{count, plural, one {Supprimer ce produit ?} other {Supprimer ces # produits ?}}",
+      "bulkError": "Une erreur est survenue. Réessaie.",
       "form": {
         "nameFr": "Nom (FR)",
         "nameEn": "Nom (EN)",
