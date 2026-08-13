@@ -9,6 +9,8 @@ import { ProductGallery } from "@/components/shop/product-gallery";
 import { ProductGrid } from "@/components/shop/product-grid";
 import { ProductPurchasePanel } from "@/components/shop/product-purchase-panel";
 import { ProductReviews } from "@/components/shop/product-reviews";
+import { RecentlyViewedSection } from "@/components/shop/recently-viewed-section";
+import { TrackRecentlyViewed } from "@/components/shop/track-recently-viewed";
 import { WishlistButton } from "@/components/shop/wishlist-button";
 import { formatPrice } from "@/lib/format";
 import type { Locale } from "@/lib/catalogue/types";
@@ -76,6 +78,7 @@ export default async function ProductPage({
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
+      <TrackRecentlyViewed productId={product.id} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -130,6 +133,8 @@ export default async function ProductPage({
           </div>
         </section>
       )}
+
+      <RecentlyViewedSection excludeProductId={product.id} />
     </div>
   );
 }

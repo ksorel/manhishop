@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { CategoryPills } from "@/components/shop/category-pills";
 import { ProductGrid } from "@/components/shop/product-grid";
 import { PromoCarousel } from "@/components/shop/promo-carousel";
+import { RecentlyViewedSection } from "@/components/shop/recently-viewed-section";
 import {
   getCategories,
   getFeaturedProducts,
@@ -91,6 +92,8 @@ export default async function HomePage({
           </div>
         )}
       </section>
+
+      <RecentlyViewedSection />
     </div>
   );
 }
