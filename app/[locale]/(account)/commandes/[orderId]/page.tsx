@@ -58,9 +58,19 @@ export default async function OrderDetailPage({
             </span>
           </div>
         ))}
-        <div className="mt-2 flex justify-between border-t border-border pt-2 text-sm font-semibold">
-          <span className="text-foreground">{t("total")}</span>
-          <span className="text-foreground">{formatPrice(order.total, locale as Locale)}</span>
+        <div className="mt-2 flex flex-col gap-1 border-t border-border pt-2">
+          {order.discountAmount > 0 && (
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">{t("discount")}</span>
+              <span className="text-foreground">
+                -{formatPrice(order.discountAmount, locale as Locale)}
+              </span>
+            </div>
+          )}
+          <div className="flex justify-between text-sm font-semibold">
+            <span className="text-foreground">{t("total")}</span>
+            <span className="text-foreground">{formatPrice(order.total, locale as Locale)}</span>
+          </div>
         </div>
       </Card>
 

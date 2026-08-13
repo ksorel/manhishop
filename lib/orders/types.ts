@@ -24,6 +24,7 @@ export interface CheckoutInput {
   address: CheckoutAddressInput;
   contactEmail: string;
   contactPhone: string;
+  promoCode?: string;
 }
 
 export interface PreparedOrderLine {
@@ -39,6 +40,7 @@ export interface PreparedOrder {
   accessToken: string;
   subtotal: number;
   deliveryFee: number;
+  discountAmount: number;
   total: number;
   contactEmail: string;
   locale: "fr" | "en";

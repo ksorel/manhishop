@@ -17,11 +17,17 @@ function renderHtml(order: PreparedOrder, locale: Locale) {
     .join("");
 
   const deliveryLabel = locale === "fr" ? "Livraison" : "Delivery";
+  const discountLabel = locale === "fr" ? "Réduction" : "Discount";
   const totalLabel = locale === "fr" ? "Total" : "Total";
   const thanks =
     locale === "fr"
       ? "Merci pour votre commande sur Manhishop !"
       : "Thank you for your order on Manhishop!";
+
+  const discountRow =
+    order.discountAmount > 0
+      ? `<tr><td>${discountLabel}</td><td style="text-align:right">-${formatPrice(order.discountAmount, locale)}</td></tr>`
+      : "";
 
   return `
     <div>
@@ -29,6 +35,7 @@ function renderHtml(order: PreparedOrder, locale: Locale) {
       <table style="width:100%;border-collapse:collapse">
         ${rows}
         <tr><td>${deliveryLabel}</td><td style="text-align:right">${formatPrice(order.deliveryFee, locale)}</td></tr>
+        ${discountRow}
         <tr><td><strong>${totalLabel}</strong></td><td style="text-align:right"><strong>${formatPrice(order.total, locale)}</strong></td></tr>
       </table>
     </div>

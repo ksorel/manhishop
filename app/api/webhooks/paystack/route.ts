@@ -49,7 +49,7 @@ export async function POST(request: Request) {
     const { data: order } = await admin
       .from("orders")
       .select(
-        "id, status, contact_email, locale, subtotal, delivery_fee, total, access_token, order_items(product_id, product_name, size_label, quantity, unit_price)",
+        "id, status, contact_email, locale, subtotal, delivery_fee, discount_amount, total, access_token, order_items(product_id, product_name, size_label, quantity, unit_price)",
       )
       .eq("id", reference)
       .maybeSingle();
@@ -71,6 +71,7 @@ export async function POST(request: Request) {
         accessToken: order.access_token,
         subtotal: Number(order.subtotal),
         deliveryFee: Number(order.delivery_fee),
+        discountAmount: Number(order.discount_amount),
         total: Number(order.total),
         contactEmail: order.contact_email,
         locale: order.locale as "fr" | "en",

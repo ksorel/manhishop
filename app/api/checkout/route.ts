@@ -28,6 +28,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ url: session.url });
   } catch (error) {
+    if (error instanceof Error && error.message === "invalid_promo_code") {
+      return NextResponse.json({ error: "invalid_promo_code" }, { status: 400 });
+    }
     console.error("checkout error:", error);
     return NextResponse.json({ error: "checkout_failed" }, { status: 500 });
   }

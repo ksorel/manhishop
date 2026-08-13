@@ -27,4 +27,5 @@ export const checkoutSchema = z.object({
   address: z.union([savedAddressSchema, newAddressSchema]),
   contactEmail: z.string().email(),
   contactPhone: z.string().min(1),
+  promoCode: z.string().trim().min(1).optional(),
 });

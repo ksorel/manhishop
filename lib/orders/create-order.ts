@@ -1,6 +1,7 @@
 import { getProductsByIds } from "@/lib/catalogue/queries";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { resolveShippingFee } from "@/lib/shipping/pricing";
+import { computeDiscount } from "@/lib/promo/validate";
 import type { ShippingRate } from "@/lib/shipping/types";
 import type { Locale } from "@/lib/catalogue/types";
 import type { CheckoutInput, PreparedOrder } from "./types";
@@ -107,7 +108,38 @@ export async function createPendingOrder(
   }));
 
   const deliveryFee = resolveShippingFee(shippingRates, country, city);
-  const { subtotal, total } = computeOrderTotals(lines, deliveryFee);
+  const { subtotal } = computeOrderTotals(lines, deliveryFee);
+
+  // Le client n'envoie qu'un code, jamais un montant de réduction — celui-ci
+  // est toujours recalculé ici à partir de la ligne promo_codes en base.
+  let discountAmount = 0;
+  let promoCodeId: string | null = null;
+  if (input.promoCode) {
+    const { data: promo, error: promoError } = await admin
+      .from("promo_codes")
+      .select("id, discount_type, discount_value, active, expires_at, max_uses, used_count")
+      .eq("code", input.promoCode.trim().toUpperCase())
+      .maybeSingle();
+
+    if (promoError) throw promoError;
+    const now = new Date();
+    const isValid =
+      !!promo &&
+      promo.active &&
+      (!promo.expires_at || new Date(promo.expires_at) > now) &&
+      (promo.max_uses === null || promo.used_count < promo.max_uses);
+
+    if (!promo || !isValid) throw new Error("invalid_promo_code");
+
+    promoCodeId = promo.id;
+    discountAmount = computeDiscount(
+      promo.discount_type as "percent" | "fixed",
+      Number(promo.discount_value),
+      subtotal,
+    );
+  }
+
+  const total = Math.max(0, subtotal - discountAmount) + deliveryFee;
 
   const { data: order, error: orderError } = await admin
     .from("orders")
@@ -118,6 +150,8 @@ export async function createPendingOrder(
       locale,
       subtotal,
       delivery_fee: deliveryFee,
+      discount_amount: discountAmount,
+      promo_code_id: promoCodeId,
       total,
       shipping_address_id: shippingAddressId,
     })
@@ -125,6 +159,24 @@ export async function createPendingOrder(
     .single();
 
   if (orderError) throw orderError;
+
+  if (promoCodeId) {
+    // Best-effort, pas de transaction (cohérent avec le reste de cette
+    // fonction) : une commande créée en même temps qu'une autre sur le même
+    // code pourrait sous-compter d'une unité dans de très rares cas, sans
+    // conséquence à l'échelle de cette boutique.
+    const { data: current } = await admin
+      .from("promo_codes")
+      .select("used_count")
+      .eq("id", promoCodeId)
+      .maybeSingle();
+    if (current) {
+      await admin
+        .from("promo_codes")
+        .update({ used_count: current.used_count + 1 })
+        .eq("id", promoCodeId);
+    }
+  }
 
   const { error: itemsError } = await admin.from("order_items").insert(
     lines.map((line) => ({
@@ -154,6 +206,7 @@ export async function createPendingOrder(
     accessToken: order.access_token,
     subtotal,
     deliveryFee,
+    discountAmount,
     total,
     contactEmail: input.contactEmail,
     locale,

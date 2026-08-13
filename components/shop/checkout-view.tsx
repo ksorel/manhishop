@@ -41,6 +41,8 @@ export function CheckoutView({
   const [country, setCountry] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState(initialEmail);
+  const [promoCode, setPromoCode] = useState("");
+  const [promoError, setPromoError] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
@@ -62,6 +64,7 @@ export function CheckoutView({
     event.preventDefault();
     setPending(true);
     setError(null);
+    setPromoError(false);
 
     const contactPhone = reusingSelectedAddress ? (selectedAddress?.phone ?? phone) : phone;
 
@@ -77,6 +80,7 @@ export function CheckoutView({
         : { fullName, line1, line2: line2 || undefined, city, country, phone },
       contactEmail: email,
       contactPhone,
+      promoCode: promoCode.trim() || undefined,
     };
 
     try {
@@ -87,7 +91,14 @@ export function CheckoutView({
       });
 
       const result = await response.json();
-      if (!response.ok || !result.url) throw new Error(result.error ?? "checkout_failed");
+      if (!response.ok || !result.url) {
+        if (result.error === "invalid_promo_code") {
+          setPromoError(true);
+          setPending(false);
+          return;
+        }
+        throw new Error(result.error ?? "checkout_failed");
+      }
 
       // La commande est créée à ce stade (statut pending) : le panier est
       // vidé maintenant, comme côté serveur pour un client connecté —
@@ -246,6 +257,19 @@ export function CheckoutView({
           </>
         )}
       </section>
+
+      <label className="flex flex-col gap-1 text-sm">
+        <span className="text-foreground">{t("promoCode")}</span>
+        <input
+          type="text"
+          value={promoCode}
+          onChange={(e) => setPromoCode(e.target.value)}
+          className={inputClass}
+        />
+        {promoError && (
+          <span className="text-xs font-medium text-error">{t("promoCodeInvalid")}</span>
+        )}
+      </label>
 
       <Card className="flex flex-col gap-2 p-4 text-sm">
         <div className="flex justify-between">
