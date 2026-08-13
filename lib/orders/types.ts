@@ -25,6 +25,7 @@ export interface CheckoutInput {
   contactEmail: string;
   contactPhone: string;
   promoCode?: string;
+  redeemPoints?: number;
 }
 
 export interface PreparedOrderLine {
@@ -41,6 +42,7 @@ export interface PreparedOrder {
   subtotal: number;
   deliveryFee: number;
   discountAmount: number;
+  pointsRedeemed: number;
   total: number;
   contactEmail: string;
   locale: "fr" | "en";

@@ -67,6 +67,13 @@ export default async function OrderDetailPage({
               </span>
             </div>
           )}
+          {order.pointsRedeemed > 0 && (
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">
+                {t("pointsRedeemed", { count: order.pointsRedeemed })}
+              </span>
+            </div>
+          )}
           <div className="flex justify-between text-sm font-semibold">
             <span className="text-foreground">{t("total")}</span>
             <span className="text-foreground">{formatPrice(order.total, locale as Locale)}</span>

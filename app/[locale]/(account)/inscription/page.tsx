@@ -8,10 +8,13 @@ export const dynamic = "force-dynamic";
 
 export default async function SignupPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ ref?: string }>;
 }) {
   const { locale } = await params;
+  const { ref } = await searchParams;
   setRequestLocale(locale);
 
   const supabase = await createClient();
@@ -22,7 +25,7 @@ export default async function SignupPage({
 
   return (
     <AuthShell>
-      <SignupForm />
+      <SignupForm referredBy={ref} />
     </AuthShell>
   );
 }

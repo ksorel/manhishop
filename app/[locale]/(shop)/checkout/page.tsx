@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { getAddresses } from "@/lib/addresses/actions";
 import { getShippingRates } from "@/lib/shipping/queries";
+import { getLoyaltyBalance } from "@/lib/loyalty/queries";
 import { CheckoutView } from "@/components/shop/checkout-view";
 
 export const dynamic = "force-dynamic";
@@ -19,9 +20,10 @@ export default async function CheckoutPage({
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const [addresses, shippingRates] = await Promise.all([
+  const [addresses, shippingRates, loyaltyBalance] = await Promise.all([
     getAddresses().then((a) => a ?? []),
     getShippingRates(),
+    user ? getLoyaltyBalance(user.id) : Promise.resolve(0),
   ]);
 
   return (
@@ -32,6 +34,7 @@ export default async function CheckoutPage({
           initialEmail={user?.email ?? ""}
           savedAddresses={addresses}
           shippingRates={shippingRates}
+          loyaltyBalance={loyaltyBalance}
         />
       </div>
     </div>

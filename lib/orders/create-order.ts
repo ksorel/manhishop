@@ -2,6 +2,8 @@ import { getProductsByIds } from "@/lib/catalogue/queries";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { resolveShippingFee } from "@/lib/shipping/pricing";
 import { computeDiscount } from "@/lib/promo/validate";
+import { getLoyaltyBalance } from "@/lib/loyalty/queries";
+import { POINTS_TO_FCFA } from "@/lib/loyalty/constants";
 import type { ShippingRate } from "@/lib/shipping/types";
 import type { Locale } from "@/lib/catalogue/types";
 import type { CheckoutInput, PreparedOrder } from "./types";
@@ -139,7 +141,22 @@ export async function createPendingOrder(
     );
   }
 
-  const total = Math.max(0, subtotal - discountAmount) + deliveryFee;
+  // Points de fidélité : le client n'envoie qu'un nombre de points
+  // souhaité, jamais un montant — le solde réel est relu en base et le
+  // nombre de points effectivement dépensés est plafonné à la fois par ce
+  // solde et par ce qu'il reste à payer après la réduction du code promo
+  // (jamais de total négatif, jamais plus de points que ceux possédés).
+  let pointsRedeemed = 0;
+  if (input.redeemPoints && userId) {
+    const balance = await getLoyaltyBalance(userId);
+    const requestedPoints = Math.max(0, Math.trunc(input.redeemPoints));
+    const remainingAfterPromo = subtotal - discountAmount;
+    const maxAffordablePoints = Math.floor(remainingAfterPromo / POINTS_TO_FCFA);
+    pointsRedeemed = Math.min(requestedPoints, balance, maxAffordablePoints);
+  }
+  const pointsDiscountAmount = pointsRedeemed * POINTS_TO_FCFA;
+
+  const total = Math.max(0, subtotal - discountAmount - pointsDiscountAmount) + deliveryFee;
 
   const { data: order, error: orderError } = await admin
     .from("orders")
@@ -152,6 +169,7 @@ export async function createPendingOrder(
       delivery_fee: deliveryFee,
       discount_amount: discountAmount,
       promo_code_id: promoCodeId,
+      points_redeemed: pointsRedeemed,
       total,
       shipping_address_id: shippingAddressId,
     })
@@ -159,6 +177,15 @@ export async function createPendingOrder(
     .single();
 
   if (orderError) throw orderError;
+
+  if (pointsRedeemed > 0 && userId) {
+    await admin.from("loyalty_transactions").insert({
+      user_id: userId,
+      points: -pointsRedeemed,
+      reason: "redemption",
+      order_id: order.id,
+    });
+  }
 
   if (promoCodeId) {
     // Best-effort, pas de transaction (cohérent avec le reste de cette
@@ -207,6 +234,7 @@ export async function createPendingOrder(
     subtotal,
     deliveryFee,
     discountAmount,
+    pointsRedeemed,
     total,
     contactEmail: input.contactEmail,
     locale,

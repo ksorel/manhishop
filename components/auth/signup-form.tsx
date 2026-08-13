@@ -11,7 +11,7 @@ import type { Locale } from "@/lib/catalogue/types";
 const inputClass =
   "min-h-11 rounded border border-border bg-background px-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary";
 
-export function SignupForm() {
+export function SignupForm({ referredBy }: { referredBy?: string }) {
   const t = useTranslations("auth");
   const locale = useLocale() as Locale;
   const [fullName, setFullName] = useState("");
@@ -26,7 +26,7 @@ export function SignupForm() {
     setPending(true);
     setError(null);
 
-    const result = await signUp({ email, password, fullName });
+    const result = await signUp({ email, password, fullName, referredBy });
 
     if (result.code) {
       setError(t(`errors.${result.code}`));

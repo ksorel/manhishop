@@ -28,4 +28,5 @@ export const checkoutSchema = z.object({
   contactEmail: z.string().email(),
   contactPhone: z.string().min(1),
   promoCode: z.string().trim().min(1).optional(),
+  redeemPoints: z.number().int().nonnegative().optional(),
 });

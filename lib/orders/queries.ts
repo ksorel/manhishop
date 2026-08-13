@@ -13,6 +13,7 @@ export interface OrderDetail extends OrderSummary {
   subtotal: number;
   deliveryFee: number;
   discountAmount: number;
+  pointsRedeemed: number;
   contactEmail: string;
   contactPhone: string;
   address: {
@@ -27,7 +28,7 @@ export interface OrderDetail extends OrderSummary {
 }
 
 const ORDER_DETAIL_COLUMNS = `
-  id, status, subtotal, delivery_fee, discount_amount, total, contact_email, contact_phone, created_at,
+  id, status, subtotal, delivery_fee, discount_amount, points_redeemed, total, contact_email, contact_phone, created_at,
   addresses (full_name, line1, line2, city, country, phone),
   order_items (product_name, size_label, quantity, unit_price)
 `;
@@ -73,6 +74,7 @@ export async function getMyOrderById(orderId: string): Promise<OrderDetail | nul
     subtotal: Number(data.subtotal),
     deliveryFee: Number(data.delivery_fee),
     discountAmount: Number(data.discount_amount),
+    pointsRedeemed: data.points_redeemed,
     total: Number(data.total),
     contactEmail: data.contact_email,
     contactPhone: data.contact_phone,

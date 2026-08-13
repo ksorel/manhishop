@@ -18,6 +18,7 @@ function renderHtml(order: PreparedOrder, locale: Locale) {
 
   const deliveryLabel = locale === "fr" ? "Livraison" : "Delivery";
   const discountLabel = locale === "fr" ? "Réduction" : "Discount";
+  const pointsLabel = locale === "fr" ? "Points utilisés" : "Points redeemed";
   const totalLabel = locale === "fr" ? "Total" : "Total";
   const thanks =
     locale === "fr"
@@ -29,6 +30,11 @@ function renderHtml(order: PreparedOrder, locale: Locale) {
       ? `<tr><td>${discountLabel}</td><td style="text-align:right">-${formatPrice(order.discountAmount, locale)}</td></tr>`
       : "";
 
+  const pointsRow =
+    order.pointsRedeemed > 0
+      ? `<tr><td>${pointsLabel}</td><td style="text-align:right">${order.pointsRedeemed}</td></tr>`
+      : "";
+
   return `
     <div>
       <p>${thanks}</p>
@@ -36,6 +42,7 @@ function renderHtml(order: PreparedOrder, locale: Locale) {
         ${rows}
         <tr><td>${deliveryLabel}</td><td style="text-align:right">${formatPrice(order.deliveryFee, locale)}</td></tr>
         ${discountRow}
+        ${pointsRow}
         <tr><td><strong>${totalLabel}</strong></td><td style="text-align:right"><strong>${formatPrice(order.total, locale)}</strong></td></tr>
       </table>
     </div>

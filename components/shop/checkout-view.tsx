@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { formatPrice } from "@/lib/format";
 import { resolveShippingFee } from "@/lib/shipping/pricing";
+import { POINTS_TO_FCFA } from "@/lib/loyalty/constants";
 import type { Locale } from "@/lib/catalogue/types";
 import type { Address } from "@/lib/addresses/types";
 import type { ShippingRate } from "@/lib/shipping/types";
@@ -20,10 +21,12 @@ export function CheckoutView({
   initialEmail,
   savedAddresses,
   shippingRates,
+  loyaltyBalance,
 }: {
   initialEmail: string;
   savedAddresses: Address[];
   shippingRates: ShippingRate[];
+  loyaltyBalance: number;
 }) {
   const t = useTranslations("checkout");
   const locale = useLocale() as Locale;
@@ -43,6 +46,7 @@ export function CheckoutView({
   const [email, setEmail] = useState(initialEmail);
   const [promoCode, setPromoCode] = useState("");
   const [promoError, setPromoError] = useState(false);
+  const [usePoints, setUsePoints] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
@@ -81,6 +85,7 @@ export function CheckoutView({
       contactEmail: email,
       contactPhone,
       promoCode: promoCode.trim() || undefined,
+      redeemPoints: usePoints ? loyaltyBalance : undefined,
     };
 
     try {
@@ -270,6 +275,21 @@ export function CheckoutView({
           <span className="text-xs font-medium text-error">{t("promoCodeInvalid")}</span>
         )}
       </label>
+
+      {loyaltyBalance > 0 && (
+        <label className="flex min-h-11 items-center gap-2 text-sm text-foreground">
+          <input
+            type="checkbox"
+            checked={usePoints}
+            onChange={(e) => setUsePoints(e.target.checked)}
+            className="size-5"
+          />
+          {t("points.useAll", {
+            points: loyaltyBalance,
+            value: formatPrice(loyaltyBalance * POINTS_TO_FCFA, locale),
+          })}
+        </label>
+      )}
 
       <Card className="flex flex-col gap-2 p-4 text-sm">
         <div className="flex justify-between">

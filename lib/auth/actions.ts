@@ -20,12 +20,15 @@ export async function signUp(input: {
   email: string;
   password: string;
   fullName: string;
+  referredBy?: string;
 }): Promise<{ code: AuthErrorCode | null; needsEmailConfirmation: boolean }> {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
     email: input.email,
     password: input.password,
-    options: { data: { full_name: input.fullName } },
+    options: {
+      data: { full_name: input.fullName, referred_by: input.referredBy ?? null },
+    },
   });
 
   if (error) {

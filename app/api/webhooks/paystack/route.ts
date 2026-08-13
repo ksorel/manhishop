@@ -2,7 +2,58 @@ import { NextResponse } from "next/server";
 import { verifyPaystackSignature, verifyPaystackTransaction } from "@/lib/paystack/webhook";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendOrderConfirmationEmail } from "@/lib/email/send-order-confirmation";
+import { EARN_RATE_FCFA_PER_POINT, REFERRAL_BONUS_POINTS } from "@/lib/loyalty/constants";
 import type { PreparedOrder } from "@/lib/orders/types";
+
+/**
+ * Crédite les points gagnés sur cette commande et, à la toute première
+ * commande payée d'un filleul, le bonus de parrainage des deux côtés.
+ * Best-effort (comme le rapatriement d'images ou l'alerte retour en stock
+ * ailleurs dans le projet) : ne doit jamais faire échouer la confirmation
+ * du paiement ni bloquer l'email de confirmation.
+ */
+async function creditLoyaltyAndReferral(
+  admin: ReturnType<typeof createAdminClient>,
+  order: { id: string; user_id: string | null; subtotal: number; discount_amount: number },
+) {
+  if (!order.user_id) return;
+
+  const earnedPoints = Math.floor(
+    (Number(order.subtotal) - Number(order.discount_amount)) / EARN_RATE_FCFA_PER_POINT,
+  );
+  if (earnedPoints > 0) {
+    await admin.from("loyalty_transactions").insert({
+      user_id: order.user_id,
+      points: earnedPoints,
+      reason: "purchase",
+      order_id: order.id,
+    });
+  }
+
+  const { data: profile } = await admin
+    .from("profiles")
+    .select("referred_by, referral_rewarded")
+    .eq("id", order.user_id)
+    .maybeSingle();
+
+  if (profile?.referred_by && !profile.referral_rewarded) {
+    await admin.from("loyalty_transactions").insert([
+      {
+        user_id: order.user_id,
+        points: REFERRAL_BONUS_POINTS,
+        reason: "referral_bonus",
+        order_id: order.id,
+      },
+      {
+        user_id: profile.referred_by,
+        points: REFERRAL_BONUS_POINTS,
+        reason: "referral_bonus",
+        order_id: order.id,
+      },
+    ]);
+    await admin.from("profiles").update({ referral_rewarded: true }).eq("id", order.user_id);
+  }
+}
 
 export async function POST(request: Request) {
   const rawBody = await request.text();
@@ -49,7 +100,7 @@ export async function POST(request: Request) {
     const { data: order } = await admin
       .from("orders")
       .select(
-        "id, status, contact_email, locale, subtotal, delivery_fee, discount_amount, total, access_token, order_items(product_id, product_name, size_label, quantity, unit_price)",
+        "id, status, user_id, contact_email, locale, subtotal, delivery_fee, discount_amount, points_redeemed, total, access_token, order_items(product_id, product_name, size_label, quantity, unit_price)",
       )
       .eq("id", reference)
       .maybeSingle();
@@ -72,6 +123,7 @@ export async function POST(request: Request) {
         subtotal: Number(order.subtotal),
         deliveryFee: Number(order.delivery_fee),
         discountAmount: Number(order.discount_amount),
+        pointsRedeemed: order.points_redeemed,
         total: Number(order.total),
         contactEmail: order.contact_email,
         locale: order.locale as "fr" | "en",
@@ -85,6 +137,12 @@ export async function POST(request: Request) {
       };
 
       await sendOrderConfirmationEmail(preparedOrder, preparedOrder.locale);
+
+      try {
+        await creditLoyaltyAndReferral(admin, order);
+      } catch (loyaltyError) {
+        console.error("Échec crédit fidélité/parrainage:", loyaltyError);
+      }
     }
 
     return NextResponse.json({ received: true, paid: true });
