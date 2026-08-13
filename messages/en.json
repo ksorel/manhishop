@@ -9,7 +9,7 @@
   },
   "nav": {
     "home": "Home",
-    "catalogue": "Catalogue",
+    "catalogue": "Collection",
     "search": "Search",
     "cart": "Cart",
     "account": "Account",
@@ -41,7 +41,7 @@
   },
   "home": {
     "hero": {
-      "cta": "Browse the catalogue"
+      "cta": "Browse the collection"
     },
     "categories": {
       "title": "Categories",
@@ -57,7 +57,7 @@
     }
   },
   "catalogue": {
-    "title": "Catalogue",
+    "title": "Collection",
     "allCategories": "All categories",
     "loading": "Loading products…",
     "empty": "No products match these filters.",
@@ -284,6 +284,7 @@
     "products": {
       "title": "Products",
       "add": "Add a product",
+      "import": "Import a catalogue",
       "name": "Name",
       "category": "Category",
       "price": "Price",
@@ -325,6 +326,31 @@
         "noSizeGuide": "None",
         "fillFromGuide": "Fill sizes from the guide"
       }
+    },
+    "catalogueImport": {
+      "title": "Import a supplier catalogue",
+      "intro": "Analyse a supplier file (bdroppy.com format), then choose which categories to import.",
+      "fileLabel": "File (.xlsx)",
+      "analyze": "Analyse",
+      "analyzing": "Analysing…",
+      "fxRate": "Exchange rate (EUR → FCFA)",
+      "marginPercent": "Margin (%)",
+      "categoriesTitle": "Categories to import",
+      "productsCount": "{count} products",
+      "priceRange": "Supplier price: €{min} – €{max}",
+      "import": "Import",
+      "importing": "Importing…",
+      "noSelection": "Select at least one category.",
+      "draftNotice": "Imported products are created as drafts: nothing is visible on the shop until you activate them from their page.",
+      "resultTitle": "Import complete",
+      "resultProducts": "{count} products created",
+      "resultCategories": "{count} categories created",
+      "resultSizes": "{count} sizes created",
+      "resultImages": "{count} images linked",
+      "resultSkipped": "{count} rows skipped",
+      "backToList": "Back to products",
+      "fileError": "Invalid file.",
+      "error": "Something went wrong. Please try again."
     },
     "categories": {
       "title": "Categories",

@@ -19,11 +19,19 @@ export default async function AdminProductsPage({
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <h1 className="text-2xl font-semibold text-foreground">{t("title")}</h1>
-        <Link href="/admin/produits/nouveau" className={buttonVariants({ variant: "primary" })}>
-          {t("add")}
-        </Link>
+        <div className="flex gap-2">
+          <Link
+            href="/admin/produits/importer"
+            className={buttonVariants({ variant: "secondary" })}
+          >
+            {t("import")}
+          </Link>
+          <Link href="/admin/produits/nouveau" className={buttonVariants({ variant: "primary" })}>
+            {t("add")}
+          </Link>
+        </div>
       </div>
 
       {products.length === 0 ? (

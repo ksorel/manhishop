@@ -20,9 +20,14 @@ const nextConfig: NextConfig = {
   // purement cosmétique et sans effet en production.
   devIndicators: false,
   images: {
-    remotePatterns: supabaseHostname
-      ? [{ protocol: "https", hostname: supabaseHostname, pathname: "/storage/v1/object/public/**" }]
-      : [],
+    remotePatterns: [
+      ...(supabaseHostname
+        ? [{ protocol: "https" as const, hostname: supabaseHostname, pathname: "/storage/v1/object/public/**" }]
+        : []),
+      // Images hotlinkées de l'import de catalogue fournisseur (bdroppy.com) —
+      // pas de re-upload vers Supabase Storage (quota gratuit insuffisant).
+      { protocol: "https" as const, hostname: "media.bdroppy.com" },
+    ],
   },
 };
 

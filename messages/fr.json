@@ -9,7 +9,7 @@
   },
   "nav": {
     "home": "Accueil",
-    "catalogue": "Catalogue",
+    "catalogue": "Collection",
     "search": "Recherche",
     "cart": "Panier",
     "account": "Compte",
@@ -41,7 +41,7 @@
   },
   "home": {
     "hero": {
-      "cta": "Découvrir le catalogue"
+      "cta": "Découvrir la collection"
     },
     "categories": {
       "title": "Catégories",
@@ -57,7 +57,7 @@
     }
   },
   "catalogue": {
-    "title": "Catalogue",
+    "title": "Collection",
     "allCategories": "Toutes les catégories",
     "loading": "Chargement des produits…",
     "empty": "Aucun produit ne correspond à ces critères.",
@@ -284,6 +284,7 @@
     "products": {
       "title": "Produits",
       "add": "Ajouter un produit",
+      "import": "Importer un catalogue",
       "name": "Nom",
       "category": "Catégorie",
       "price": "Prix",
@@ -325,6 +326,31 @@
         "noSizeGuide": "Aucun",
         "fillFromGuide": "Remplir les tailles depuis le guide"
       }
+    },
+    "catalogueImport": {
+      "title": "Importer un catalogue fournisseur",
+      "intro": "Analyse un fichier fournisseur (format bdroppy.com) puis choisis les catégories à importer.",
+      "fileLabel": "Fichier (.xlsx)",
+      "analyze": "Analyser",
+      "analyzing": "Analyse en cours…",
+      "fxRate": "Taux de change (EUR → FCFA)",
+      "marginPercent": "Marge (%)",
+      "categoriesTitle": "Catégories à importer",
+      "productsCount": "{count} produits",
+      "priceRange": "Prix fournisseur : {min} € – {max} €",
+      "import": "Importer",
+      "importing": "Import en cours…",
+      "noSelection": "Sélectionne au moins une catégorie.",
+      "draftNotice": "Les produits importés sont créés en brouillon : rien n'est visible sur la boutique tant que tu ne les actives pas depuis leur fiche.",
+      "resultTitle": "Import terminé",
+      "resultProducts": "{count} produits créés",
+      "resultCategories": "{count} catégories créées",
+      "resultSizes": "{count} tailles créées",
+      "resultImages": "{count} images liées",
+      "resultSkipped": "{count} lignes ignorées",
+      "backToList": "Retour aux produits",
+      "fileError": "Fichier invalide.",
+      "error": "Une erreur est survenue. Réessaie."
     },
     "categories": {
       "title": "Catégories",
