@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { fetchAllRows } from "@/lib/supabase/paginate";
 import type { AdminProduct, AdminProductImage, AdminProductInput, AdminProductSummary } from "./types";
 
 function toAdminProduct(row: {
@@ -69,18 +70,30 @@ async function replaceProductSizes(
   if (insertError) throw insertError;
 }
 
+interface AdminProductListRow {
+  id: string;
+  slug: string;
+  name_fr: string;
+  price: number;
+  stock: number;
+  status: "active" | "draft";
+  category: { name_fr: string } | { name_fr: string }[] | null;
+  product_images: { url: string; display_order: number }[] | null;
+}
+
 export async function getAdminProducts(): Promise<AdminProductSummary[]> {
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("products")
-    .select(
-      "id, slug, name_fr, price, stock, status, category:categories(name_fr), product_images(url, display_order)",
-    )
-    .order("created_at", { ascending: false });
+  const data = await fetchAllRows<AdminProductListRow>((from, to) =>
+    supabase
+      .from("products")
+      .select(
+        "id, slug, name_fr, price, stock, status, category:categories(name_fr), product_images(url, display_order)",
+      )
+      .order("created_at", { ascending: false })
+      .range(from, to),
+  );
 
-  if (error) throw error;
-
-  return (data ?? []).map((row) => {
+  return data.map((row) => {
     const category = Array.isArray(row.category) ? row.category[0] : row.category;
     const images = (row.product_images ?? []).slice().sort((a, b) => a.display_order - b.display_order);
     return {

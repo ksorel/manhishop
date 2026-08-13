@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { assertAdminApi } from "@/lib/admin/guard";
+import { fetchAllRows } from "@/lib/supabase/paginate";
 import { slugify } from "@/lib/utils";
 import {
   parseBdroppyWorkbook,
@@ -148,11 +149,15 @@ export async function POST(request: Request) {
   }
 
   // 2. Produits candidats, slugs uniques sur tout le lot + l'existant ------
-  const { data: existingSlugRows, error: slugsError } = await supabase
-    .from("products")
-    .select("slug");
-  if (slugsError) return NextResponse.json({ error: "products_read_failed" }, { status: 500 });
-  const usedSlugs = new Set((existingSlugRows ?? []).map((r) => r.slug));
+  let existingSlugRows: { slug: string }[];
+  try {
+    existingSlugRows = await fetchAllRows<{ slug: string }>((from, to) =>
+      supabase.from("products").select("slug").range(from, to),
+    );
+  } catch {
+    return NextResponse.json({ error: "products_read_failed" }, { status: 500 });
+  }
+  const usedSlugs = new Set(existingSlugRows.map((r) => r.slug));
 
   const candidates: CandidateProduct[] = valid.map((g) =>
     toCandidateProduct(g, { fxRate, marginPercent }, usedSlugs),
