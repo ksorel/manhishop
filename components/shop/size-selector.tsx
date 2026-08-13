@@ -8,10 +8,12 @@ export function SizeSelector({
   sizes,
   selectedSizeId,
   onSelect,
+  onRequestNotify,
 }: {
   sizes: ProductSize[];
   selectedSizeId: string | null;
   onSelect: (size: ProductSize) => void;
+  onRequestNotify?: (size: ProductSize) => void;
 }) {
   const t = useTranslations("product");
 
@@ -26,8 +28,8 @@ export function SizeSelector({
             <button
               key={size.id}
               type="button"
-              disabled={outOfStock}
-              onClick={() => onSelect(size)}
+              disabled={outOfStock && !onRequestNotify}
+              onClick={() => (outOfStock ? onRequestNotify?.(size) : onSelect(size))}
               aria-pressed={selected}
               className={cn(
                 "min-h-11 min-w-11 rounded border px-3 text-sm font-medium transition-colors",
@@ -35,6 +37,7 @@ export function SizeSelector({
                   ? "border-primary bg-primary text-primary-foreground"
                   : "border-border bg-background text-foreground hover:bg-surface",
                 outOfStock && "cursor-not-allowed opacity-40 line-through hover:bg-background",
+                outOfStock && onRequestNotify && "cursor-pointer",
               )}
             >
               {size.label}

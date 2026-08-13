@@ -86,7 +86,11 @@
     "chooseSize": "Choose a size",
     "sizeRequired": "Choose a size to add to cart.",
     "sizeGuide": "Size guide",
-    "sizeGuideClose": "Close"
+    "sizeGuideClose": "Close",
+    "notifyMe": "Notify me when available",
+    "notifyForSize": "Notify me for size {size}",
+    "notifySubscribed": "You'll be notified as soon as it's available!",
+    "notifyError": "Something went wrong. Please try again."
   },
   "wishlist": {
     "title": "My wishlist",

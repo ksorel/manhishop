@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { fetchAllRows } from "@/lib/supabase/paginate";
+import { notifyBackInStockIfNeeded } from "@/lib/stock-notifications/notify";
 import type { AdminProduct, AdminProductImage, AdminProductInput, AdminProductSummary } from "./types";
 
 function toAdminProduct(row: {
@@ -96,28 +97,56 @@ async function rehostExternalImages(
   }
 }
 
+interface ProductSizeRow {
+  id: string;
+  label: string;
+  stock: number;
+}
+
+/**
+ * Remplace les tailles d'un produit par la liste fournie. Garde le même
+ * `id` pour une taille dont le libellé ne change pas (upsert sur la
+ * contrainte unique product_id+label, migration 0012) au lieu de tout
+ * supprimer puis réinsérer : évite qu'une simple modification de stock sur
+ * UNE taille ne casse, via cascade delete, le size_id référencé par
+ * cart_items (panier client) ou stock_notifications (abonnements "prévenez-
+ * moi") de TOUTES les autres tailles du produit.
+ */
 async function replaceProductSizes(
   supabase: Awaited<ReturnType<typeof createClient>>,
   productId: string,
   sizes: AdminProductInput["sizes"],
-) {
-  const { error: deleteError } = await supabase
+): Promise<ProductSizeRow[]> {
+  const { data: existingRows } = await supabase
     .from("product_sizes")
-    .delete()
+    .select("id, label")
     .eq("product_id", productId);
-  if (deleteError) throw deleteError;
 
-  if (sizes.length === 0) return;
+  const newLabels = new Set(sizes.map((size) => size.label));
+  const toDelete = (existingRows ?? [])
+    .filter((row) => !newLabels.has(row.label))
+    .map((row) => row.id);
+  if (toDelete.length > 0) {
+    const { error: deleteError } = await supabase.from("product_sizes").delete().in("id", toDelete);
+    if (deleteError) throw deleteError;
+  }
 
-  const { error: insertError } = await supabase.from("product_sizes").insert(
-    sizes.map((size, index) => ({
-      product_id: productId,
-      label: size.label,
-      stock: size.stock,
-      display_order: index,
-    })),
-  );
-  if (insertError) throw insertError;
+  if (sizes.length === 0) return [];
+
+  const { data, error: upsertError } = await supabase
+    .from("product_sizes")
+    .upsert(
+      sizes.map((size, index) => ({
+        product_id: productId,
+        label: size.label,
+        stock: size.stock,
+        display_order: index,
+      })),
+      { onConflict: "product_id,label" },
+    )
+    .select("id, label, stock");
+  if (upsertError) throw upsertError;
+  return data ?? [];
 }
 
 interface AdminProductListRow {
@@ -221,7 +250,22 @@ export async function updateProduct(id: string, input: AdminProductInput): Promi
     .eq("id", id);
 
   if (error) throw error;
-  await replaceProductSizes(supabase, id, input.sizes);
+  const sizeRows = await replaceProductSizes(supabase, id, input.sizes);
+
+  try {
+    await notifyBackInStockIfNeeded({
+      productId: id,
+      nameFr: input.nameFr,
+      slug: input.slug,
+      simpleStock: input.stock,
+      sizes: sizeRows,
+    });
+  } catch (notifyError) {
+    // Best-effort : un souci sur l'email/l'abonnement ne doit jamais
+    // empêcher la sauvegarde du produit.
+    console.error("Échec notification retour en stock:", notifyError);
+  }
+
   if (input.status === "active") {
     await rehostExternalImages(supabase, id);
   }

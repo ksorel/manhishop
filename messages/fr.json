@@ -86,7 +86,11 @@
     "chooseSize": "Choisir une taille",
     "sizeRequired": "Choisissez une taille pour ajouter au panier.",
     "sizeGuide": "Guide des tailles",
-    "sizeGuideClose": "Fermer"
+    "sizeGuideClose": "Fermer",
+    "notifyMe": "Prévenez-moi quand disponible",
+    "notifyForSize": "Prévenez-moi pour la taille {size}",
+    "notifySubscribed": "Tu seras prévenu(e) dès que disponible !",
+    "notifyError": "Une erreur est survenue. Réessaie."
   },
   "wishlist": {
     "title": "Mes favoris",
