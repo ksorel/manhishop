@@ -353,7 +353,9 @@
       "salesToday": "Ventes aujourd'hui",
       "salesWeek": "Ventes 7 derniers jours",
       "outOfStock": "Produits en rupture",
-      "pendingOrders": "Commandes en attente"
+      "pendingOrders": "Commandes en attente",
+      "visitorsWeek": "Visiteurs (7 jours)",
+      "conversionWeek": "Taux de conversion (7 jours)"
     },
     "products": {
       "title": "Produits",

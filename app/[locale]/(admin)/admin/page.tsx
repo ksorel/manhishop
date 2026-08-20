@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { formatPrice } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Locale } from "@/lib/catalogue/types";
-import { AlertTriangle, Clock, TrendingUp, Wallet } from "lucide-react";
+import { AlertTriangle, Clock, TrendingUp, Users, Wallet } from "lucide-react";
 
 export default async function AdminPage({
   params,
@@ -40,6 +40,21 @@ export default async function AdminPage({
       value: String(stats.pendingOrdersCount),
       icon: Clock,
       accent: stats.pendingOrdersCount > 0 ? "text-warning" : "text-muted-foreground",
+    },
+    {
+      label: t("dashboard.visitorsWeek"),
+      value: String(stats.visitorsThisWeek),
+      icon: Users,
+      accent: "text-muted-foreground",
+    },
+    {
+      label: t("dashboard.conversionWeek"),
+      value:
+        stats.conversionRateThisWeek === null
+          ? "—"
+          : `${stats.conversionRateThisWeek.toFixed(1)}%`,
+      icon: TrendingUp,
+      accent: "text-muted-foreground",
     },
   ];
 

@@ -353,7 +353,9 @@
       "salesToday": "Sales today",
       "salesWeek": "Sales last 7 days",
       "outOfStock": "Out-of-stock products",
-      "pendingOrders": "Pending orders"
+      "pendingOrders": "Pending orders",
+      "visitorsWeek": "Visitors (7 days)",
+      "conversionWeek": "Conversion rate (7 days)"
     },
     "products": {
       "title": "Products",
