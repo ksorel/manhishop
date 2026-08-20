@@ -13,7 +13,7 @@ export interface AdminOrderSummary {
 }
 
 const ORDER_DETAIL_COLUMNS = `
-  id, status, subtotal, delivery_fee, discount_amount, points_redeemed, total, contact_email, contact_phone, created_at,
+  id, status, subtotal, delivery_fee, discount_amount, points_redeemed, tracking_info, total, contact_email, contact_phone, created_at,
   addresses (full_name, line1, line2, city, country, phone),
   order_items (product_name, size_label, quantity, unit_price)
 `;
@@ -63,6 +63,7 @@ export async function getAdminOrderById(orderId: string): Promise<OrderDetail | 
     deliveryFee: Number(data.delivery_fee),
     discountAmount: Number(data.discount_amount),
     pointsRedeemed: data.points_redeemed,
+    trackingInfo: data.tracking_info,
     total: Number(data.total),
     contactEmail: data.contact_email,
     contactPhone: data.contact_phone,
@@ -161,6 +162,15 @@ export async function updateOrderStatus(orderId: string, status: OrderStatus): P
 
   const supabase = await createClient();
   const { error } = await supabase.from("orders").update({ status }).eq("id", orderId);
+  if (error) throw error;
+}
+
+export async function updateOrderTracking(orderId: string, trackingInfo: string): Promise<void> {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("orders")
+    .update({ tracking_info: trackingInfo.trim() || null })
+    .eq("id", orderId);
   if (error) throw error;
 }
 

@@ -298,6 +298,14 @@
     "shippingAddress": "Shipping address",
     "items": "Items",
     "notFound": "Order not found.",
+    "trackingInfo": "Tracking information",
+    "timeline": {
+      "ordered": "Ordered",
+      "paid": "Paid",
+      "shipped": "Shipped",
+      "delivered": "Delivered",
+      "cancelledNotice": "This order has been cancelled."
+    },
     "status": {
       "pending": "Awaiting payment",
       "paid": "Paid",
@@ -568,7 +576,10 @@
       "exportCsv": "Export as CSV",
       "selectAll": "Select all",
       "selectedCount": "{count, plural, one {# selected} other {# selected}}",
-      "bulkError": "Something went wrong. Please try again."
+      "bulkError": "Something went wrong. Please try again.",
+      "trackingLabel": "Tracking number / info (optional)",
+      "trackingSave": "Save",
+      "trackingSaved": "Tracking information saved."
     },
     "ordersExport": {
       "orderId": "Order number",

@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { Card } from "@/components/ui/card";
 import { OrderStatusBadge } from "@/components/account/order-status-badge";
 import { OrderStatusSelect } from "@/components/admin/order-status-select";
+import { OrderTrackingForm } from "@/components/admin/order-tracking-form";
 import { formatPrice } from "@/lib/format";
 import type { Locale } from "@/lib/catalogue/types";
 
@@ -98,6 +99,10 @@ export default async function AdminOrderDetailPage({
 
       <div className="mt-6">
         <OrderStatusSelect orderId={order.id} initialStatus={order.status} />
+      </div>
+
+      <div className="mt-6">
+        <OrderTrackingForm orderId={order.id} initialTrackingInfo={order.trackingInfo} />
       </div>
     </div>
   );

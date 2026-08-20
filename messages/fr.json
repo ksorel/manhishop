@@ -298,6 +298,14 @@
     "shippingAddress": "Adresse de livraison",
     "items": "Articles",
     "notFound": "Commande introuvable.",
+    "trackingInfo": "Informations de suivi",
+    "timeline": {
+      "ordered": "Commandée",
+      "paid": "Payée",
+      "shipped": "Expédiée",
+      "delivered": "Livrée",
+      "cancelledNotice": "Cette commande a été annulée."
+    },
     "status": {
       "pending": "En attente de paiement",
       "paid": "Payée",
@@ -568,7 +576,10 @@
       "exportCsv": "Exporter en CSV",
       "selectAll": "Tout sélectionner",
       "selectedCount": "{count, plural, one {# sélectionnée} other {# sélectionnées}}",
-      "bulkError": "Une erreur est survenue. Réessaie."
+      "bulkError": "Une erreur est survenue. Réessaie.",
+      "trackingLabel": "Numéro / info de suivi (optionnel)",
+      "trackingSave": "Enregistrer",
+      "trackingSaved": "Informations de suivi enregistrées."
     },
     "ordersExport": {
       "orderId": "Numéro de commande",

@@ -5,6 +5,7 @@ import { getMyOrderById } from "@/lib/orders/queries";
 import { Link } from "@/i18n/navigation";
 import { Card } from "@/components/ui/card";
 import { OrderStatusBadge } from "@/components/account/order-status-badge";
+import { OrderTimeline } from "@/components/account/order-timeline";
 import { formatPrice } from "@/lib/format";
 import type { Locale } from "@/lib/catalogue/types";
 
@@ -44,6 +45,17 @@ export default async function OrderDetailPage({
       <p className="mt-1 text-sm text-muted-foreground">
         {new Date(order.createdAt).toLocaleDateString(locale)}
       </p>
+
+      <div className="mt-6">
+        <OrderTimeline status={order.status} />
+      </div>
+
+      {order.trackingInfo && (
+        <Card className="mt-4 p-4 text-sm">
+          <h2 className="text-sm font-semibold text-foreground">{t("trackingInfo")}</h2>
+          <p className="mt-2 whitespace-pre-line text-muted-foreground">{order.trackingInfo}</p>
+        </Card>
+      )}
 
       <Card className="mt-6 flex flex-col gap-2 p-4">
         <h2 className="text-sm font-semibold text-foreground">{t("items")}</h2>
