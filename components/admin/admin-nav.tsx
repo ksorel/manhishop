@@ -6,9 +6,12 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { cn } from "@/lib/utils";
 import {
+  Briefcase,
   ClipboardList,
   FileText,
+  Inbox,
   LayoutDashboard,
+  Newspaper,
   Package,
   Percent,
   Ruler,
@@ -28,6 +31,9 @@ const NAV_ITEMS = [
   { href: "/admin/codes-promo" as const, key: "promoCodes" as const, icon: Percent },
   { href: "/admin/commandes" as const, key: "orders" as const, icon: ClipboardList },
   { href: "/admin/livraison" as const, key: "shipping" as const, icon: Truck },
+  { href: "/admin/actualites" as const, key: "articles" as const, icon: Newspaper },
+  { href: "/admin/postes" as const, key: "jobs" as const, icon: Briefcase },
+  { href: "/admin/candidatures" as const, key: "applications" as const, icon: Inbox },
   { href: "/admin/contenu" as const, key: "content" as const, icon: FileText },
   { href: "/admin/utilisateurs" as const, key: "users" as const, icon: Users },
 ];

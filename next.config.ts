@@ -19,6 +19,15 @@ const nextConfig: NextConfig = {
   // clics Playwright sur petit viewport (mobile-chrome) — désactivé,
   // purement cosmétique et sans effet en production.
   devIndicators: false,
+  experimental: {
+    // Défaut Next (1 Mo) trop bas pour l'upload de CV en PDF via Server
+    // Action (submitJobApplication) — le code applique déjà sa propre
+    // limite à 5 Mo (message d'erreur convivial). Marge volontairement
+    // large au-dessus de cette limite applicative (10 Mo) pour que ce soit
+    // toujours notre validation — pas le plafond bas niveau de Next — qui
+    // déclenche en premier et affiche le message convivial.
+    serverActions: { bodySizeLimit: "10mb" },
+  },
   images: {
     remotePatterns: [
       ...(supabaseHostname

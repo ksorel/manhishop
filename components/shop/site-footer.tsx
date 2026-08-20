@@ -54,6 +54,12 @@ export function SiteFooter({ content }: { content: FooterContent }) {
         <Link href="/guide-tailles" className="hover:text-foreground hover:underline">
           {t("sizeGuide")}
         </Link>
+        <Link href="/actualites" className="hover:text-foreground hover:underline">
+          {tFooter("news")}
+        </Link>
+        <Link href="/carrieres" className="hover:text-foreground hover:underline">
+          {tFooter("careers")}
+        </Link>
         {content.cgvFr && (
           <Link href="/cgv" className="hover:text-foreground hover:underline">
             {tFooter("cgv")}

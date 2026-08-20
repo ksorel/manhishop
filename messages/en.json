@@ -125,6 +125,30 @@
     "deleteYourReview": "Delete my review",
     "you": "You"
   },
+  "news": {
+    "title": "News & updates",
+    "empty": "No articles yet.",
+    "backToList": "Back to news"
+  },
+  "careers": {
+    "title": "Careers",
+    "empty": "No open positions right now.",
+    "backToList": "Back to positions",
+    "apply": "Apply",
+    "form": {
+      "fullName": "Full name",
+      "email": "Email",
+      "phone": "Phone",
+      "message": "Cover message",
+      "cv": "CV (PDF)",
+      "submit": "Submit my application",
+      "success": "Application sent! We'll get back to you if your profile is a match.",
+      "error": "Something went wrong. Please try again.",
+      "cvRequired": "Please attach your CV as a PDF.",
+      "cvInvalidType": "The CV must be a PDF file.",
+      "cvTooLarge": "The CV must not exceed 5 MB."
+    }
+  },
   "search": {
     "title": "Search",
     "placeholder": "Search for a product…",
@@ -319,6 +343,9 @@
       "promoCodes": "Promo codes",
       "orders": "Orders",
       "shipping": "Shipping",
+      "articles": "News",
+      "jobs": "Jobs",
+      "applications": "Applications",
       "content": "Content",
       "users": "Users"
     },
@@ -433,6 +460,53 @@
       "empty": "No reviews yet.",
       "delete": "Delete",
       "confirmDelete": "Delete this review?"
+    },
+    "articles": {
+      "title": "News",
+      "add": "Add an article",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Delete this article?",
+      "empty": "No articles.",
+      "active": "Published",
+      "draft": "Draft",
+      "form": {
+        "titleFr": "Title (FR)",
+        "titleEn": "Title (EN)",
+        "bodyFr": "Body (FR)",
+        "bodyEn": "Body (EN)",
+        "image": "Image (optional)",
+        "save": "Save",
+        "cancel": "Cancel",
+        "saveError": "Something went wrong. Please try again."
+      }
+    },
+    "jobs": {
+      "title": "Jobs",
+      "add": "Add a job",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Delete this job?",
+      "empty": "No jobs.",
+      "active": "Open",
+      "draft": "Draft",
+      "form": {
+        "titleFr": "Title (FR)",
+        "titleEn": "Title (EN)",
+        "descriptionFr": "Description (FR)",
+        "descriptionEn": "Description (EN)",
+        "location": "Location (optional)",
+        "save": "Save",
+        "cancel": "Cancel",
+        "saveError": "Something went wrong. Please try again."
+      }
+    },
+    "applications": {
+      "title": "Applications",
+      "empty": "No applications yet.",
+      "downloadCv": "Download CV",
+      "delete": "Delete",
+      "confirmDelete": "Delete this application?"
     },
     "promoCodes": {
       "title": "Promo codes",
@@ -581,6 +655,8 @@
   "footer": {
     "rights": "All rights reserved.",
     "linksLabel": "Useful links",
+    "news": "News & updates",
+    "careers": "Careers",
     "cgv": "Terms of sale",
     "privacy": "Privacy",
     "legalNotice": "Legal notice"

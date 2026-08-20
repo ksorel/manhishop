@@ -125,6 +125,30 @@
     "deleteYourReview": "Supprimer mon avis",
     "you": "Vous"
   },
+  "news": {
+    "title": "Infos & actualités",
+    "empty": "Aucun article pour le moment.",
+    "backToList": "Retour aux actualités"
+  },
+  "careers": {
+    "title": "Carrières",
+    "empty": "Aucun poste ouvert pour le moment.",
+    "backToList": "Retour aux postes",
+    "apply": "Postuler",
+    "form": {
+      "fullName": "Nom complet",
+      "email": "Email",
+      "phone": "Téléphone",
+      "message": "Message de motivation",
+      "cv": "CV (PDF)",
+      "submit": "Envoyer ma candidature",
+      "success": "Candidature envoyée ! Nous te recontacterons si ton profil correspond.",
+      "error": "Une erreur est survenue. Réessaie.",
+      "cvRequired": "Merci de joindre ton CV au format PDF.",
+      "cvInvalidType": "Le CV doit être un fichier PDF.",
+      "cvTooLarge": "Le CV ne doit pas dépasser 5 Mo."
+    }
+  },
   "search": {
     "title": "Recherche",
     "placeholder": "Rechercher un produit…",
@@ -319,6 +343,9 @@
       "promoCodes": "Codes promo",
       "orders": "Commandes",
       "shipping": "Livraison",
+      "articles": "Actualités",
+      "jobs": "Postes",
+      "applications": "Candidatures",
       "content": "Contenu",
       "users": "Utilisateurs"
     },
@@ -433,6 +460,53 @@
       "empty": "Aucun avis pour le moment.",
       "delete": "Supprimer",
       "confirmDelete": "Supprimer cet avis ?"
+    },
+    "articles": {
+      "title": "Actualités",
+      "add": "Ajouter un article",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "confirmDelete": "Supprimer cet article ?",
+      "empty": "Aucun article.",
+      "active": "Publié",
+      "draft": "Brouillon",
+      "form": {
+        "titleFr": "Titre (FR)",
+        "titleEn": "Titre (EN)",
+        "bodyFr": "Texte (FR)",
+        "bodyEn": "Texte (EN)",
+        "image": "Image (optionnelle)",
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "saveError": "Une erreur est survenue. Réessaie."
+      }
+    },
+    "jobs": {
+      "title": "Postes",
+      "add": "Ajouter un poste",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "confirmDelete": "Supprimer ce poste ?",
+      "empty": "Aucun poste.",
+      "active": "Ouvert",
+      "draft": "Brouillon",
+      "form": {
+        "titleFr": "Titre (FR)",
+        "titleEn": "Titre (EN)",
+        "descriptionFr": "Description (FR)",
+        "descriptionEn": "Description (EN)",
+        "location": "Lieu (optionnel)",
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "saveError": "Une erreur est survenue. Réessaie."
+      }
+    },
+    "applications": {
+      "title": "Candidatures",
+      "empty": "Aucune candidature pour le moment.",
+      "downloadCv": "Télécharger le CV",
+      "delete": "Supprimer",
+      "confirmDelete": "Supprimer cette candidature ?"
     },
     "promoCodes": {
       "title": "Codes promo",
@@ -581,6 +655,8 @@
   "footer": {
     "rights": "Tous droits réservés.",
     "linksLabel": "Liens utiles",
+    "news": "Infos & actualités",
+    "careers": "Carrières",
     "cgv": "Conditions générales de vente",
     "privacy": "Confidentialité",
     "legalNotice": "Mentions légales"
