@@ -9,6 +9,7 @@ export interface AdminOrderSummary {
   status: OrderStatus;
   total: number;
   contactEmail: string;
+  contactPhone: string;
   createdAt: string;
 }
 
@@ -25,11 +26,12 @@ export async function getAdminOrders(): Promise<AdminOrderSummary[]> {
     status: string;
     total: number;
     contact_email: string;
+    contact_phone: string;
     created_at: string;
   }>((from, to) =>
     supabase
       .from("orders")
-      .select("id, status, total, contact_email, created_at")
+      .select("id, status, total, contact_email, contact_phone, created_at")
       .order("created_at", { ascending: false })
       .range(from, to),
   );
@@ -39,6 +41,7 @@ export async function getAdminOrders(): Promise<AdminOrderSummary[]> {
     status: row.status as OrderStatus,
     total: Number(row.total),
     contactEmail: row.contact_email,
+    contactPhone: row.contact_phone,
     createdAt: row.created_at,
   }));
 }

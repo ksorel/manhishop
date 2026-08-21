@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Card } from "@/components/ui/card";
@@ -10,8 +10,13 @@ import { bulkUpdateOrderStatus } from "@/lib/admin/orders";
 import { formatPrice } from "@/lib/format";
 import type { Locale } from "@/lib/catalogue/types";
 import type { AdminOrderSummary } from "@/lib/admin/orders";
+import type { OrderStatus } from "@/lib/orders/queries";
 
 type BulkStatus = "shipped" | "delivered" | "cancelled";
+const ALL_STATUSES: OrderStatus[] = ["pending", "paid", "shipped", "delivered", "cancelled"];
+
+const inputClass =
+  "min-h-11 rounded border border-border bg-background px-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary";
 
 export function OrderList({
   initialOrders,
@@ -26,8 +31,23 @@ export function OrderList({
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<OrderStatus | "all">("all");
 
-  const allSelected = orders.length > 0 && selected.size === orders.length;
+  const filteredOrders = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return orders.filter((order) => {
+      if (statusFilter !== "all" && order.status !== statusFilter) return false;
+      if (!query) return true;
+      return (
+        order.id.toLowerCase().includes(query) ||
+        order.contactEmail.toLowerCase().includes(query) ||
+        order.contactPhone.toLowerCase().includes(query)
+      );
+    });
+  }, [orders, search, statusFilter]);
+
+  const allSelected = filteredOrders.length > 0 && filteredOrders.every((o) => selected.has(o.id));
 
   function toggle(id: string) {
     setSelected((prev) => {
@@ -39,7 +59,7 @@ export function OrderList({
   }
 
   function toggleAll() {
-    setSelected(allSelected ? new Set() : new Set(orders.map((o) => o.id)));
+    setSelected(allSelected ? new Set() : new Set(filteredOrders.map((o) => o.id)));
   }
 
   async function handleBulkStatus(status: BulkStatus) {
@@ -63,16 +83,48 @@ export function OrderList({
 
   return (
     <div className="mt-6 flex flex-col gap-3">
-      <div className="flex items-center gap-3">
-        <input
-          type="checkbox"
-          checked={allSelected}
-          onChange={toggleAll}
-          aria-label={t("selectAll")}
-          className="size-5 shrink-0"
-        />
-        <span className="text-sm text-muted-foreground">{t("selectAll")}</span>
+      <div className="flex flex-wrap items-end gap-3">
+        <label className="flex flex-1 flex-col gap-1 text-sm">
+          <span className="text-foreground">{t("search")}</span>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={t("searchPlaceholder")}
+            className={inputClass}
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-sm">
+          <span className="text-foreground">{t("statusFilter")}</span>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value as OrderStatus | "all")}
+            className={inputClass}
+          >
+            <option value="all">{t("statusAll")}</option>
+            {ALL_STATUSES.map((value) => (
+              <option key={value} value={value}>
+                {tStatus(value)}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
+
+      {filteredOrders.length === 0 ? (
+        <Card className="p-6 text-muted-foreground">{t("noResults")}</Card>
+      ) : (
+        <div className="flex items-center gap-3">
+          <input
+            type="checkbox"
+            checked={allSelected}
+            onChange={toggleAll}
+            aria-label={t("selectAll")}
+            className="size-5 shrink-0"
+          />
+          <span className="text-sm text-muted-foreground">{t("selectAll")}</span>
+        </div>
+      )}
 
       {selected.size > 0 && (
         <div className="flex flex-wrap items-center gap-2 rounded border border-border bg-surface p-3">
@@ -112,7 +164,7 @@ export function OrderList({
       {error && <p className="text-sm font-medium text-error">{error}</p>}
 
       <ul className="flex flex-col gap-2">
-        {orders.map((order) => (
+        {filteredOrders.map((order) => (
           <li key={order.id} className="flex items-center gap-2">
             <input
               type="checkbox"
