@@ -31,12 +31,14 @@ export function buildOrderLines(
 
       let availableStock = product.stock;
       let sizeLabel: string | null = null;
+      let sizeId: string | null = null;
 
       if (product.hasSizes) {
         const size = item.sizeId ? sizesById.get(item.sizeId) : undefined;
         if (!size || size.productId !== product.id) return null;
         availableStock = size.stock;
         sizeLabel = size.label;
+        sizeId = item.sizeId ?? null;
       }
 
       const requestedQuantity = Math.max(1, Math.trunc(item.quantity));
@@ -45,6 +47,7 @@ export function buildOrderLines(
 
       return {
         productId: product.id,
+        sizeId,
         name: product.name,
         sizeLabel,
         unitPrice: product.promoPrice ?? product.price,

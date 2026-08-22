@@ -1,9 +1,11 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendBackInStockEmail } from "@/lib/email/send-back-in-stock-alert";
+import type { Locale } from "@/lib/catalogue/types";
 
 interface NotifyParams {
   productId: string;
   nameFr: string;
+  nameEn: string;
   slug: string;
   simpleStock: number;
   sizes: { id: string; label: string; stock: number }[];
@@ -36,7 +38,7 @@ export async function notifyBackInStockIfNeeded(params: NotifyParams): Promise<v
   for (const target of targets) {
     let query = admin
       .from("stock_notifications")
-      .select("id, user_id")
+      .select("id, user_id, locale")
       .eq("product_id", params.productId)
       .is("notified_at", null);
     query = target.sizeId ? query.eq("size_id", target.sizeId) : query.is("size_id", null);
@@ -46,11 +48,16 @@ export async function notifyBackInStockIfNeeded(params: NotifyParams): Promise<v
     for (const subscription of pending ?? []) {
       const { data } = await admin.auth.admin.getUserById(subscription.user_id);
       if (data.user?.email) {
-        await sendBackInStockEmail(data.user.email, {
-          nameFr: params.nameFr,
-          slug: params.slug,
-          sizeLabel: target.sizeLabel,
-        });
+        await sendBackInStockEmail(
+          data.user.email,
+          {
+            nameFr: params.nameFr,
+            nameEn: params.nameEn,
+            slug: params.slug,
+            sizeLabel: target.sizeLabel,
+          },
+          (subscription.locale as Locale) ?? "fr",
+        );
       }
       await admin
         .from("stock_notifications")

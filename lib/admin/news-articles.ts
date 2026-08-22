@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { slugify } from "@/lib/utils";
+import { assertValidImageFile } from "@/lib/admin/image-upload";
 
 export interface AdminNewsArticleInput {
   titleFr: string;
@@ -106,12 +107,13 @@ export async function uploadArticleImage(
   const supabase = await createClient();
   const file = formData.get("file") as File | null;
   if (!file) throw new Error("no_file");
+  assertValidImageFile(file);
 
   const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
   const path = `${articleId}/${crypto.randomUUID()}-${safeName}`;
   const { error: uploadError } = await supabase.storage
     .from("article-images")
-    .upload(path, file);
+    .upload(path, file, { contentType: file.type });
 
   if (uploadError) throw uploadError;
 

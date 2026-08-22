@@ -209,6 +209,7 @@ export async function createPendingOrder(
     lines.map((line) => ({
       order_id: order.id,
       product_id: line.productId,
+      size_id: line.sizeId,
       product_name: line.name,
       size_label: line.sizeLabel,
       quantity: line.quantity,

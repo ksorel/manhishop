@@ -26,6 +26,31 @@ export async function requireAdmin(locale: string) {
 }
 
 /**
+ * Équivalent de `requireAdmin` pour une action serveur : lève une erreur
+ * au lieu de `redirect()`. À appeler explicitement en tête de toute action
+ * qui bascule ensuite sur le client service-role (qui contourne les RLS
+ * normalement chargées de refuser l'accès à un non-admin).
+ */
+export async function assertAdmin(): Promise<string> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) throw new Error("unauthorized");
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (profile?.role !== "admin") throw new Error("forbidden");
+
+  return user.id;
+}
+
+/**
  * Équivalent de `requireAdmin` pour une route API (JSON) : renvoie une
  * réponse 401/403 au lieu de `redirect()`, qui n'a pas de sens hors page.
  */

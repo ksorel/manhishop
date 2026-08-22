@@ -6,6 +6,7 @@ import { BellRing } from "lucide-react";
 import { subscribeToStockNotification } from "@/lib/stock-notifications/actions";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import type { Locale } from "@/lib/catalogue/types";
 
 export function NotifyBackInStockButton({
   productId,
@@ -28,7 +29,7 @@ export function NotifyBackInStockButton({
     setPending(true);
     setError(false);
     try {
-      const result = await subscribeToStockNotification(productId, sizeId);
+      const result = await subscribeToStockNotification(productId, sizeId, locale as Locale);
       if (result.status === "unauthenticated") {
         window.location.href = `/${locale}/connexion`;
         return;

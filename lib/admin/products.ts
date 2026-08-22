@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { fetchAllRows } from "@/lib/supabase/paginate";
 import { notifyBackInStockIfNeeded } from "@/lib/stock-notifications/notify";
+import { assertValidImageFile } from "@/lib/admin/image-upload";
 import type { AdminProduct, AdminProductImage, AdminProductInput, AdminProductSummary } from "./types";
 
 function toAdminProduct(row: {
@@ -256,6 +257,7 @@ export async function updateProduct(id: string, input: AdminProductInput): Promi
     await notifyBackInStockIfNeeded({
       productId: id,
       nameFr: input.nameFr,
+      nameEn: input.nameEn,
       slug: input.slug,
       simpleStock: input.stock,
       sizes: sizeRows,
@@ -307,12 +309,13 @@ export async function uploadProductImage(
   const supabase = await createClient();
   const file = formData.get("file") as File | null;
   if (!file) throw new Error("no_file");
+  assertValidImageFile(file);
 
   const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
   const path = `${productId}/${crypto.randomUUID()}-${safeName}`;
   const { error: uploadError } = await supabase.storage
     .from("product-images")
-    .upload(path, file);
+    .upload(path, file, { contentType: file.type });
 
   if (uploadError) throw uploadError;
 

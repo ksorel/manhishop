@@ -2,8 +2,29 @@ import { NextResponse } from "next/server";
 import { verifyPaystackSignature, verifyPaystackTransaction } from "@/lib/paystack/webhook";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendOrderConfirmationEmail } from "@/lib/email/send-order-confirmation";
-import { EARN_RATE_FCFA_PER_POINT, REFERRAL_BONUS_POINTS } from "@/lib/loyalty/constants";
+import { computeEarnedPoints, REFERRAL_BONUS_POINTS } from "@/lib/loyalty/constants";
 import type { PreparedOrder } from "@/lib/orders/types";
+
+/**
+ * Décrémente le stock de chaque ligne de la commande maintenant payée
+ * (atomique via apply_stock_delta, jamais de lecture-puis-écriture ici).
+ * Best-effort comme creditLoyaltyAndReferral : ne doit jamais faire
+ * échouer la confirmation du paiement.
+ */
+async function decrementStockForOrder(
+  admin: ReturnType<typeof createAdminClient>,
+  items: { product_id: string | null; size_id: string | null; quantity: number }[],
+) {
+  for (const item of items) {
+    if (!item.product_id) continue;
+    const { error } = await admin.rpc("apply_stock_delta", {
+      p_product_id: item.product_id,
+      p_size_id: item.size_id,
+      p_delta: -item.quantity,
+    });
+    if (error) throw error;
+  }
+}
 
 /**
  * Crédite les points gagnés sur cette commande et, à la toute première
@@ -14,12 +35,20 @@ import type { PreparedOrder } from "@/lib/orders/types";
  */
 async function creditLoyaltyAndReferral(
   admin: ReturnType<typeof createAdminClient>,
-  order: { id: string; user_id: string | null; subtotal: number; discount_amount: number },
+  order: {
+    id: string;
+    user_id: string | null;
+    subtotal: number;
+    discount_amount: number;
+    points_redeemed: number;
+  },
 ) {
   if (!order.user_id) return;
 
-  const earnedPoints = Math.floor(
-    (Number(order.subtotal) - Number(order.discount_amount)) / EARN_RATE_FCFA_PER_POINT,
+  const earnedPoints = computeEarnedPoints(
+    Number(order.subtotal),
+    Number(order.discount_amount),
+    order.points_redeemed,
   );
   if (earnedPoints > 0) {
     await admin.from("loyalty_transactions").insert({
@@ -100,7 +129,7 @@ export async function POST(request: Request) {
     const { data: order } = await admin
       .from("orders")
       .select(
-        "id, status, user_id, contact_email, locale, subtotal, delivery_fee, discount_amount, points_redeemed, total, access_token, order_items(product_id, product_name, size_label, quantity, unit_price)",
+        "id, status, user_id, contact_email, locale, subtotal, delivery_fee, discount_amount, points_redeemed, total, access_token, order_items(product_id, size_id, product_name, size_label, quantity, unit_price)",
       )
       .eq("id", reference)
       .maybeSingle();
@@ -129,6 +158,7 @@ export async function POST(request: Request) {
         locale: order.locale as "fr" | "en",
         lines: (order.order_items ?? []).map((item) => ({
           productId: item.product_id,
+          sizeId: item.size_id,
           name: item.product_name,
           sizeLabel: item.size_label,
           unitPrice: Number(item.unit_price),
@@ -137,6 +167,12 @@ export async function POST(request: Request) {
       };
 
       await sendOrderConfirmationEmail(preparedOrder, preparedOrder.locale);
+
+      try {
+        await decrementStockForOrder(admin, order.order_items ?? []);
+      } catch (stockError) {
+        console.error("Échec décrémentation du stock:", stockError);
+      }
 
       try {
         await creditLoyaltyAndReferral(admin, order);

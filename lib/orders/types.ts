@@ -30,6 +30,7 @@ export interface CheckoutInput {
 
 export interface PreparedOrderLine {
   productId: string;
+  sizeId: string | null;
   name: string;
   sizeLabel: string | null;
   unitPrice: number;

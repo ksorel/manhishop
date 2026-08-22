@@ -13,8 +13,42 @@ const withSerwist = withSerwistInit({
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseHostname = supabaseUrl ? new URL(supabaseUrl).hostname : undefined;
+const supabaseOrigin = supabaseHostname ? `https://${supabaseHostname}` : "";
+
+// CSP appliquée uniquement en production : le mode dev de Next (HMR)
+// nécessite 'unsafe-eval' et des websockets locales que la politique de
+// prod n'autorise pas — pas la peine de compliquer la CSP pour ça.
+// Checkout Paystack : redirection complète (window.location.href), jamais
+// d'iframe/script Paystack chargé sur nos pages — pas de directive dédiée
+// nécessaire ici.
+const csp = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  `img-src 'self' data: ${supabaseOrigin} https://media.bdroppy.com`,
+  "font-src 'self' data:",
+  `connect-src 'self' ${supabaseOrigin} https://*.sentry.io`,
+  "frame-ancestors 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+]
+  .join("; ")
+  .trim();
+
+const securityHeaders = [
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+  ...(process.env.NODE_ENV === "production"
+    ? [{ key: "Content-Security-Policy", value: csp }]
+    : []),
+];
 
 const nextConfig: NextConfig = {
+  async headers() {
+    return [{ source: "/:path*", headers: securityHeaders }];
+  },
   // Le badge de statut du mode dev (coin de l'écran) intercepte les
   // clics Playwright sur petit viewport (mobile-chrome) — désactivé,
   // purement cosmétique et sans effet en production.
