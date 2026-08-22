@@ -1,7 +1,27 @@
-import { Document, Page, Text, View, StyleSheet, renderToBuffer } from "@react-pdf/renderer";
-import { formatPrice } from "@/lib/format";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { Document, Page, Text, View, Image, StyleSheet, renderToBuffer } from "@react-pdf/renderer";
 import type { Locale } from "@/lib/catalogue/types";
 import type { OrderDetail } from "./queries";
+
+// Lu en mémoire une seule fois (module chargé une fois par instance de
+// fonction serverless) plutôt qu'à chaque facture générée — évite une
+// lecture disque répétée, et un chemin relatif recalculé à chaque appel.
+const LOGO_BUFFER = readFileSync(join(process.cwd(), "public/logo/manhishop.jpeg"));
+
+/**
+ * lib/format.ts::formatPrice() utilise Intl.NumberFormat, qui insère des
+ * espaces Unicode spéciales (U+202F, U+00A0) entre les groupes de
+ * chiffres — absentes du WinAnsiEncoding de la police Helvetica standard
+ * utilisée par @react-pdf/renderer, ce qui les faisait s'afficher comme
+ * des "/" dans le PDF. Formatage manuel dédié, en espace ASCII normal.
+ */
+function formatPricePdf(amount: number): string {
+  const grouped = Math.round(amount)
+    .toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return `${grouped} FCFA`;
+}
 
 // Contenu bilingue en dur (pas next-intl) — même convention que les
 // templates d'email (lib/email/send-order-confirmation.ts), plus simple
@@ -70,8 +90,8 @@ const STATUS_LABEL: Record<Locale, Record<OrderDetail["status"], string>> = {
 
 const styles = StyleSheet.create({
   page: { padding: 36, fontSize: 10, fontFamily: "Helvetica", color: "#1c1f1b" },
-  headerRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 24 },
-  brand: { fontSize: 18, fontWeight: 700, color: "#3f7d33" },
+  headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 24 },
+  logo: { width: 48, height: 48, borderRadius: 24 },
   title: { fontSize: 14, fontWeight: 700, textAlign: "right" },
   meta: { fontSize: 10, textAlign: "right", color: "#5b6158", marginTop: 2 },
   columns: { flexDirection: "row", justifyContent: "space-between", marginBottom: 20, gap: 20 },
@@ -119,7 +139,8 @@ function InvoiceDocument({ order, locale, seller }: { order: OrderDetail; locale
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.headerRow}>
-          <Text style={styles.brand}>Manhishop</Text>
+          {/* eslint-disable-next-line jsx-a11y/alt-text -- Image de @react-pdf/renderer (document PDF), pas <img> HTML : pas de prop alt. */}
+          <Image style={styles.logo} src={{ data: LOGO_BUFFER, format: "jpg" }} />
           <View>
             <Text style={styles.title}>{t.invoice}</Text>
             <Text style={styles.meta}>
@@ -176,8 +197,8 @@ function InvoiceDocument({ order, locale, seller }: { order: OrderDetail; locale
                 {item.sizeLabel ? ` (${item.sizeLabel})` : ""}
               </Text>
               <Text style={styles.colQty}>{item.quantity}</Text>
-              <Text style={styles.colPrice}>{formatPrice(item.unitPrice, locale)}</Text>
-              <Text style={styles.colTotal}>{formatPrice(item.unitPrice * item.quantity, locale)}</Text>
+              <Text style={styles.colPrice}>{formatPricePdf(item.unitPrice)}</Text>
+              <Text style={styles.colTotal}>{formatPricePdf(item.unitPrice * item.quantity)}</Text>
             </View>
           ))}
         </View>
@@ -185,12 +206,12 @@ function InvoiceDocument({ order, locale, seller }: { order: OrderDetail; locale
         <View style={styles.totals}>
           <View style={styles.totalRow}>
             <Text style={styles.totalLabel}>{t.subtotal}</Text>
-            <Text>{formatPrice(order.subtotal, locale)}</Text>
+            <Text>{formatPricePdf(order.subtotal)}</Text>
           </View>
           {order.discountAmount > 0 && (
             <View style={styles.totalRow}>
               <Text style={styles.totalLabel}>{t.discount}</Text>
-              <Text>-{formatPrice(order.discountAmount, locale)}</Text>
+              <Text>-{formatPricePdf(order.discountAmount)}</Text>
             </View>
           )}
           {order.pointsRedeemed > 0 && (
@@ -201,11 +222,11 @@ function InvoiceDocument({ order, locale, seller }: { order: OrderDetail; locale
           )}
           <View style={styles.totalRow}>
             <Text style={styles.totalLabel}>{t.delivery}</Text>
-            <Text>{formatPrice(order.deliveryFee, locale)}</Text>
+            <Text>{formatPricePdf(order.deliveryFee)}</Text>
           </View>
           <View style={styles.grandTotalRow}>
             <Text>{t.total}</Text>
-            <Text>{formatPrice(order.total, locale)}</Text>
+            <Text>{formatPricePdf(order.total)}</Text>
           </View>
         </View>
 
