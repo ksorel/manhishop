@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Download } from "lucide-react";
 import { getAdminOrderById } from "@/lib/admin/orders";
 import { Link } from "@/i18n/navigation";
 import { Card } from "@/components/ui/card";
+import { buttonVariants } from "@/components/ui/button";
 import { OrderStatusBadge } from "@/components/account/order-status-badge";
 import { OrderStatusSelect } from "@/components/admin/order-status-select";
 import { OrderTrackingForm } from "@/components/admin/order-tracking-form";
@@ -104,6 +106,14 @@ export default async function AdminOrderDetailPage({
       <div className="mt-6">
         <OrderTrackingForm orderId={order.id} initialTrackingInfo={order.trackingInfo} />
       </div>
+
+      <a
+        href={`/api/admin/orders/${order.id}/invoice?locale=${locale}`}
+        className={buttonVariants({ variant: "secondary", className: "mt-6 gap-1.5" })}
+      >
+        <Download className="size-4" aria-hidden="true" />
+        {tOrders("downloadInvoice")}
+      </a>
     </div>
   );
 }

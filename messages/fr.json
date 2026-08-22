@@ -304,6 +304,7 @@
     "items": "Articles",
     "notFound": "Commande introuvable.",
     "trackingInfo": "Informations de suivi",
+    "downloadInvoice": "Télécharger la facture (PDF)",
     "timeline": {
       "ordered": "Commandée",
       "paid": "Payée",
@@ -583,7 +584,8 @@
       "noResults": "Aucune commande ne correspond à cette recherche.",
       "updateStatus": "Changer le statut",
       "statusUpdated": "Statut mis à jour.",
-      "exportCsv": "Exporter en CSV",
+      "exportExcel": "Exporter en Excel",
+      "exportReflectsFilter": "L'export ne contient que les commandes actuellement filtrées/recherchées.",
       "selectAll": "Tout sélectionner",
       "selectedCount": "{count, plural, one {# sélectionnée} other {# sélectionnées}}",
       "bulkError": "Une erreur est survenue. Réessaie.",

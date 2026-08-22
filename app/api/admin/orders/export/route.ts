@@ -1,24 +1,28 @@
 import { NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
+import * as XLSX from "xlsx";
 import { createClient } from "@/lib/supabase/server";
-import { getAdminOrdersForExport } from "@/lib/admin/orders";
+import { getAdminOrdersForExport, type AdminOrderExportRow } from "@/lib/admin/orders";
 import type { Locale } from "@/lib/catalogue/types";
+import type { OrderStatus } from "@/lib/orders/queries";
 
-// RFC 4180 : une valeur contenant une virgule, un guillemet ou un saut de
-// ligne doit être entourée de guillemets, avec les guillemets internes
-// doublés.
-function csvEscape(value: string): string {
-  if (/[",\n\r]/.test(value)) {
-    return `"${value.replace(/"/g, '""')}"`;
-  }
-  return value;
+const ALL_STATUSES: OrderStatus[] = ["pending", "paid", "shipped", "delivered", "cancelled"];
+
+/**
+ * Même prédicat que le filtre côté client (components/admin/order-list.tsx)
+ * — l'export doit refléter exactement ce que l'admin voit filtré/recherché
+ * à l'écran, pas systématiquement toutes les commandes.
+ */
+function matchesFilter(order: AdminOrderExportRow, search: string, status: string): boolean {
+  if (status !== "all" && order.status !== status) return false;
+  if (!search) return true;
+  const query = search.toLowerCase();
+  return (
+    order.id.toLowerCase().includes(query) ||
+    order.contactEmail.toLowerCase().includes(query) ||
+    order.contactPhone.toLowerCase().includes(query)
+  );
 }
-
-function csvRow(values: string[]): string {
-  return values.map(csvEscape).join(",") + "\r\n";
-}
-
-const UTF8_BOM = "\uFEFF";
 
 export async function GET(request: Request) {
   const supabase = await createClient();
@@ -38,23 +42,24 @@ export async function GET(request: Request) {
 
   const { searchParams } = new URL(request.url);
   const locale = (searchParams.get("locale") === "en" ? "en" : "fr") as Locale;
+  const search = searchParams.get("search") ?? "";
+  const statusParam = searchParams.get("status") ?? "all";
+  const status = statusParam === "all" || ALL_STATUSES.includes(statusParam as OrderStatus) ? statusParam : "all";
 
   const [t, tStatus] = await Promise.all([
     getTranslations({ locale, namespace: "admin.ordersExport" }),
     getTranslations({ locale, namespace: "orders.status" }),
   ]);
 
-  const orders = await getAdminOrdersForExport();
+  const allOrders = await getAdminOrdersForExport();
+  const orders = allOrders.filter((order) => matchesFilter(order, search, status));
 
   const paymentLabels: Record<string, string> = {
     card: t("paymentCard"),
     mobile_money: t("paymentMobileMoney"),
   };
 
-  // BOM UTF-8 : sans lui, Excel sur Windows interprète les accents comme
-  // du Latin-1 et affiche des caractères corrompus à l'ouverture du CSV.
-  let csv = UTF8_BOM;
-  csv += csvRow([
+  const headerRow = [
     t("orderId"),
     t("date"),
     t("status"),
@@ -66,9 +71,9 @@ export async function GET(request: Request) {
     t("total"),
     t("paymentMethod"),
     t("items"),
-  ]);
+  ];
 
-  for (const order of orders) {
+  const rows = orders.map((order) => {
     const addressText = order.address
       ? [order.address.line1, order.address.line2, order.address.city, order.address.country]
           .filter(Boolean)
@@ -81,27 +86,46 @@ export async function GET(request: Request) {
       )
       .join("; ");
 
-    csv += csvRow([
+    return [
       order.id,
       new Date(order.createdAt).toLocaleString(locale),
       tStatus(order.status),
       order.contactEmail,
       order.contactPhone,
       addressText,
-      order.subtotal.toString(),
-      order.deliveryFee.toString(),
-      order.total.toString(),
+      order.subtotal,
+      order.deliveryFee,
+      order.total,
       order.paymentMethod ? (paymentLabels[order.paymentMethod] ?? order.paymentMethod) : "",
       itemsText,
-    ]);
-  }
+    ];
+  });
+
+  const sheet = XLSX.utils.aoa_to_sheet([headerRow, ...rows]);
+  sheet["!cols"] = [
+    { wch: 38 }, // n° commande (uuid)
+    { wch: 18 }, // date
+    { wch: 14 }, // statut
+    { wch: 26 }, // email
+    { wch: 16 }, // téléphone
+    { wch: 40 }, // adresse
+    { wch: 12 }, // sous-total
+    { wch: 12 }, // livraison
+    { wch: 12 }, // total
+    { wch: 14 }, // moyen de paiement
+    { wch: 50 }, // articles
+  ];
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, sheet, "Commandes");
+  const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
 
   const date = new Date().toISOString().slice(0, 10);
 
-  return new NextResponse(csv, {
+  return new NextResponse(new Uint8Array(buffer), {
     headers: {
-      "Content-Type": "text/csv; charset=utf-8",
-      "Content-Disposition": `attachment; filename="commandes-manhishop-${date}.csv"`,
+      "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "Content-Disposition": `attachment; filename="commandes-manhishop-${date}.xlsx"`,
     },
   });
 }

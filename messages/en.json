@@ -304,6 +304,7 @@
     "items": "Items",
     "notFound": "Order not found.",
     "trackingInfo": "Tracking information",
+    "downloadInvoice": "Download invoice (PDF)",
     "timeline": {
       "ordered": "Ordered",
       "paid": "Paid",
@@ -583,7 +584,8 @@
       "noResults": "No orders match this search.",
       "updateStatus": "Update status",
       "statusUpdated": "Status updated.",
-      "exportCsv": "Export as CSV",
+      "exportExcel": "Export to Excel",
+      "exportReflectsFilter": "The export only includes the currently filtered/searched orders.",
       "selectAll": "Select all",
       "selectedCount": "{count, plural, one {# selected} other {# selected}}",
       "bulkError": "Something went wrong. Please try again.",

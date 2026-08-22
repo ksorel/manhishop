@@ -2,9 +2,10 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { Download } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { OrderStatusBadge } from "@/components/account/order-status-badge";
 import { bulkUpdateOrderStatus } from "@/lib/admin/orders";
 import { formatPrice } from "@/lib/format";
@@ -81,6 +82,10 @@ export function OrderList({
     return <Card className="mt-6 p-6 text-muted-foreground">{t("empty")}</Card>;
   }
 
+  const exportParams = new URLSearchParams({ locale });
+  if (search.trim()) exportParams.set("search", search.trim());
+  if (statusFilter !== "all") exportParams.set("status", statusFilter);
+
   return (
     <div className="mt-6 flex flex-col gap-3">
       <div className="flex flex-wrap items-end gap-3">
@@ -109,7 +114,17 @@ export function OrderList({
             ))}
           </select>
         </label>
+        <a
+          href={`/api/admin/orders/export?${exportParams.toString()}`}
+          className={buttonVariants({ variant: "secondary", className: "gap-1.5" })}
+        >
+          <Download className="size-4" aria-hidden="true" />
+          {t("exportExcel")}
+        </a>
       </div>
+      {(search.trim() || statusFilter !== "all") && (
+        <p className="text-xs text-muted-foreground">{t("exportReflectsFilter")}</p>
+      )}
 
       {filteredOrders.length === 0 ? (
         <Card className="p-6 text-muted-foreground">{t("noResults")}</Card>

@@ -2,8 +2,10 @@ import { notFound, redirect } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { getMyOrderById } from "@/lib/orders/queries";
+import { Download } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { Card } from "@/components/ui/card";
+import { buttonVariants } from "@/components/ui/button";
 import { OrderStatusBadge } from "@/components/account/order-status-badge";
 import { OrderTimeline } from "@/components/account/order-timeline";
 import { formatPrice } from "@/lib/format";
@@ -113,6 +115,14 @@ export default async function OrderDetailPage({
           </p>
         </Card>
       )}
+
+      <a
+        href={`/api/orders/${order.id}/invoice?locale=${locale}`}
+        className={buttonVariants({ variant: "secondary", className: "mt-6 gap-1.5" })}
+      >
+        <Download className="size-4" aria-hidden="true" />
+        {t("downloadInvoice")}
+      </a>
     </div>
   );
 }
